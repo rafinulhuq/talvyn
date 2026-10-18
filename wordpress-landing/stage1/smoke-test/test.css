@@ -1,0 +1,14 @@
+/* Talvyn smoke test. Delete once it passes. */
+.ov-landing .ov-smoketest {
+  border: 3px solid #0f766e;
+  background: #eafaf7;
+  color: #0d3d3a;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  text-align: center;
+  font-family: system-ui, sans-serif;
+}
+.ov-landing .ov-smoketest b { font-size: 20px; }
+.ov-landing .ov-fail { display: none; }
+.ov-landing .ov-pass { display: block; color: #0f766e; font-weight: 700; }

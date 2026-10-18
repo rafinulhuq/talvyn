@@ -1,0 +1,28 @@
+target-version = "py312"
+
+[lint]
+# Explicit rule selection so lint is REPRODUCIBLE across ruff versions.
+# ruff's *default* select is version-dependent — 0.16 expanded it (adding
+# RET/PLR and more), which silently changed CI outcomes on unrelated PRs. Pin
+# the ruleset here (and the ruff version in CI, see .github/workflows/ci.yml)
+# so a new ruff release can't move the goalposts.
+#
+# This mirrors ruff's long-standing classic default — pycodestyle errors
+# (E4 import placement, E7 statement style, E9 syntax) + pyflakes (F) — plus
+# import sorting (I). Full E is intentionally NOT selected (E501 line-length
+# etc. are not enforced in this codebase). B (bugbear) / S (bandit) are not
+# selected either: ~24 pre-existing violations would need a separate pass —
+# the ignores below are kept so those families are ready to enable later.
+select = ["E4", "E7", "E9", "F", "I"]
+
+# B008 (function-call-in-default-argument) fires on every FastAPI
+# `Depends(...)`/`File(...)` parameter default — that's the framework's own
+# idiomatic dependency-injection pattern, not a bug.
+#
+# BLE001 (blind-except) / S110 (try-except-pass) / S112 (try-except-continue)
+# fire on this codebase's established best-effort/cleanup pattern (log and
+# move on rather than let a non-critical failure take down the request).
+#
+# E402 (module-import-not-at-top) fires on the intentional late imports in
+# app/main.py (Prometheus instrumentation registered after app construction).
+ignore = ["B008", "BLE001", "S110", "S112", "E402"]

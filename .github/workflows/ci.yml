@@ -1,0 +1,248 @@
+name: CI
+
+# All jobs run on the org's self-hosted runner: the GitHub-hosted Actions
+# minutes for `squareatom` are exhausted, so `ubuntu-latest` jobs would be
+# blocked/billed. Requirements on the runner box:
+#   - Docker (for the `services: postgres` containers in backend-migrations
+#     and schema-drift)
+#   - outbound network (setup-python/setup-node download toolchains once, then
+#     cache them on the runner)
+# A single runner executes jobs sequentially, so CI is slower but free. Add
+# more runners to parallelize. Only trigger CI from trusted (non-fork) PRs —
+# self-hosted runners execute PR code on your machine.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    name: Backend tests (pytest + ruff)
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        # ruff is pinned so CI lint is reproducible — an unpinned `ruff` picks
+        # up whatever the latest release is, and a new default ruleset (as in
+        # 0.16) silently changes outcomes on unrelated PRs. The enforced rules
+        # are also pinned explicitly in backend/ruff.toml.
+        run: pip install -r requirements.txt "ruff==0.16.1"
+
+      - name: Lint (ruff)
+        run: ruff check app/
+
+      - name: Run tests
+        # tests/conftest.py force-sets DATABASE_URL/INTERNAL_API_SECRET/
+        # MAGIC_LINK_SECRET/DEBUG/etc. itself so the suite is deterministic
+        # regardless of what the runner happens to have lying around — no
+        # env: block needed here.
+        run: pytest tests/ -x -q
+
+  backend-migrations:
+    name: Backend migrations (alembic upgrade head, fresh Postgres)
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci_migrations_db
+        ports:
+          # Random host port (not 5432:5432): the self-hosted box already runs
+          # Postgres on 5432. Read the mapped port via job.services.postgres.ports.
+          - 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Apply all migrations to a brand-new database
+        run: alembic upgrade head
+        env:
+          DATABASE_URL: "postgresql+asyncpg://ci:ci@localhost:${{ job.services.postgres.ports['5432'] }}/ci_migrations_db"
+          INTERNAL_API_SECRET: ci_internal_api_secret_32chars_long
+          MAGIC_LINK_SECRET: ci_magic_link_secret_32chars_longg
+          UPLOAD_DIR: /tmp/jd_test_uploads
+          APP_ENV: development
+          DEBUG: "false"
+
+  frontend-checks:
+    name: Frontend lint + type-check + build
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci_db
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci_db
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: ci_nextauth_secret_that_is_32chars!
+          INTERNAL_API_SECRET: ci_internal_api_secret_32chars_long
+          FASTAPI_INTERNAL_URL: http://localhost:8000
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+          # Identical on purpose: this keeps HOST_SPLIT_ENABLED false in CI
+          # (see frontend/src/lib/hosts.ts) so the build and the E2E suite
+          # exercise the pre-split routing. Production passes real, differing
+          # hostnames via docker-compose.prod.yml build.args.
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+  # A8-6 Dependency / CVE gates. Non-blocking for now (continue-on-error) so
+  # they surface known vulnerabilities in the PR checks without breaking
+  # builds; ratchet to blocking once the current backlog is triaged.
+  security-audit:
+    name: Dependency audit (pip-audit + npm audit) — non-blocking
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: pip-audit (backend requirements)
+        continue-on-error: true
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          echo "## pip-audit (backend)" >> "$GITHUB_STEP_SUMMARY"
+          pip-audit -r requirements.txt --desc \
+            | tee -a "$GITHUB_STEP_SUMMARY" \
+            || echo "pip-audit reported findings (non-blocking)." >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+
+      - name: npm audit (frontend, production deps)
+        continue-on-error: true
+        working-directory: frontend
+        run: |
+          echo "## npm audit (frontend, prod deps, level=high)" >> "$GITHUB_STEP_SUMMARY"
+          npm audit --omit=dev --audit-level=high \
+            | tee -a "$GITHUB_STEP_SUMMARY" \
+            || echo "npm audit reported findings (non-blocking)." >> "$GITHUB_STEP_SUMMARY"
+
+  # A8-2 Schema authority: Alembic owns the DB (see docs/schema-authority.md).
+  # This job builds the schema from Alembic, then reports how the Prisma
+  # datamodel differs from it. Non-blocking while the historical drift backlog
+  # is paid down; flip to blocking once the datamodel matches.
+  schema-drift:
+    name: Schema drift (Alembic ↔ Prisma) — non-blocking
+    runs-on: self-hosted
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci_drift_db
+        ports:
+          # Random host port (not 5432:5432): the self-hosted box already runs
+          # Postgres on 5432. Read the mapped port via job.services.postgres.ports.
+          - 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install backend deps
+        working-directory: backend
+        run: pip install -r requirements.txt
+
+      - name: Build the database from Alembic (source of truth)
+        working-directory: backend
+        run: alembic upgrade head
+        env:
+          DATABASE_URL: "postgresql+asyncpg://ci:ci@localhost:${{ job.services.postgres.ports['5432'] }}/ci_drift_db"
+          INTERNAL_API_SECRET: ci_internal_api_secret_32chars_long
+          MAGIC_LINK_SECRET: ci_magic_link_secret_32chars_longg
+          UPLOAD_DIR: /tmp/jd_test_uploads
+          APP_ENV: development
+          DEBUG: "false"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Compare Prisma datamodel against the Alembic-built DB
+        continue-on-error: true
+        working-directory: frontend
+        env:
+          DATABASE_URL: "postgresql://ci:ci@localhost:${{ job.services.postgres.ports['5432'] }}/ci_drift_db"
+        run: |
+          npx prisma migrate diff \
+            --from-schema-datamodel prisma/schema.prisma \
+            --to-schema-datasource prisma/schema.prisma \
+            --script > drift.sql 2>drift.err || true
+          echo "## Prisma ↔ Alembic schema drift" >> "$GITHUB_STEP_SUMMARY"
+          if grep -qvE '^\s*(--.*)?$' drift.sql 2>/dev/null; then
+            echo "⚠️ Prisma datamodel has drifted from the Alembic-built schema." >> "$GITHUB_STEP_SUMMARY"
+            echo "The SQL below is what would reconcile Prisma to the real DB:" >> "$GITHUB_STEP_SUMMARY"
+            { echo '```sql'; cat drift.sql; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "✅ No drift: the Prisma datamodel matches the Alembic schema." >> "$GITHUB_STEP_SUMMARY"
+            cat drift.err 2>/dev/null || true
+          fi

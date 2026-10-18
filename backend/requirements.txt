@@ -1,0 +1,91 @@
+# ─── Web framework ────────────────────────────────────────────
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+
+# ─── Database ─────────────────────────────────────────────────
+sqlalchemy[asyncio]==2.0.52
+asyncpg==0.31.0
+alembic==1.19.1
+
+# ─── Email validation ────────────────────────────────────────
+email-validator==2.3.0
+
+# ─── Config & validation ──────────────────────────────────────
+pydantic==2.13.5
+pydantic-settings==2.15.0
+python-dotenv==1.2.3
+
+# ─── Security ─────────────────────────────────────────────────
+passlib[bcrypt]==1.7.4
+
+# ─── File parsing (Phase 2 — installed now for structure) ─────
+pymupdf==1.28.2
+python-docx==1.2.0
+python-multipart==0.0.32
+
+# ─── Async file I/O ─────────────────────────────────────────
+aiofiles==25.1.0
+
+# ─── HTTP client (for Ollama) ─────────────────────────────────
+httpx==0.28.1
+
+# ─── Email ────────────────────────────────────────────────────
+resend==2.42.0
+
+# ─── Rate limiting ────────────────────────────────────────────
+slowapi==0.1.10
+
+# ─── Redis (progress tracking + rate-limit storage) ───────────
+redis==5.3.1
+
+# ─── Task queue (Ollama background jobs) ──────────────────────
+arq==0.28.0
+
+# ─── Error tracking (GlitchTip / Sentry) ─────────────────────
+# Set GLITCHTIP_DSN in .env to enable. Leave empty to disable (zero overhead).
+sentry-sdk[fastapi]==2.68.1
+
+# ─── Object storage (MinIO / S3) ──────────────────────────────
+# Used when STORAGE_BACKEND=s3 (set automatically by start.sh or manually).
+# On local/Docker runs the default STORAGE_BACKEND=local uses aiofiles.
+miniopy-async==1.23.5
+
+# ─── Metrics (Prometheus) ─────────────────────────────────────
+# Exposes /metrics endpoint; Prometheus scrapes it via Docker network.
+# Zero overhead when not scraped — counters are incremented in-process.
+prometheus-fastapi-instrumentator==8.1.0
+
+# ─── Vector similarity search (pgvector) ──────────────────────
+# Requires the postgres image to be pgvector/pgvector:pg16. Embedding
+# generation is opt-in (EMBEDDING_ENABLED=true) — see embedding_service.py.
+pgvector==0.5.0
+
+# ─── AI text detection (opt-in, AI_DETECTION_BACKEND=desklib) ────
+# Desklib's AI-text-detector-v1.01: a DeBERTa-v3-large classifier (real
+# probability output, not an LLM self-report) — see desklib_detector_service.py.
+# CPU-only wheel deliberately pinned (+cpu) — this server's GPU is already
+# near its VRAM ceiling running Ollama, and a single classification forward
+# pass is fast enough on CPU for a background/async-job workload like this.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.0+cpu
+transformers==5.16.1
+sentencepiece==0.2.2          # required by the DeBERTa-v2/v3 tokenizer
+
+# ─── RAG knowledge corpus (bulk JD ingestion) ─────────────────
+# OCR fallback for scanned PDFs (requires the tesseract-ocr system
+# package — installed in the Dockerfile runtime stage) and LangChain's
+# standalone text splitter for deterministic chunking. See
+# docs/superpowers/specs/2026-07-05-bulk-jd-corpus-rag-ingestion-design.md.
+pytesseract==0.3.13
+pillow==12.3.0
+langchain-text-splitters==1.1.2
+
+# ─── Logging ──────────────────────────────────────────────────
+structlog==26.1.0
+
+# ─── Testing ──────────────────────────────────────────────────
+pytest==9.1.1
+pytest-asyncio==1.4.0
+# In-memory SQLite, engine used by tests/conftest.py so the suite runs
+# without a real Postgres instance.
+aiosqlite==0.22.1

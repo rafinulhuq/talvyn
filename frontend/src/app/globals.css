@@ -1,0 +1,484 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+/* ─── CSS Variables ──────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Deep Indigo & Cool Slate Theme Tokens */
+    --color-primary: #4f46e5;
+    --color-primary-hover: #4338ca;
+    --color-primary-foreground: #ffffff;
+
+    --color-surface-canvas: #f8fafc;
+    --color-surface: #ffffff;
+    --color-surface-elevated: #ffffff;
+    --color-surface-overlay: #ffffff;
+
+    --color-bg: #f8fafc;
+    --color-bg-muted: #f1f5f9;
+    --color-bg-subtle: #e2e8f0;
+
+    --color-border-subtle: #f1f5f9;
+    --color-border: #e2e8f0;
+    --color-border-strong: #cbd5e1;
+
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #334155;
+    --color-text-muted: #64748b;
+
+    --color-text: #0f172a;
+    --color-text-subtle: #64748b;
+
+    /* Semantic Status Tokens */
+    --color-status-success-bg: #ecfdf5;
+    --color-status-success-fg: #059669;
+    --color-status-warning-bg: #fffbeb;
+    --color-status-warning-fg: #d97706;
+    --color-status-danger-bg: #fef2f2;
+    --color-status-danger-fg: #e11d48;
+    --color-status-info-bg: #eef2ff;
+    --color-status-info-fg: #4f46e5;
+
+    /* Sidebar */
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 64px;
+    --header-height: 54px;
+
+    /* Z-index scale */
+    --z-sidebar: 40;
+    --z-header: 30;
+    --z-modal: 50;
+    --z-toast: 60;
+  }
+
+  /* ─── Base element resets ─────────────────────────────────── */
+  * {
+    @apply border-slate-200;
+  }
+
+  /* Mobile hygiene: stop iOS from re-flowing text on rotate, kill the grey
+     tap flash on touch, and let long words break instead of forcing a
+     horizontal scrollbar on a 360px screen. */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: var(--font-body);
+    -webkit-tap-highlight-color: transparent;
+    overflow-wrap: break-word;
+  }
+
+  /* Headings default to the display face (Plus Jakarta Sans); any element
+     with an explicit font-sans/font-mono class overrides this, since a
+     class selector outranks this element selector. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  /* Dark-mode semantic token overrides */
+  :root.dark, .dark {
+    --color-primary: #6366f1;
+    --color-primary-hover: #818cf8;
+    --color-primary-foreground: #ffffff;
+
+    --color-surface-canvas: #09090b;
+    --color-surface: #121215;
+    --color-surface-elevated: #18181b;
+    --color-surface-overlay: #222226;
+
+    --color-bg: #09090b;
+    --color-bg-muted: #121215;
+    --color-bg-subtle: #18181b;
+
+    --color-border-subtle: #1e1e24;
+    --color-border: #27272a;
+    --color-border-strong: #3f3f46;
+
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #a1a1aa;
+    --color-text-muted: #71717a;
+
+    --color-text: #f8fafc;
+    --color-text-subtle: #71717a;
+
+    --color-status-success-bg: rgba(6, 78, 59, 0.35);
+    --color-status-success-fg: #34d399;
+    --color-status-warning-bg: rgba(120, 53, 15, 0.35);
+    --color-status-warning-fg: #fbbf24;
+    --color-status-danger-bg: rgba(136, 19, 55, 0.35);
+    --color-status-danger-fg: #fb7185;
+    --color-status-info-bg: rgba(12, 74, 110, 0.35);
+    --color-status-info-fg: #38bdf8;
+  }
+
+  /* ─── Focus styles ────────────────────────────────────────── */
+  *:focus-visible {
+    @apply outline-hidden ring-2 ring-indigo-500/40 ring-offset-1;
+  }
+
+  /* ─── Form controls on small screens ──────────────────────────
+     iOS Safari zooms the viewport whenever a focused control renders below
+     16px, which is every `text-sm` input in the admin UI — the page ends up
+     panned and horizontally scrolled after a single tap. Forcing 16px under
+     the `sm` breakpoint keeps the same visual rhythm on desktop while making
+     the forms usable on a phone. */
+  @media (max-width: 639px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
+  /* ─── Scrollbar ───────────────────────────────────────────── */
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600;
+  }
+
+  /* ─── Motion ──────────────────────────────────────────────
+     Anchor-jumps and programmatic scrollTo glide instead of teleporting.
+     Kept off `html` under reduced motion by the block below. */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* One global honour of prefers-reduced-motion. Tailwind's
+     `motion-reduce:` variant only covers elements that opted in
+     individually — this catches every animation and transition in the
+     app, including third-party ones (TipTap, lucide, next/image). Motion
+     is reduced to ~1 frame rather than removed, so animation `end`/
+     `transitionend` handlers still fire and nothing gets stuck waiting
+     on an event that never arrives. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ─── Component utilities ────────────────────────────────────── */
+@layer components {
+  /* Card pattern used throughout the admin UI (indigo redesign, Phase 1 —
+     see docs/changelog/indigo-redesign-overview.md): back to a thin border
+     + soft shadow, reversing the lime rebrand's thick-border/no-shadow
+     treatment to match the reference dashboards' clean SaaS look. */
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white shadow-card dark:border-slate-700 dark:bg-slate-900;
+  }
+
+  /* Lift-on-hover is a pointer-device affordance; on touch the transform
+     sticks after a tap (there is no pointer to leave), so the card stays
+     visibly nudged until something else is tapped. Restrict the motion to
+     real hover devices and give touch a press state instead. */
+  .card-hover {
+    @apply rounded-xl border border-slate-200 bg-white shadow-card transition-all duration-150 hover:border-brand-300 hover:shadow-card-hover active:border-brand-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-brand-600;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card-hover:hover {
+      @apply -translate-y-0.5;
+    }
+
+    /* Same pointer-only lift, for surfaces that aren't `.card-hover` but
+       want the affordance (KPI tiles, result rows). Split out rather than
+       expressed as an inline arbitrary variant so the media query stays
+       written once, in real CSS. */
+    .lift-hover:hover {
+      @apply -translate-y-0.5;
+    }
+  }
+
+  /* Horizontal scroll rows (steppers, filter pills, breadcrumbs) — swipeable
+     on touch, no scrollbar gutter eating a line of vertical space. */
+  .scroll-row {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .scroll-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Minimum comfortable touch target (WCAG 2.5.8 / Apple HIG) for the small
+     icon buttons that pepper the admin surfaces. Keeps the visual icon size
+     but grows the hit area on touch. */
+  .touch-target {
+    @apply inline-flex items-center justify-center;
+    min-height: 40px;
+    min-width: 40px;
+  }
+
+  @media (min-width: 640px) {
+    .touch-target {
+      min-height: 32px;
+      min-width: 32px;
+    }
+  }
+
+  /* Range inputs sized for a finger. The default 6px-tall track gives a
+     thumb that is nearly impossible to grab on touch; this keeps the same
+     slim track but grows the hit area to 24px and the thumb to 20px. The
+     thumb borrows `currentColor`, so the caller tints it with a text-* class. */
+  .range-touch {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 24px;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .range-touch::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 9999px;
+    @apply bg-slate-200 dark:bg-slate-700;
+  }
+
+  .range-touch::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    margin-top: -7px;
+    border-radius: 9999px;
+    border: 2px solid currentColor;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+  }
+
+  .range-touch::-moz-range-track {
+    height: 6px;
+    border-radius: 9999px;
+    @apply bg-slate-200 dark:bg-slate-700;
+  }
+
+  .range-touch::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 9999px;
+    border: 2px solid currentColor;
+    background: #ffffff;
+  }
+
+  /* ─── Stagger ─────────────────────────────────────────────
+     Put `.stagger` on a list/grid container and every direct child fades
+     up in sequence. Implemented with nth-child delays rather than
+     per-item inline styles so a server component can use it without
+     becoming a client component just to compute a delay.
+
+     Capped at 12: past that the last row would wait ~0.5s, which reads
+     as lag rather than polish. Children beyond the cap inherit the 12th
+     delay and land together — a wave that ends, not one that drags. */
+  .stagger > * {
+    @apply animate-rise-in;
+    animation-delay: 240ms;
+  }
+
+  .stagger > *:nth-child(1)  { animation-delay: 0ms; }
+  .stagger > *:nth-child(2)  { animation-delay: 30ms; }
+  .stagger > *:nth-child(3)  { animation-delay: 60ms; }
+  .stagger > *:nth-child(4)  { animation-delay: 85ms; }
+  .stagger > *:nth-child(5)  { animation-delay: 110ms; }
+  .stagger > *:nth-child(6)  { animation-delay: 133ms; }
+  .stagger > *:nth-child(7)  { animation-delay: 155ms; }
+  .stagger > *:nth-child(8)  { animation-delay: 175ms; }
+  .stagger > *:nth-child(9)  { animation-delay: 194ms; }
+  .stagger > *:nth-child(10) { animation-delay: 211ms; }
+  .stagger > *:nth-child(11) { animation-delay: 227ms; }
+
+  /* ─── Skeleton shimmer ────────────────────────────────────
+     A travelling highlight band. `background-size: 200%` is what gives
+     the `shimmer` keyframes (which move background-position) something
+     to travel across. */
+  .shimmer {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(255 255 255 / 0.55) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  .dark .shimmer {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(255 255 255 / 0.06) 50%,
+      transparent 100%
+    );
+  }
+
+  /* ─── Press feedback ──────────────────────────────────────
+     The tactile "it registered" cue for anything clickable that isn't a
+     <Button>: row links, cards, icon buttons. Scale only — no color
+     change — so it composes with whatever hover treatment the element
+     already has. */
+  .pressable {
+    /* `transition-transform` is not enough: Tailwind v4 compiles `scale-*` to
+       the standalone `scale` property, which that utility does not list. */
+    @apply transition-[transform,scale,translate] duration-150 ease-smooth active:scale-[0.985];
+  }
+
+  /* Page section heading */
+  .section-heading {
+    @apply text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500;
+  }
+
+  /* Status badge base */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-blue {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300;
+  }
+
+  .badge-green {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-success-light text-success-dark dark:bg-emerald-950 dark:text-emerald-300;
+  }
+
+  .badge-yellow {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-warning-light text-warning-dark dark:bg-amber-950 dark:text-amber-300;
+  }
+
+  .badge-red {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-danger-light text-danger-dark dark:bg-red-950 dark:text-red-300;
+  }
+
+  .badge-slate {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300;
+  }
+}
+
+/* ── Medium-style blog editor (TipTap) ─────────────────────────
+   The rich editor renders bare HTML nodes; these rules give the
+   writing canvas the same typography as the public article page. */
+.blog-editor-content {
+  min-height: 24rem;
+  color: #1e293b; /* slate-800 */
+  font-size: 1.125rem;
+  line-height: 2rem;
+}
+
+.blog-editor-content > * + * {
+  margin-top: 1rem;
+}
+
+.blog-editor-content h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+  margin-top: 2rem;
+}
+
+.blog-editor-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+  margin-top: 2.5rem;
+}
+
+.blog-editor-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 2rem;
+}
+
+.blog-editor-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.blog-editor-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+
+.blog-editor-content blockquote {
+  border-left: 4px solid #aaffaa;
+  background: rgba(234, 255, 234, 0.5);
+  padding: 0.5rem 1rem;
+  font-style: italic;
+  color: #475569;
+}
+
+.blog-editor-content code {
+  background: #f1f5f9;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  color: #1e293b;
+}
+
+.blog-editor-content pre {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+}
+
+.blog-editor-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.blog-editor-content img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.blog-editor-content img.ProseMirror-selectednode {
+  outline: 3px solid #5dd0bf;
+}
+
+.blog-editor-content a {
+  color: #0d5f59;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-editor-content hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 2rem 0;
+}
+
+.blog-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: #94a3b8;
+}

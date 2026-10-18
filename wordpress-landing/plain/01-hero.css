@@ -1,0 +1,137 @@
+/* Talvyn hero — self-contained. No Tailwind, no framework.
+   Brand colours taken from the app: teal #0f766e, accent #e2542d, ink #0d3d3a. */
+
+.ovh {
+  position: relative;
+  overflow: hidden;
+  padding: 72px 16px 88px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(23,150,138,.16) 0%, rgba(205,243,236,.28) 32%, rgba(254,243,239,.22) 62%, transparent 82%),
+    #fff;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #0f172a;
+  text-align: center;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+.ovh *, .ovh *::before, .ovh *::after { box-sizing: inherit; }
+
+.ovh-inner { max-width: 880px; margin: 0 auto; }
+
+/* Badge */
+.ovh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 7px 16px;
+  border: 1px solid rgba(20,184,166,.3);
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 1px 3px rgba(13,61,58,.08);
+  font-size: 12px;
+  font-weight: 700;
+  color: #0d3d3a;
+}
+.ovh-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #17968a;
+  flex: none;
+}
+
+/* Headline */
+.ovh-title {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-size: clamp(30px, 5.2vw, 56px);
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  color: #020617;
+}
+.ovh-title-alt {
+  display: block;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #0d3d3a 0%, #0f766e 50%, #e2542d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Sub-headline */
+.ovh-sub {
+  max-width: 680px;
+  margin: 24px auto 0;
+  font-size: clamp(15px, 1.9vw, 18px);
+  color: #475569;
+  line-height: 1.65;
+}
+
+/* Buttons */
+.ovh-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 36px;
+}
+.ovh .ovh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 32px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.ovh .ovh-btn-primary {
+  background: #e2542d;
+  color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(226,84,45,.25);
+}
+.ovh .ovh-btn-primary:hover { background: #ea7047; transform: translateY(-2px); }
+.ovh .ovh-btn-ghost {
+  background: rgba(255,255,255,.95);
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+.ovh .ovh-btn-ghost:hover { border-color: #2fb3a3; background: #f0fdfa; color: #0d3d3a; transform: translateY(-2px); }
+
+/* Trust row */
+.ovh-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 28px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ovh-trust li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+}
+.ovh-trust li::before {
+  content: "";
+  width: 15px; height: 15px;
+  flex: none;
+  border-radius: 50%;
+  background: #0f766e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5L20 6'/%3E%3C/svg%3E") center/10px no-repeat;
+}
+
+@media (max-width: 480px) {
+  .ovh { padding: 48px 16px 60px; }
+  .ovh-cta { flex-direction: column; }
+  .ovh .ovh-btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovh *, .ovh *::before, .ovh *::after { transition: none !important; }
+}

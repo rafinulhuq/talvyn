@@ -1,0 +1,292 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Talvyn — Production Docker Compose
+#
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# What is different from docker-compose.yml (dev):
+#   - Frontend builds a real production image (no live-reload, no volume mount)
+#   - Backend runs without --reload and with 2 workers
+#   - APP_ENV=production, DEBUG=false on backend
+#   - No source-code volume mounts (code is baked into the images)
+#   - PostgreSQL and Ollama ports are NOT exposed to the host (internal only)
+#   - The frontend port (${FRONTEND_PORT:-3003}) and the backend's port (127.0.0.1:8000) are the
+#     only host-published ports — Nginx proxies both on port 80/443
+#     (frontend at "/", backend at "/api-backend/" for direct candidate calls)
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: talvyn
+
+services:
+
+  # ── PostgreSQL Database ─────────────────────────────────────────────────────
+  postgres:
+    # pgvector/pgvector:pg16 = upstream postgres:16 + the pgvector extension
+    # preinstalled. The db7cdbbfd2a8 migration needs CREATE EXTENSION vector.
+    image: pgvector/pgvector:pg16
+    container_name: talvyn_postgres
+    restart: always                          # always restart on server reboot
+    environment:
+      POSTGRES_USER:     ${POSTGRES_USER:-talvyn_user}
+      # SECURITY (audit #9): this default is weak, but hard-requiring the env
+      # var (`:?`) breaks the deploy AND cannot rotate a password already baked
+      # into the existing data volume — POSTGRES_PASSWORD only applies on first
+      # init. Rotating it is an operational task: `ALTER USER talvyn_user
+      # WITH PASSWORD '<strong>'` in the running DB, then set POSTGRES_PASSWORD
+      # (and the backend/worker DATABASE_URL) to the same value. Postgres is
+      # not host-exposed here, so the exposure is internal-network only.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-talvyn_pass}
+      POSTGRES_DB:       ${POSTGRES_DB:-talvyn_db}
+    # max_connections=100 (the image default) is below the backend's own
+    # theoretical ceiling: 4 uvicorn workers × (pool_size=10 + max_overflow=20)
+    # = 120, before counting the ARQ worker's pool or Prisma's pool from the
+    # frontend. Bumped with headroom for ~40 concurrent candidates hitting
+    # the API at once. shared_buffers raised to match (rule of thumb: ~25%
+    # of available RAM on a dedicated DB host; conservative here since
+    # Postgres shares this box with Ollama/the GPU stack).
+    command: postgres -c max_connections=250 -c shared_buffers=512MB
+    # expose makes the port available ONLY inside Docker — not on the host machine
+    # This keeps the database private and secure
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # data persists across restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-talvyn_user} -d ${POSTGRES_DB:-talvyn_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Redis — shared state across uvicorn workers ────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: talvyn_redis
+    restart: always
+    expose:
+      - "6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ─────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile                     # uses the existing backend Dockerfile
+    container_name: talvyn_backend
+    restart: always
+    ports:
+      # Loopback only (127.0.0.1) — never 0.0.0.0. Historically a host-level
+      # Nginx proxied /api-backend/ to http://localhost:8000 for direct
+      # candidate-browser access to FastAPI; production now fronts the
+      # stack with Cloudflare Tunnel instead (docs/deployment.md Step 7),
+      # which only routes to the frontend container, and candidate exam
+      # requests go through the frontend's same-origin /api/candidate/*
+      # proxy (see deployment.md's Step 5 note). This loopback bind is kept
+      # for local debugging (`curl localhost:8000/...` on the box itself) —
+      # if anything still depends on a public /api-backend/ path, that path
+      # is not wired up by the current cloudflared config and needs its own
+      # tunnel public-hostname entry. Postgres and Ollama remain
+      # `expose`-only (no host port) and stay fully private either way.
+      - "127.0.0.1:8000:8000"
+    environment:
+      # These override anything in backend/.env for production correctness
+      - APP_ENV=production
+      - DEBUG=false
+      # Use Docker service name "postgres" not "localhost"
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-talvyn_user}:${POSTGRES_PASSWORD:-talvyn_pass}@postgres:5432/${POSTGRES_DB:-talvyn_db}
+      # Ollama runs natively on the host (same as dev) — resolves via host-gateway.
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - REDIS_URL=redis://redis:6379
+      # Question bank / sectioned exam (Master Prompt 2/3). Set here (not
+      # backend/.env) because that file is gitignored and per-machine — the
+      # CI/CD deploy pipeline (.github/workflows/deploy.yml) only reaches
+      # whatever's tracked in git, so this is the env var this server
+      # actually picks up on every deploy.
+      - QUESTION_BANK_MODE=true
+      # GLM tier and OLLAMA_MODEL are deliberately NOT set here — they come
+      # from backend/.env.hardware (env_file below), the same single source
+      # of truth start.sh writes for the dev stack. This used to hardcode
+      # GLM_ENABLED=true + GLM_MODEL=glm4:9b unconditionally, which silently
+      # ignored whatever model start.sh picked/detected and ran a second
+      # model (gemma3:4b + glm4:9b) thrashing against OLLAMA_MAX_LOADED_MODELS
+      # on this host's Ollama process — a real, confirmed cause of "slower
+      # than when I tested with start.sh" reports. Run `./start.sh` (or
+      # `./start.sh --glm-model glm4:9b` for the dual-tier setup this server
+      # was tuned for, RTX 3060 8GB) on this host before deploying so
+      # .env.hardware reflects what you actually want running.
+      # AI detection (AI Checker + candidate open-ended answers) uses a real
+      # DeBERTa-v3-large classifier (desklib_detector_service.py) instead of
+      # an LLM self-report — runs CPU-only, see requirements.txt. Independent
+      # of GLM_MODEL/OLLAMA_MODEL, which only cover JD extraction/test
+      # generation/evaluation.
+      - AI_DETECTION_BACKEND=desklib
+      # Enabled deliberately: Desklib is imported lazily, cached in hf_cache,
+      # and runs independently of the LLM evaluation model.
+      - AI_LIKENESS_ENABLED=true
+      # Caches the ~870MB model weights in the hf_cache volume so they
+      # download once, not on every rebuild.
+      - HF_HOME=/app/.cache/huggingface
+    env_file:
+      - ./backend/.env                           # loads INTERNAL_API_SECRET, RESEND_API_KEY, etc.
+      - path: ./backend/.env.hardware             # Generated by start.sh; overrides above (OLLAMA_MODEL, GLM_*)
+        required: false
+    # Override dev command: remove --reload, add 2 workers for concurrency.
+    # Keep running prestart.sh first — it applies pending Alembic migrations
+    # (idempotent, advisory-lock guarded) before uvicorn starts.
+    command: ["sh", "-c", "bash /app/prestart.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2"]
+    depends_on:
+      postgres:
+        condition: service_healthy               # wait for DB to be ready before starting
+      redis:
+        condition: service_healthy
+    # Ollama runs natively on the host (same as dev) — resolves via host-gateway.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - uploads_data:/app/uploads                # JD PDF uploads persist here
+      - hf_cache:/app/.cache/huggingface         # Desklib (and any other HF) model weights
+      # NOTE: source code is NOT mounted — it's baked into the image at build time
+
+  # ── ARQ Worker — runs Ollama background jobs ───────────────────────────────
+  # Shares the backend image but overrides the CMD to run arq instead of
+  # uvicorn. Without this service, every job enqueued via arq_pool
+  # (JD parsing/skill extraction/test generation, webhook delivery, and the
+  # AI Checker's "/jobs" background check) sits in the Redis queue forever
+  # with no process consuming it — symptoms include JDs stuck PENDING and
+  # AI Checker jobs that 404 once their key naturally falls out of view.
+  # prestart.sh (Alembic migrations) is intentionally skipped — the backend
+  # service already runs migrations before this worker starts.
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: talvyn_worker
+    restart: always
+    command: python -m arq app.worker.WorkerSettings
+    # The backend image's HEALTHCHECK curls localhost:8000/api/v1/health, but
+    # this container runs the ARQ worker (no HTTP server) — disable it here so
+    # the container doesn't sit "unhealthy" forever for a check that can never pass.
+    healthcheck:
+      disable: true
+    environment:
+      - APP_ENV=production
+      - DEBUG=false
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-talvyn_user}:${POSTGRES_PASSWORD:-talvyn_pass}@postgres:5432/${POSTGRES_DB:-talvyn_db}
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - REDIS_URL=redis://redis:6379
+      # Same overrides as the backend service, kept in sync — the worker is
+      # what actually runs batched CQ evaluation in the background.
+      - QUESTION_BANK_MODE=true
+      # GLM tier and OLLAMA_MODEL come from backend/.env.hardware (env_file
+      # below) — see the matching comment on the backend service above.
+      - AI_DETECTION_BACKEND=desklib
+      # Enabled deliberately: Desklib is imported lazily, cached in hf_cache,
+      # and runs independently of the LLM evaluation model.
+      - AI_LIKENESS_ENABLED=true
+      - HF_HOME=/app/.cache/huggingface
+    env_file:
+      - ./backend/.env                           # loads INTERNAL_API_SECRET, RESEND_API_KEY, etc.
+      - path: ./backend/.env.hardware             # Generated by start.sh; overrides above (OLLAMA_MODEL, GLM_*)
+        required: false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - uploads_data:/app/uploads                # must match backend — same uploaded JD files
+      - hf_cache:/app/.cache/huggingface         # must match backend — same cached model weights
+
+  # ── Next.js Frontend ────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod               # production multi-stage build
+      args:
+        # NEXT_PUBLIC_* are inlined by `next build` and are NOT re-read at
+        # runtime, so they must be passed here as well as in the environment
+        # below. .dockerignore keeps .env.local out of the image (secrets),
+        # which is why these cannot simply be picked up from that file.
+        # Set them in the repo root .env; the defaults keep local builds
+        # working unchanged.
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3003}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3003}
+    container_name: talvyn_frontend
+    restart: always
+    ports:
+      # Default to 3003 to avoid colliding with Grafana in docker-compose.yml.
+      # Override with FRONTEND_PORT=3001 when running only the prod stack.
+      - "${FRONTEND_PORT:-3003}:3000"           # exposed to host — Nginx proxies this
+    environment:
+      - NODE_ENV=production
+      # Override localhost URLs with Docker service names
+      - FASTAPI_INTERNAL_URL=http://backend:8000
+      # NOTE: NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_APP_URL
+      # are deliberately NOT listed here. Next.js inlines them during
+      # `next build`, so setting them at runtime has no effect — they are
+      # passed as build.args above. Changing one requires a rebuild.
+      # Keep Prisma/NextAuth on the private Docker network. Do not use a
+      # public Postgres URL or localhost when frontend runs in Docker.
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-talvyn_user}:${POSTGRES_PASSWORD:-talvyn_pass}@postgres:5432/${POSTGRES_DB:-talvyn_db}
+    env_file:
+      - ./frontend/.env.local                   # loads NEXTAUTH_SECRET, DATABASE_URL, etc.
+    # Do NOT run `prisma migrate deploy` or `prisma db push` here. Alembic
+    # (backend) owns schema changes; the DB has no `_prisma_migrations`
+    # tracking table, so `migrate deploy` fails with P3005 ("schema is not
+    # empty") and crash-loops the container. See docs/future-improvements.md
+    # S4-4 and frontend/scripts/start-dev.sh (same fix, dev path).
+    command: ["sh", "-c", "npx prisma db seed && npm run start"]
+    depends_on:
+      - backend
+
+  # ── Documentation site — MkDocs build served as static files ──────────────
+  # Not on GitHub Pages: the repo is private and GitHub Pages on private
+  # repos needs a paid org plan (see Settings -> Pages on the repo for the
+  # exact billing message). Not on the Cloudflare Tunnel either — access is
+  # gated by the app's own login (ADMIN / SUPER_ADMIN / DEV roles only, see
+  # frontend/src/lib/docs.ts), proxied through
+  # frontend/src/app/(admin)/dashboard/docs/[[...path]]/route.ts. No host
+  # port needed: the frontend container reaches this one over the internal
+  # Docker network by service name (http://docs).
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    container_name: talvyn_docs
+    restart: unless-stopped
+
+  # ── Cloudflare Tunnel — public access, no port-forwarding/DDNS/certbot ────
+  # Outbound-only connection to Cloudflare's edge; terminates TLS there and
+  # proxies to the frontend over plain HTTP on the host network. Public
+  # hostname (www.talvyn.com -> http://localhost:3003) and DNS are
+  # configured in the Cloudflare Zero Trust dashboard, not here — this just
+  # runs the connector. CLOUDFLARE_TUNNEL_TOKEN lives in the repo root's
+  # .env (gitignored, never commit the real value) — get it from
+  # one.dash.cloudflare.com -> Networks -> Tunnels -> talvyn-tunnel-prod.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: talvyn_cloudflared
+    restart: unless-stopped
+    network_mode: host
+    # --protocol http2: this host runs Docker Desktop (containers run inside
+    # its linuxkit VM, not directly on the bare host) — cloudflared's
+    # default QUIC/UDP transport is unreliable through that VM's networking
+    # layer (connects, passes prechecks, then fails immediately with
+    # "control stream encountered a failure"). HTTP/2 is NAT/VM-friendly.
+    command: ["tunnel", "--no-autoupdate", "--protocol", "http2", "run", "--token", "${CLOUDFLARE_TUNNEL_TOKEN}"]
+    depends_on:
+      - frontend
+
+# ── Named Volumes ────────────────────────────────────────────────────────────
+# Docker manages these — data survives container restarts and rebuilds
+volumes:
+  postgres_data:    # PostgreSQL database files
+  uploads_data:     # Uploaded job description PDF/DOCX files
+  hf_cache:         # Hugging Face model weights (Desklib AI text detector)

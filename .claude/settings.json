@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cargo remove *)",
+      "Read(//home/a-m-rafinul-huq/.cargo/**)",
+      "Bash(find / -maxdepth 2 -name \"Cargo.toml\")",
+      "Bash(env)",
+      "Bash(.venv_test/bin/python -c \"import fastapi; print\\('ok'\\)\")",
+      "Bash(.venv_test/bin/python -c ' *)",
+      "Bash(.venv_test/bin/python -c \"import redis; print\\(redis.__version__\\)\")",
+      "Bash(xargs -I{} echo {})",
+      "Bash(node verify_final.mjs)",
+      "Bash(.venv_test/bin/python -c \"import pgvector\")",
+      "Bash(.venv_test/bin/python -m pytest tests/test_evaluation.py tests/test_jd_upload.py tests/test_parser.py -q)",
+      "Bash(kill -9 282826 282797)",
+      "Bash(timeout 30 .venv_test/bin/python -m pytest tests/test_parser.py -q)",
+      "Bash(timeout 25 .venv_test/bin/python -m pytest tests/test_parser.py -q)",
+      "Bash(git stash *)",
+      "Bash(git check-ignore *)",
+      "Bash(grep -n \"select\\(\\\\s*$\\\\|JobDescription.id,\\\\|JobDescription.parse_status\" backend/app/services/jd_service.py)",
+      "Bash(grep -c \"^---$\" docs/future-improvements.md)"
+    ]
+  }
+}

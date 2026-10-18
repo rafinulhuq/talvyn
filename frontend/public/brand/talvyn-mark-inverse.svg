@@ -1,0 +1,43 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Talvyn Mark">
+  <defs>
+    <linearGradient id="invTopFacet" x1="56" y1="52" x2="200" y2="76" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E4E4E7"/>
+    </linearGradient>
+    <linearGradient id="invFrontFacet" x1="56" y1="76" x2="168" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D4D4D8"/>
+    </linearGradient>
+    <linearGradient id="invRightFacetA" x1="168" y1="52" x2="200" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A1A1AA"/>
+      <stop offset="100%" stop-color="#71717A"/>
+    </linearGradient>
+    <linearGradient id="invRightFacetB" x1="136" y1="88" x2="168" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#71717A"/>
+      <stop offset="100%" stop-color="#3F3F46"/>
+    </linearGradient>
+    <linearGradient id="invVNotchFacet" x1="88" y1="164" x2="136" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="100%" stop-color="#27272A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="256" height="256" rx="56" fill="#000000"/>
+  <rect x="1.5" y="1.5" width="253" height="253" rx="54.5" stroke="#FFFFFF" stroke-opacity="0.15" stroke-width="3"/>
+
+  <!-- Technical Calibration Corner Brackets -->
+  <path d="M 32 60 L 32 32 L 60 32" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="3" stroke-linecap="square"/>
+  <path d="M 196 32 L 224 32 L 224 60" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="3" stroke-linecap="square"/>
+  <path d="M 32 196 L 32 224 L 60 224" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="3" stroke-linecap="square"/>
+  <path d="M 196 224 L 224 224 L 224 196" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="3" stroke-linecap="square"/>
+
+  <!-- 3D Monolith Facets -->
+  <path d="M 56 76 L 88 52 L 200 52 L 168 76 Z" fill="url(#invTopFacet)"/>
+  <path d="M 168 76 L 200 52 L 200 88 L 168 112 Z" fill="url(#invRightFacetA)"/>
+  <path d="M 136 112 L 168 88 L 168 164 L 136 188 Z" fill="url(#invRightFacetB)"/>
+  <path d="M 56 76 L 168 76 L 168 112 L 136 112 L 136 188 L 112 164 L 88 188 L 88 112 L 56 112 Z" fill="url(#invFrontFacet)"/>
+  <path d="M 88 188 L 112 164 L 136 188 L 152 176 L 112 148 L 88 188 Z" fill="url(#invVNotchFacet)"/>
+
+  <!-- Central Kinetic V-Chevron Vector -->
+  <path d="M 88 112 L 112 140 L 136 112" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.5"/>
+</svg>

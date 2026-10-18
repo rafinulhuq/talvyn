@@ -1,0 +1,21 @@
+# ── Build artifacts ──────────────────────────────────────────
+.next
+out
+build
+
+# ── Dependencies (installed inside the image, not from host) ─
+node_modules
+
+# ── Secrets (never bake into image layers) ───────────────────
+.env.local
+.env*.local
+.env
+
+# ── Dev noise ────────────────────────────────────────────────
+tsconfig.tsbuildinfo
+*.log
+npm-debug.log*
+
+# ── Git ──────────────────────────────────────────────────────
+.git
+.gitignore

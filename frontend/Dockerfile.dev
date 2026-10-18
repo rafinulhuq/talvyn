@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Talvyn — Frontend Development Dockerfile
+#
+# PURPOSE
+#   Installs node_modules and generates the Prisma client at IMAGE BUILD TIME,
+#   not at container start time.  This means:
+#     - `docker compose up`  → instant start (~2s instead of 30–120s)
+#     - `docker compose restart frontend` → instant (no re-install)
+#     - Source code hot-reload still works via the volume mount in docker-compose.yml
+#
+# HOW THE VOLUME TRICK WORKS
+#   docker-compose.yml mounts ./frontend:/app (live source reload) AND declares
+#   an anonymous volume at /app/node_modules.  Docker evaluates volumes after
+#   the bind mount, so the anonymous volume containing our pre-installed
+#   node_modules WINS over whatever the host has (or doesn't have) at that path.
+#
+# REBUILDING
+#   Only needed when package.json / package-lock.json / prisma/schema.prisma change:
+#     docker compose build frontend
+# ─────────────────────────────────────────────────────────────────────────────
+
+FROM node:20-alpine
+
+# Install libc compat — needed by some native Node addons on Alpine
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# ── Install dependencies ──────────────────────────────────────────────────────
+# Copy only the package manifests first so Docker can cache this layer.
+# The layer is only invalidated when package.json or package-lock.json changes.
+COPY package.json package-lock.json ./
+
+# npm ci: fast, reproducible, respects lock file exactly (no surprises)
+RUN npm ci
+
+# ── Generate Prisma client ────────────────────────────────────────────────────
+# The generated client must exist before Next.js tries to import it.
+# We copy only the schema — the full source is mounted at runtime.
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# ── Runtime ───────────────────────────────────────────────────────────────────
+EXPOSE 3000
+
+# Source code arrives via the volume mount defined in docker-compose.yml.
+# Turbopack watches for file changes and triggers hot reload automatically.
+CMD ["npm", "run", "dev"]

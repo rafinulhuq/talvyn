@@ -1,0 +1,71 @@
+site_name: Talvyn Documentation
+site_description: Documentation for the Talvyn AI hiring assessment platform.
+site_url: https://rafinulhuq.github.io/talvyn/
+repo_url: https://github.com/rafinulhuq/talvyn
+repo_name: rafinulhuq/talvyn
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: sky
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: sky
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+exclude_docs: |
+  *.pdf
+  *.html
+  *.docx
+  # Everything under docs/internal/ is exactly that — internal. Team-only
+  # audits, the enterprise doc suite, the open-source strategy memo,
+  # planning docs, and the engineering changelog all live there specifically
+  # so this one line keeps them out of the public build, and so the repo
+  # itself can be split cleanly later without hunting for stragglers.
+  internal/
+
+nav:
+  - Home: index.md
+  - User Guide: user-guide.md
+  - Developer Guide: developer-guide.md
+  - Deployment Guide: deployment.md
+  - Architecture: architecture.md
+  - Hardware Guidance: hardware-guidance.md

@@ -1,0 +1,89 @@
+name: talvyn-microservices
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    container_name: talvyn_gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - IAM_SERVICE_URL=http://iam:8001
+      - RECRUITMENT_SERVICE_URL=http://recruitment:8002
+      - ASSESSMENT_SERVICE_URL=http://assessment:8003
+      - EVALUATION_SERVICE_URL=http://evaluation:8004
+      - ANALYTICS_SERVICE_URL=http://analytics:8005
+    depends_on:
+      - iam
+      - recruitment
+      - assessment
+      - evaluation
+      - analytics
+    restart: unless-stopped
+
+  assessment:
+    build:
+      context: .
+      dockerfile: services/assessment/Dockerfile
+    container_name: talvyn_assessment
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+      - DATABASE_URL=postgresql://acmeai:acmeai_dev_password@postgres:5432/talvyn?sslmode=disable
+      - REDIS_URL=redis:6379
+    restart: unless-stopped
+
+  evaluation:
+    build:
+      context: .
+      dockerfile: services/evaluation/Dockerfile
+    container_name: talvyn_evaluation
+    ports:
+      - "8004:8004"
+    environment:
+      - PORT=8004
+      - DATABASE_URL=postgresql://acmeai:acmeai_dev_password@postgres:5432/talvyn?sslmode=disable
+      - REDIS_URL=redis:6379
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  iam:
+    build:
+      context: .
+      dockerfile: services/iam/Dockerfile
+    container_name: talvyn_iam
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - DATABASE_URL=postgresql://acmeai:acmeai_dev_password@postgres:5432/talvyn?sslmode=disable
+    restart: unless-stopped
+
+  recruitment:
+    build:
+      context: .
+      dockerfile: services/recruitment/Dockerfile
+    container_name: talvyn_recruitment
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+      - DATABASE_URL=postgresql://acmeai:acmeai_dev_password@postgres:5432/talvyn?sslmode=disable
+    restart: unless-stopped
+
+  analytics:
+    build:
+      context: .
+      dockerfile: services/analytics/Dockerfile
+    container_name: talvyn_analytics
+    ports:
+      - "8005:8005"
+    environment:
+      - PORT=8005
+      - DATABASE_URL=postgresql://acmeai:acmeai_dev_password@postgres:5432/talvyn?sslmode=disable
+    restart: unless-stopped

@@ -1,0 +1,75 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Talvyn — Frontend Production Dockerfile
+# Multi-stage build:
+#   Stage 1 (deps)    — install ONLY production dependencies
+#   Stage 2 (builder) — install all deps + build Next.js
+#   Stage 3 (runner)  — minimal image that only runs the built app
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Stage 1: Install dependencies ────────────────────────────────────────────
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# Copy package files first so Docker can cache this layer
+COPY package.json package-lock.json ./
+
+# npm ci is faster and reproducible (uses lock file exactly)
+RUN npm ci
+
+# ── Stage 2: Build the Next.js application ───────────────────────────────────
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# Copy installed node_modules from stage 1
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy all source files
+COPY . .
+
+# Generate Prisma client (required before building Next.js)
+RUN npx prisma generate
+
+# ── Public origins — MUST be present at build time ───────────────────────────
+# Next.js inlines every NEXT_PUBLIC_* variable into the bundle during
+# `next build`; afterwards the app no longer reads them from the environment.
+# .env.local is (correctly) excluded by .dockerignore so secrets never enter
+# an image layer, which means these have to arrive as build args instead —
+# without them the build freezes the localhost fallbacks into sitemap.xml,
+# robots.txt, blog canonical links and the RSS feed.
+#
+# Supplied by docker-compose.prod.yml (build.args). Values are public URLs,
+# not secrets.
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+
+# Build the production Next.js bundle
+RUN npm run build
+
+# ── Stage 3: Production runner (minimal image) ───────────────────────────────
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Create a non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser  --system --uid 1001 nextjs
+
+# Copy built output and runtime dependencies from builder stage
+COPY --from=builder /app/.next           ./.next
+COPY --from=builder /app/node_modules    ./node_modules
+COPY --from=builder /app/package.json    ./package.json
+COPY --from=builder /app/prisma          ./prisma
+
+# Copy public folder (static assets — images, favicons, videos, etc.)
+COPY --from=builder /app/public          ./public
+
+# Run as non-root user
+USER nextjs
+
+EXPOSE 3000
+
+# Start the production Next.js server
+CMD ["npm", "run", "start"]

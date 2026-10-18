@@ -1,0 +1,394 @@
+name: talvyn
+
+services:
+  postgres:
+    # pgvector/pgvector:pg16 = upstream postgres:16 + the pgvector extension
+    # preinstalled. Drop-in replacement — only adds the `vector` column type
+    # and similarity operators used by the optional embedding feature
+    # (EMBEDDING_ENABLED=true). Everything else behaves like postgres:16.
+    image: pgvector/pgvector:pg16
+    container_name: talvyn_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-talvyn_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-talvyn_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-talvyn_db}
+    ports:
+      # Localhost-only so Postgres is available to tools on this machine
+      # without being exposed on the public network interface.
+      # Temporarily 5440 instead of 5436 — a leftover docker-proxy process
+      # from an earlier container recreation is still holding 5436 and
+      # survives even a Docker Desktop restart (only a full daemon
+      # restart/reboot clears it). Same named volume, same data; switch
+      # back to 5436 once that's confirmed cleared.
+      - "127.0.0.1:5440:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-talvyn_user} -d ${POSTGRES_DB:-talvyn_db}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Ollama runs NATIVELY on the host (not in Docker) ───────────
+  # Reason: RTX 3060 Ti requires nvidia-container-toolkit CDI
+  # configuration inside Docker which conflicts with the daemon.json
+  # runtime approach on Ubuntu.  Running natively avoids all GPU-in-Docker
+  # complexity and gives Ollama full direct CUDA access.
+  #
+  # Start before docker compose up:
+  #   OLLAMA_NUM_PARALLEL=1 OLLAMA_KEEP_ALIVE=-1 OLLAMA_FLASH_ATTENTION=1 \
+  #   OLLAMA_MAX_LOADED_MODELS=1 OLLAMA_NUM_THREADS=8 \
+  #   ollama serve &
+  #
+  # Pull the model once:
+  #   ollama pull gemma3:12b
+  #
+  # The backend connects via host.docker.internal (host-gateway alias).
+
+  # ── Redis — shared state across uvicorn workers ───────────────
+  # Used for: generation progress tracking, rate-limit counters.
+  # Must run before the backend so workers can reach it on startup.
+  redis:
+    image: redis:7-alpine
+    container_name: talvyn_redis
+    restart: unless-stopped
+    # No host port binding — containers reach Redis via Docker network (redis:6379).
+    # The host already has Redis on 6379; binding would conflict.
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Mailpit — local email catcher for development ─────────────
+  # All outgoing emails are captured here instead of being delivered.
+  # Web UI:  http://localhost:8026
+  # SMTP:    localhost:1026
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: talvyn_mailpit
+    restart: unless-stopped
+    ports:
+      # Loopback-only — dev tool with no auth; don't expose it if this
+      # compose file ever runs on a reachable host.
+      - "127.0.0.1:8026:8025"   # Web UI  — host 8026 → container 8025 (mailpit default)
+      - "127.0.0.1:1026:1025"   # SMTP    — host 1026 → container 1025 (mailpit default)
+    environment:
+      - MP_UI_PATH_PREFIX=/mailpit   # serve UI under /mailpit/ for nginx sub-path proxying
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: talvyn_backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:9000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-talvyn_user}:${POSTGRES_PASSWORD:-talvyn_pass}@postgres:5432/${POSTGRES_DB:-talvyn_db}
+      # Ollama runs natively on the host; host.docker.internal resolves to the
+      # Docker bridge gateway via extra_hosts below.
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      # OLLAMA_MODEL is intentionally absent here — backend/.env.hardware sets it
+      # based on detected GPU VRAM (written by start.sh). Hardcoding it here would
+      # override the hardware profile and pick the wrong model.
+      # Candidate-answer AI-likeness detection uses Desklib so it does not add
+      # one more LLM call per written answer.
+      - AI_LIKENESS_ENABLED=true
+      - AI_DETECTION_BACKEND=llm
+      - HF_HOME=/app/.cache/huggingface
+      # Frontend host port — used for magic link emails and CORS.
+      - MAGIC_LINK_BASE_URL=${MAGIC_LINK_BASE_URL:-http://localhost:3003}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:3003}
+      # ── Dev email via Mailpit ──────────────────────────────────
+      # When SMTP_HOST is set the backend uses SMTP instead of Resend.
+      # Mailpit catches everything locally — no real emails are sent.
+      # Remove or leave blank in production to fall back to Resend.
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
+      - REDIS_URL=redis://redis:6379
+    # On Linux, host.docker.internal is not built-in — map it to the bridge gateway.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./backend/.env
+      - path: ./backend/.env.hardware   # Generated by start.sh; overrides above
+        required: false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+      - hf_cache:/app/.cache/huggingface
+
+  # ── ARQ worker — runs Ollama background jobs ─────────────────
+  # Shares the backend image but overrides the CMD to run arq instead of
+  # uvicorn.  prestart.sh (Alembic migrations) is intentionally skipped —
+  # the backend already runs migrations before this worker starts.
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: talvyn_worker
+    restart: unless-stopped
+    command: python -m arq app.worker.WorkerSettings
+    # The backend image's HEALTHCHECK curls localhost:8000/api/v1/health, but
+    # this container runs the ARQ worker (no HTTP server) — disable it here so
+    # the container doesn't sit "unhealthy" forever for a check that can never pass.
+    healthcheck:
+      disable: true
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-talvyn_user}:${POSTGRES_PASSWORD:-talvyn_pass}@postgres:5432/${POSTGRES_DB:-talvyn_db}
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      # OLLAMA_MODEL comes from backend/.env.hardware (written by start.sh)
+      - AI_LIKENESS_ENABLED=true
+      - AI_DETECTION_BACKEND=llm
+      - HF_HOME=/app/.cache/huggingface
+      - MAGIC_LINK_BASE_URL=${MAGIC_LINK_BASE_URL:-http://localhost:3003}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./backend/.env
+      - path: ./backend/.env.hardware
+        required: false
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+      - hf_cache:/app/.cache/huggingface
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev   # deps installed at build time — start is instant
+    container_name: talvyn_frontend
+    restart: unless-stopped
+    # Runs the admin seed (Prisma `db seed` only — no schema sync; Alembic
+    # on the backend owns migrations, see S4-4) before starting Next.js.
+    command: ["sh", "/app/scripts/start-dev.sh"]
+    ports:
+      - "3003:3000"   # host 3003 → container 3000 (Next.js default)
+    environment:
+      - NODE_ENV=development
+      - FASTAPI_INTERNAL_URL=http://backend:8000
+      # Direct URL used by the candidate's browser for the attempts API.
+      # Must be reachable from the user's machine (not the Docker internal network).
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:9000}
+      # Prisma needs DATABASE_URL to run `db seed` on startup (no migrate —
+      # see start-dev.sh).
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-talvyn_user}:${POSTGRES_PASSWORD:-talvyn_pass}@postgres:5432/${POSTGRES_DB:-talvyn_db}
+    env_file:
+      - ./frontend/.env.local
+    depends_on:
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    volumes:
+      - ./frontend:/app            # full source mount — turbopack hot-reload works
+      - /app/node_modules          # anonymous vol: shields the image's node_modules
+      - /app/.next                 # anonymous vol: preserves compile cache on restart
+
+  # ── Nginx (OpenResty) — reverse proxy + Lua JWT guard ────────
+  # Single entry point on port 80 replacing the raw :3003 / :9000 URLs.
+  # OpenResty = Nginx + embedded LuaJIT; the jwt_check.lua script rejects
+  # requests with no valid NextAuth session cookie before they touch Python.
+  #
+  # Access the full stack through http://localhost (port 80):
+  #   /          → Next.js admin dashboard + candidate UI
+  #   /api/v1/   → FastAPI REST API
+  #   /mailpit/  → Mailpit dev email UI
+  #
+  # Direct ports on frontend (:3003) and backend (:9000) remain open so you
+  # can bypass Nginx during development / debugging if needed.
+  nginx:
+    image: openresty/openresty:alpine
+    container_name: talvyn_nginx
+    restart: unless-stopped
+    # Docs (README, architecture.md, etc.) describe the standard setup as port
+    # 80. This is swapped to 81 here because port 80 was already taken by
+    # another service on this host. nginx/nginx.conf's `listen` directive
+    # must always match whichever of these two lines is active.
+    ports:
+      # - "80:80"
+      - "81:81"
+    volumes:
+      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./nginx/lua:/usr/local/openresty/nginx/lua:ro
+    depends_on:
+      - frontend
+      - backend
+
+  # ── MinIO — S3-compatible object storage for JD uploads ──────
+  # Web console: http://localhost:9002  (user: talvyn_minio / pass from .env)
+  # S3 API:      localhost:9001
+  # To switch from local filesystem to MinIO, set in backend/.env:
+  #   STORAGE_BACKEND=s3
+  # MinIO will auto-create the talvyn-uploads bucket on first write.
+  minio:
+    image: minio/minio:latest
+    container_name: talvyn_minio
+    restart: unless-stopped
+    ports:
+      # Loopback-only — default creds below; the console is also reachable
+      # via nginx's /minio-console/ path when you need it off-host.
+      - "127.0.0.1:9001:9000"   # S3 API   — host 9001 → container 9000
+      - "127.0.0.1:9002:9001"   # Web UI   — host 9002 → container 9001
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-talvyn_minio}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-talvyn_minio_pass}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── GlitchTip — self-hosted Sentry-compatible error tracking ─
+  # Web UI:  http://localhost:8091   (create account on first visit)
+  # Once an account + project exist, copy the DSN into backend/.env:
+  #   GLITCHTIP_DSN=http://<key>@localhost:8091/<project-id>
+  # GlitchTip uses its own Postgres DB so it never touches talvyn_postgres.
+  glitchtip-db:
+    image: postgres:15-alpine
+    container_name: talvyn_glitchtip_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: glitchtip
+      POSTGRES_USER: glitchtip
+      POSTGRES_PASSWORD: glitchtip_pass
+    volumes:
+      - glitchtip_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U glitchtip -d glitchtip"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Runs Django migrations once on first start, then exits.
+  # The glitchtip and glitchtip-worker services wait for this to complete
+  # before starting — so the DB is always ready on first docker compose up.
+  glitchtip-migrate:
+    image: glitchtip/glitchtip:latest
+    container_name: talvyn_glitchtip_migrate
+    restart: "no"
+    command: ./manage.py migrate --noinput
+    environment:
+      - DATABASE_URL=postgresql://glitchtip:glitchtip_pass@glitchtip-db/glitchtip
+      - SECRET_KEY=${GLITCHTIP_SECRET_KEY:-changeme-generate-with-openssl-rand-hex-32}
+      - EMAIL_URL=consolemail://
+      - GLITCHTIP_DOMAIN=${GLITCHTIP_DOMAIN:-http://localhost:8091}
+    depends_on:
+      glitchtip-db:
+        condition: service_healthy
+
+  glitchtip:
+    image: glitchtip/glitchtip:latest
+    container_name: talvyn_glitchtip
+    restart: unless-stopped
+    ports:
+      # Loopback-only — signup is open and SECRET_KEY defaults to a
+      # published placeholder unless GLITCHTIP_SECRET_KEY is set.
+      - "127.0.0.1:8091:8000"   # host 8091 → container 8000 (GlitchTip web)
+    environment:
+      - DATABASE_URL=postgresql://glitchtip:glitchtip_pass@glitchtip-db/glitchtip
+      - SECRET_KEY=${GLITCHTIP_SECRET_KEY:-changeme-generate-with-openssl-rand-hex-32}
+      - EMAIL_URL=consolemail://
+      - GLITCHTIP_DOMAIN=${GLITCHTIP_DOMAIN:-http://localhost:8091}
+      - DEFAULT_FROM_EMAIL=glitchtip@talvyn.local
+      - CELERY_WORKER_CONCURRENCY=2
+      - REDIS_URL=redis://redis:6379/1   # use DB 1 so it doesn't conflict with Talvyn keys
+    depends_on:
+      glitchtip-db:
+        condition: service_healthy
+      glitchtip-migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  glitchtip-worker:
+    image: glitchtip/glitchtip:latest
+    container_name: talvyn_glitchtip_worker
+    restart: unless-stopped
+    command: ./bin/run-celery-with-beat.sh
+    environment:
+      - DATABASE_URL=postgresql://glitchtip:glitchtip_pass@glitchtip-db/glitchtip
+      - SECRET_KEY=${GLITCHTIP_SECRET_KEY:-changeme-generate-with-openssl-rand-hex-32}
+      - EMAIL_URL=consolemail://
+      - GLITCHTIP_DOMAIN=${GLITCHTIP_DOMAIN:-http://localhost:8091}
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      glitchtip-db:
+        condition: service_healthy
+      glitchtip-migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  # ── Prometheus — time-series metrics collector ───────────────
+  # Scrapes /metrics from the FastAPI backend every 15 s.
+  # Web UI: http://localhost:9090
+  # The backend /metrics endpoint is accessed via Docker internal network
+  # (backend:8000) — not proxied through nginx.
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: talvyn_prometheus
+    restart: unless-stopped
+    ports:
+      # Loopback-only — unauthenticated by default, and --web.enable-lifecycle
+      # lets anyone reachable POST /-/reload to reload config.
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'   # allows POST /-/reload to apply config changes
+    depends_on:
+      - backend
+
+  # ── Grafana — metrics dashboards ─────────────────────────────
+  # Web UI: http://localhost:3001
+  # Default credentials: admin / talvyn_grafana (override via .env)
+  # Prometheus is auto-provisioned as the default datasource.
+  grafana:
+    image: grafana/grafana:latest
+    container_name: talvyn_grafana
+    restart: unless-stopped
+    ports:
+      # Loopback-only — default admin password below unless GRAFANA_PASSWORD is set.
+      - "127.0.0.1:3001:3000"   # host 3001 → container 3000 (avoids clash with Next.js :3003)
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-talvyn_grafana}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data:
+  uploads_data:
+  hf_cache:
+  minio_data:
+  glitchtip_db_data:
+  prometheus_data:
+  grafana_data:

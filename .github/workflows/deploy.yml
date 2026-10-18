@@ -1,0 +1,48 @@
+name: Deploy production
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy on self-hosted runner
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+
+    env:
+      # The runner lives on the same box that serves production, so there's
+      # no SSH hop — just cd into the live checkout and update it in place.
+      DEPLOY_PATH: ${{ secrets.PROD_DEPLOY_PATH || '/home/acme-server/Desktop/talvyn' }}
+      PROD_POSTGRES_USER: ${{ secrets.PROD_POSTGRES_USER || secrets.POSTGRES_USER }}
+      PROD_POSTGRES_PASSWORD: ${{ secrets.PROD_POSTGRES_PASSWORD || secrets.POSTGRES_PASSWORD }}
+      PROD_POSTGRES_DB: ${{ secrets.PROD_POSTGRES_DB || secrets.POSTGRES_DB }}
+
+    steps:
+      - name: Deploy latest main
+        run: |
+          # NOTE: do NOT add --remove-orphans here. docker-compose.yml (dev
+          # stack: nginx/grafana/prometheus/glitchtip/minio/mailpit) and
+          # docker-compose.prod.yml share the same default Compose project
+          # name ("talvyn" = the directory name), so --remove-orphans
+          # treats the dev-only services as orphans of THIS file and stops +
+          # removes them on every deploy. Confirmed root cause of the
+          # 2026-06-24 incident where the whole dev stack vanished mid-deploy.
+          cd "$DEPLOY_PATH"
+          # Prefer explicit GitHub secrets when present, but keep .env-based
+          # deploys working by only exporting non-empty values.
+          [ -n "${PROD_POSTGRES_USER:-}" ] && export POSTGRES_USER="$PROD_POSTGRES_USER"
+          [ -n "${PROD_POSTGRES_PASSWORD:-}" ] && export POSTGRES_PASSWORD="$PROD_POSTGRES_PASSWORD"
+          [ -n "${PROD_POSTGRES_DB:-}" ] && export POSTGRES_DB="$PROD_POSTGRES_DB"
+          git fetch origin main
+          git reset --hard origin/main
+          docker compose -f docker-compose.prod.yml build
+          docker compose -f docker-compose.prod.yml up -d
+          docker compose -f docker-compose.prod.yml ps

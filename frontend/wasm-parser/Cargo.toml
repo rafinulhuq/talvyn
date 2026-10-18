@@ -1,0 +1,19 @@
+[package]
+name = "talvyn_parser"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+getrandom = { version = "0.3", features = ["wasm_js"] }
+pdf-extract = "0.10.0"
+quick-xml = "0.40.1"
+wasm-bindgen = "0.2.125"
+zip = { version = "8.6.0", default-features = false, features = ["deflate"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true

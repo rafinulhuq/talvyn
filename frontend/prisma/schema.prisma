@@ -1,0 +1,418 @@
+// ─────────────────────────────────────────────────────────────
+// Prisma Schema — JD Assessment Platform
+// ─────────────────────────────────────────────────────────────
+//
+// SCHEMA AUTHORITY (see docs/schema-authority.md):
+//   Alembic (backend/alembic) is the single source of truth for the database
+//   schema. It owns every migration; the production and dev entrypoints
+//   explicitly do NOT run `prisma migrate deploy` / `prisma db push`
+//   (see frontend/scripts/start-dev.sh and docker-compose.prod.yml).
+//
+//   This file is a *read model* for Prisma Client generation and seeding
+//   only. There are no Prisma migrations. When you change the schema, write
+//   an Alembic migration first, then hand-mirror the affected model(s) here
+//   so the generated client stays accurate. CI's `schema-drift` job compares
+//   this datamodel against an Alembic-built database and reports mismatches.
+// ─────────────────────────────────────────────────────────────
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+  // Docs-only — see backend/app/db/models/enums.py and frontend/src/lib/docs.ts.
+  DEV
+}
+
+enum FileType {
+  PDF
+  DOCX
+}
+
+enum ParseStatus {
+  PENDING
+  PROCESSING
+  DONE
+  FAILED
+}
+
+enum TestType {
+  TECHNICAL
+  REASONING
+  PROBLEM_SOLVING
+  PRACTICAL
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  MIXED
+}
+
+enum TestStatus {
+  DRAFT
+  APPROVED
+  ARCHIVED
+}
+
+enum QuestionType {
+  MCQ
+  OPEN_ENDED
+  CODE
+}
+
+enum GenerationStatus {
+  IDLE
+  DRAFTING
+  EXTRACTING
+  GENERATING
+  READY
+  FAILED
+}
+
+enum JdSource {
+  UPLOADED
+  GENERATED
+}
+
+enum InvitationStatus {
+  PENDING
+  OPENED
+  COMPLETED
+  EXPIRED
+  REVOKED
+  TERMINATED
+}
+
+enum AttemptStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  EVALUATED
+  TERMINATED
+}
+
+enum AIRecommendation {
+  STRONG_HIRE
+  HIRE
+  MAYBE
+  NO_HIRE
+}
+
+enum SignupStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id             String       @id @default(uuid())
+  email          String       @unique
+  name           String
+  passwordHash   String       @map("password_hash")
+  passwordResetTokenHash String? @unique @map("password_reset_token_hash") @db.VarChar(64)
+  passwordResetExpiresAt DateTime? @map("password_reset_expires_at") @db.Timestamptz(6)
+  sessionVersion Int @default(0) @map("session_version")
+  role           Role         @default(ADMIN)
+  isActive       Boolean      @default(true) @map("is_active")
+  companyName    String?      @map("company_name")
+  signupStatus   SignupStatus @default(APPROVED) @map("signup_status")
+  username       String?      @unique @map("username")
+  roleInCompany  String?      @map("role_in_company")
+  companyWebsite String?      @map("company_website")
+  phoneNumber    String?      @map("phone_number")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  deletedAt      DateTime?    @map("deleted_at")
+
+  jobDescriptions JobDescription[]
+  invitations     Invitation[]
+
+  @@map("users")
+}
+
+model JobDescription {
+  id                  String           @id @default(uuid())
+  uploadedById        String           @map("uploaded_by")
+  source              JdSource         @default(UPLOADED) @map("source")
+  originalFilename    String           @map("original_filename")
+  filePath            String?          @map("file_path")
+  fileType            FileType?        @map("file_type")
+  rawText             String?          @map("raw_text") @db.Text
+  parseStatus         ParseStatus      @default(PENDING) @map("parse_status")
+  generationStatus    GenerationStatus @default(IDLE) @map("generation_status")
+  generationInputJson Json?            @map("generation_input_json")
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+  deletedAt           DateTime?        @map("deleted_at")
+
+  uploadedBy    User             @relation(fields: [uploadedById], references: [id])
+  extractedData JdExtractedData?
+  tests         Test[]
+  invitations   Invitation[]
+
+  @@map("job_descriptions")
+}
+
+model JdExtractedData {
+  id                     String   @id @default(uuid())
+  jdId                   String   @unique @map("jd_id")
+  jobTitle               String?  @map("job_title")
+  seniorityLevel         String?  @map("seniority_level")
+  mustHaveSkills         Json     @default("[]") @map("must_have_skills")
+  niceToHaveSkills       Json     @default("[]") @map("nice_to_have_skills")
+  toolsTechnologies      Json     @default("[]") @map("tools_technologies")
+  responsibilities       Json     @default("[]") @map("responsibilities")
+  recommendedTestTopics  Json     @default("[]") @map("recommended_test_topics")
+  difficultyDistribution Json     @default("{}") @map("difficulty_distribution")
+  extractedAt            DateTime @default(now()) @map("extracted_at")
+
+  jobDescription JobDescription @relation(fields: [jdId], references: [id], onDelete: Cascade)
+
+  @@map("jd_extracted_data")
+}
+
+model Test {
+  id              String     @id @default(uuid())
+  jdId            String     @map("jd_id")
+  testType        TestType   @map("test_type")
+  title           String
+  description     String?    @db.Text
+  durationMinutes Int        @map("duration_minutes")
+  totalMarks      Int        @map("total_marks")
+  passingMarks    Int?       @map("passing_marks")
+  difficulty      Difficulty
+  status          TestStatus @default(DRAFT)
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+  deletedAt       DateTime?  @map("deleted_at")
+
+  jobDescription JobDescription @relation(fields: [jdId], references: [id], onDelete: Cascade)
+  questions      Question[]
+  attempts       TestAttempt[]
+
+  @@map("tests")
+}
+
+model Question {
+  id             String       @id @default(uuid())
+  testId         String       @map("test_id")
+  questionType   QuestionType @map("question_type")
+  questionText   String       @map("question_text") @db.Text
+  skillTested    String?      @map("skill_tested")
+  difficulty     Difficulty
+  marks          Int
+  orderIndex     Int          @map("order_index")
+  options        Json?
+  correctAnswer  String?      @map("correct_answer")
+  explanation    String?      @db.Text
+  expectedAnswer String?      @map("expected_answer") @db.Text
+  scoringRubric  String?      @map("scoring_rubric") @db.Text
+  codeLanguage   String?      @map("code_language")
+  codeStarter    String?      @map("code_starter") @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  test    Test              @relation(fields: [testId], references: [id], onDelete: Cascade)
+  answers CandidateAnswer[]
+
+  @@map("questions")
+}
+
+model Candidate {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  phone     String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  invitations Invitation[]
+  attempts    TestAttempt[]
+
+  @@map("candidates")
+}
+
+model Invitation {
+  id          String           @id @default(uuid())
+  candidateId String           @map("candidate_id")
+  jdId        String           @map("jd_id")
+  invitedById String           @map("invited_by")
+  tokenHash   String           @map("token_hash")
+  expiresAt   DateTime         @map("expires_at")
+  status      InvitationStatus @default(PENDING)
+  emailSentAt DateTime?        @map("email_sent_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  candidate      Candidate      @relation(fields: [candidateId], references: [id])
+  jobDescription JobDescription @relation(fields: [jdId], references: [id])
+  invitedBy      User           @relation(fields: [invitedById], references: [id])
+  attempts       TestAttempt[]
+
+  @@map("invitations")
+}
+
+model TestAttempt {
+  id                   String        @id @default(uuid())
+  invitationId         String        @map("invitation_id")
+  candidateId          String        @map("candidate_id")
+  testId               String        @map("test_id")
+  startedAt            DateTime?     @map("started_at")
+  submittedAt          DateTime?     @map("submitted_at")
+  timeRemainingSeconds Int?          @map("time_remaining_seconds")
+  status               AttemptStatus @default(NOT_STARTED)
+  ipAddress            String?       @map("ip_address")
+  autoSubmitted        Boolean       @default(false) @map("auto_submitted")
+
+  invitation Invitation        @relation(fields: [invitationId], references: [id])
+  candidate  Candidate         @relation(fields: [candidateId], references: [id])
+  test       Test              @relation(fields: [testId], references: [id])
+  answers    CandidateAnswer[]
+  evaluation Evaluation?
+  events     SuspiciousEvent[]
+
+  @@map("test_attempts")
+}
+
+model CandidateAnswer {
+  id             String   @id @default(uuid())
+  attemptId      String   @map("attempt_id")
+  questionId     String   @map("question_id")
+  selectedOption String?  @map("selected_option")
+  answerText     String?  @map("answer_text") @db.Text
+  isAutoScored   Boolean  @default(false) @map("is_auto_scored")
+  autoScore      Int?     @map("auto_score")
+  savedAt        DateTime @default(now()) @map("saved_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  attempt  TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id])
+
+  @@unique([attemptId, questionId])
+  @@map("candidate_answers")
+}
+
+model Evaluation {
+  id                          String            @id @default(uuid())
+  attemptId                   String            @unique @map("attempt_id")
+  totalScore                  Int               @map("total_score")
+  maxScore                    Int               @map("max_score")
+  percentage                  Float
+  mcqScore                    Int               @map("mcq_score")
+  openEndedScore              Int               @map("open_ended_score")
+  aiStrengths                 Json              @default("[]") @map("ai_strengths")
+  aiWeaknesses                Json              @default("[]") @map("ai_weaknesses")
+  aiRecommendation            AIRecommendation  @map("ai_recommendation")
+  aiSummary                   String            @map("ai_summary") @db.Text
+  adminOverrideRecommendation AIRecommendation? @map("admin_override_recommendation")
+  adminNotes                  String?           @map("admin_notes") @db.Text
+  evaluatedAt                 DateTime          @default(now()) @map("evaluated_at")
+  isPreliminary               Boolean           @default(true) @map("is_preliminary")
+
+  attempt TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@map("evaluations")
+}
+
+model SuspiciousEvent {
+  id         String   @id @default(uuid())
+  attemptId  String   @map("attempt_id")
+  eventType  String   @map("event_type")
+  occurredAt DateTime @default(now()) @map("occurred_at")
+  metadata   Json?
+
+  attempt TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@map("suspicious_events")
+}
+
+enum TrackedEventType {
+  PAGE_VIEW
+  CLICK
+  CLIENT_ERROR
+  DEAD_CLICK
+}
+
+model VisitorSession {
+  id          String         @id @default(cuid())
+  firstSeenAt DateTime       @default(now()) @map("first_seen_at")
+  lastSeenAt  DateTime       @updatedAt @map("last_seen_at")
+  userAgent   String?        @map("user_agent")
+  events      TrackedEvent[]
+  feedback    HighgardenFeedback[]
+
+  @@index([lastSeenAt])
+  @@map("visitor_sessions")
+}
+
+model TrackedEvent {
+  id             String           @id @default(cuid())
+  sessionId      String           @map("session_id")
+  session        VisitorSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  type           TrackedEventType
+  path           String
+  targetLabel    String?          @map("target_label")
+  targetSelector String?          @map("target_selector")
+  referrer       String?
+  viewportWidth  Int?             @map("viewport_width")
+  viewportHeight Int?             @map("viewport_height")
+  deviceType     String?          @map("device_type")
+  browserName    String?          @map("browser_name")
+  osName         String?          @map("os_name")
+  country        String?
+  metadataJson   Json?            @map("metadata_json")
+  xPct           Float?           @map("x_pct")
+  yPct           Float?           @map("y_pct")
+  createdAt      DateTime         @default(now()) @map("created_at")
+
+  @@index([path, createdAt])
+  @@index([path, type, createdAt])
+  @@index([path, type, deviceType, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([type, createdAt])
+  @@index([deviceType, createdAt])
+  @@map("tracked_events")
+}
+
+model HighgardenFeedback {
+  id        String                   @id @default(cuid())
+  sessionId String?                  @map("session_id")
+  session   VisitorSession?          @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  path      String
+  rating    Int
+  category  String
+  comment   String?                  @db.Text
+  status    String                   @default("UNREAD") @db.VarChar(20)
+  createdAt DateTime                 @default(now()) @map("created_at")
+  updatedAt DateTime                 @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@index([path, createdAt])
+  @@map("highgarden_feedback")
+}
+
+model HighgardenAlertSettings {
+  id                  String    @id @default("default")
+  enabled             Boolean   @default(false)
+  recipientsJson      String    @default("[]") @map("recipients_json") @db.Text
+  errorThreshold      Int       @default(5) @map("error_threshold")
+  deadClickThreshold  Int       @default(10) @map("dead_click_threshold")
+  dropThreshold       Int       @default(25) @map("drop_threshold")
+  weeklyDigestEnabled Boolean   @default(false) @map("weekly_digest_enabled")
+  lastSentAt          DateTime? @map("last_sent_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  @@map("highgarden_alert_settings")
+}

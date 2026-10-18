@@ -1,0 +1,51 @@
+<svg width="360" height="80" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Talvyn Logo">
+  <defs>
+    <linearGradient id="logoLightTopFacet" x1="14" y1="13" x2="50" y2="19" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#27272A"/>
+      <stop offset="100%" stop-color="#18181B"/>
+    </linearGradient>
+    <linearGradient id="logoLightFrontFacet" x1="14" y1="19" x2="42" y2="47" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#09090B"/>
+      <stop offset="100%" stop-color="#18181B"/>
+    </linearGradient>
+    <linearGradient id="logoLightRightFacetA" x1="42" y1="13" x2="50" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#52525B"/>
+      <stop offset="100%" stop-color="#71717A"/>
+    </linearGradient>
+    <linearGradient id="logoLightRightFacetB" x1="34" y1="22" x2="42" y2="47" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3F3F46"/>
+      <stop offset="100%" stop-color="#52525B"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 3D Monolithic Block Mark Icon (64x64 at x=8, y=8) -->
+  <g transform="translate(8, 8)">
+    <rect width="64" height="64" rx="14" fill="#FFFFFF"/>
+    <rect x="0.5" y="0.5" width="63" height="63" rx="13.5" stroke="#000000" stroke-opacity="0.12"/>
+
+    <!-- Calibration Corners -->
+    <path d="M 8 15 L 8 8 L 15 8" stroke="#000000" stroke-opacity="0.35" stroke-width="1.25"/>
+    <path d="M 49 8 L 56 8 L 56 15" stroke="#000000" stroke-opacity="0.35" stroke-width="1.25"/>
+    <path d="M 8 49 L 8 56 L 15 56" stroke="#000000" stroke-opacity="0.35" stroke-width="1.25"/>
+    <path d="M 49 56 L 56 56 L 56 49" stroke="#000000" stroke-opacity="0.35" stroke-width="1.25"/>
+
+    <!-- 3D Monolith Facets -->
+    <path d="M 14 19 L 22 13 L 50 13 L 42 19 Z" fill="url(#logoLightTopFacet)"/>
+    <path d="M 42 19 L 50 13 L 50 22 L 42 28 Z" fill="url(#logoLightRightFacetA)"/>
+    <path d="M 34 28 L 42 22 L 42 41 L 34 47 Z" fill="url(#logoLightRightFacetB)"/>
+    <path d="M 14 19 L 42 19 L 42 28 L 34 28 L 34 47 L 28 41 L 22 47 L 22 28 L 14 28 Z" fill="url(#logoLightFrontFacet)"/>
+
+    <!-- Central V-Chevron Vector -->
+    <path d="M 22 28 L 28 35 L 34 28" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.7"/>
+  </g>
+
+  <!-- Wordmark Typography -->
+  <text x="88" y="49" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="30" letter-spacing="3" fill="#09090B">TALVYN</text>
+
+  <!-- Subtitle Tagline -->
+  <text x="89" y="64" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="9.5" font-weight="600" letter-spacing="3" fill="#71717A">INTELLIGENCE PLATFORM</text>
+
+  <!-- Technical Version Badge -->
+  <rect x="264" y="28" width="58" height="22" rx="4" fill="#F4F4F5" stroke="#000000" stroke-opacity="0.12"/>
+  <text x="293" y="43" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="10" font-weight="700" letter-spacing="1" fill="#18181B" text-anchor="middle">v2.0</text>
+</svg>

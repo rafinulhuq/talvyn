@@ -1,0 +1,71 @@
+# Self-hosted WordPress — standalone stack.
+#
+# DELIBERATELY SEPARATE from docker-compose.prod.yml. Deploy is push-to-main
+# with a runner on the prod box, so editing the prod compose file ships it the
+# moment you push. This file is brought up by hand instead:
+#
+#   docker compose -f docker-compose.wordpress.yml up -d
+#
+# It shares nothing with the app stack — no network, no database. The only
+# connection is the Cloudflare Tunnel, which runs with network_mode: host and
+# reaches this container over the published host port below.
+#
+# Images: wordpress:php8.3-apache and mariadb:11 (two new images, ~700 MB
+# total). Both are official. Pin exact versions before you rely on this.
+
+services:
+  wordpress-db:
+    image: mariadb:11
+    container_name: Talvyn_wp_db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${WORDPRESS_DB_NAME:-wordpress}
+      MARIADB_USER: ${WORDPRESS_DB_USER:-wordpress}
+      MARIADB_PASSWORD: ${WORDPRESS_DB_PASSWORD:?set WORDPRESS_DB_PASSWORD in .env}
+      MARIADB_ROOT_PASSWORD: ${WORDPRESS_DB_ROOT_PASSWORD:?set WORDPRESS_DB_ROOT_PASSWORD in .env}
+    volumes:
+      - wordpress_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    container_name: Talvyn_wordpress
+    restart: unless-stopped
+    ports:
+      # Host port only. Cloudflared (network_mode: host, in the prod stack)
+      # reaches this as http://localhost:8080 — add that as the public
+      # hostname target for www.talvyn.com in the Zero Trust dashboard.
+      - "${WORDPRESS_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db:3306
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:?set WORDPRESS_DB_PASSWORD in .env}
+      # Cloudflare terminates TLS at the edge and forwards plain HTTP, so
+      # WordPress sees an http request on an https site. Without the
+      # X-Forwarded-Proto check it builds http:// URLs, and the tunnel's
+      # https redirect bounces them straight back — an infinite loop on
+      # wp-login.php. This is the single most common self-host-behind-a-
+      # proxy failure; do not remove it.
+      WORDPRESS_CONFIG_EXTRA: |
+        if (isset($$_SERVER['HTTP_X_FORWARDED_PROTO']) && $$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+            $$_SERVER['HTTPS'] = 'on';
+        }
+        define('WP_HOME',    '${WORDPRESS_SITE_URL:-http://localhost:8080}');
+        define('WP_SITEURL', '${WORDPRESS_SITE_URL:-http://localhost:8080}');
+    volumes:
+      - wordpress_data:/var/www/html
+      # Raises upload_max_filesize past the 2M default so talvyn.mp4
+      # (3.3 MB) can go through Media -> Add New.
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+    depends_on:
+      wordpress-db:
+        condition: service_healthy
+
+volumes:
+  wordpress_db:      # MariaDB data files
+  wordpress_data:    # wp-content: themes, plugins, uploads

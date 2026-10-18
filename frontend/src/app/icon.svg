@@ -1,0 +1,63 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Talvyn</title>
+  <desc id="desc">Talvyn Monolithic 3D Block T-Nexus Logo</desc>
+  <defs>
+    <linearGradient id="topFacet" x1="56" y1="52" x2="200" y2="76" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E4E4E7"/>
+    </linearGradient>
+    <linearGradient id="frontFacet" x1="56" y1="76" x2="168" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D4D4D8"/>
+    </linearGradient>
+    <linearGradient id="rightFacetA" x1="168" y1="52" x2="200" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A1A1AA"/>
+      <stop offset="100%" stop-color="#71717A"/>
+    </linearGradient>
+    <linearGradient id="rightFacetB" x1="136" y1="88" x2="168" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#71717A"/>
+      <stop offset="100%" stop-color="#3F3F46"/>
+    </linearGradient>
+    <linearGradient id="vNotchFacet" x1="88" y1="164" x2="136" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="100%" stop-color="#27272A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Black Block Base Housing -->
+  <rect width="256" height="256" rx="56" fill="#09090B"/>
+  <rect x="1.5" y="1.5" width="253" height="253" rx="54.5" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="3"/>
+
+  <!-- Technical Calibration Corner Brackets -->
+  <path d="M 32 60 L 32 32 L 60 32" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="square"/>
+  <path d="M 196 32 L 224 32 L 224 60" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="square"/>
+  <path d="M 32 196 L 32 224 L 60 224" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="square"/>
+  <path d="M 196 224 L 224 224 L 224 196" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="square"/>
+
+  <!-- 3D Monolith Facet: Top Plane (Specular Highlight) -->
+  <path d="M 56 76 L 88 52 L 200 52 L 168 76 Z" fill="url(#topFacet)"/>
+
+  <!-- 3D Monolith Facet: Lintel Right Side Depth -->
+  <path d="M 168 76 L 200 52 L 200 88 L 168 112 Z" fill="url(#rightFacetA)"/>
+
+  <!-- 3D Monolith Facet: Stem Right Side Depth -->
+  <path d="M 136 112 L 168 88 L 168 164 L 136 188 Z" fill="url(#rightFacetB)"/>
+
+  <!-- 3D Monolith Facet: Front Orthogonal Face with V-Notch Cut -->
+  <path d="M 56 76 L 168 76 L 168 112 L 136 112 L 136 188 L 112 164 L 88 188 L 88 112 L 56 112 Z" fill="url(#frontFacet)"/>
+
+  <!-- Under-Stem V-Notch Depth Shadow -->
+  <path d="M 88 188 L 112 164 L 136 188 L 152 176 L 112 148 L 88 188 Z" fill="url(#vNotchFacet)" fill-opacity="0.9"/>
+
+  <!-- Precision Hairline Seam Separators -->
+  <path d="M 56 76 L 168 76" stroke="#000000" stroke-opacity="0.25" stroke-width="1.5"/>
+  <path d="M 168 76 L 168 112" stroke="#000000" stroke-opacity="0.25" stroke-width="1.5"/>
+  <path d="M 136 112 L 136 188" stroke="#000000" stroke-opacity="0.25" stroke-width="1.5"/>
+  <path d="M 88 112 L 88 188" stroke="#000000" stroke-opacity="0.25" stroke-width="1.5"/>
+
+  <!-- Central Kinetic V-Chevron Vector -->
+  <path d="M 88 112 L 112 140 L 136 112" stroke="#09090B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.45"/>
+
+  <!-- Monospaced Telemetry Tag -->
+  <text x="128" y="234" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="11" font-weight="700" fill="#71717A" letter-spacing="4" text-anchor="middle">TALVYN // SYS</text>
+</svg>

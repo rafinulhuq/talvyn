@@ -1,0 +1,12 @@
+go 1.26.9
+
+use (
+	./backend-go
+	./pkg
+	./services/gateway
+	./services/assessment
+	./services/evaluation
+	./services/iam
+	./services/recruitment
+	./services/analytics
+)

@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Talvyn AI Model Selection Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #18212f;
+      background: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12.5px;
+      line-height: 1.48;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin: 28px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #d6dde8;
+    }
+
+    h3 {
+      font-size: 14.5px;
+      margin: 18px 0 6px;
+    }
+
+    p {
+      margin: 7px 0;
+    }
+
+    ul {
+      margin: 7px 0 10px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 3px 0;
+    }
+
+    code {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 11.5px;
+      background: #eef2f7;
+      padding: 1px 4px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 18px;
+      page-break-inside: avoid;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccd5e1;
+      padding: 6px 7px;
+      vertical-align: top;
+      text-align: left;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    th {
+      background: #e8eef7;
+      color: #0f172a;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .narrow table th,
+    .narrow table td {
+      font-size: 11px;
+    }
+
+    .cover {
+      min-height: 246mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    .cover-panel {
+      padding: 28px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      font-size: 15px;
+      color: #405064;
+      margin-top: 10px;
+    }
+
+    .meta {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .meta div,
+    .callout {
+      border: 1px solid #d6dde8;
+      background: #f8fafc;
+      padding: 12px;
+      page-break-inside: avoid;
+    }
+
+    .label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #64748b;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+
+    .verdict {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f5132;
+      margin-top: 12px;
+    }
+
+    .warning {
+      border-left: 4px solid #b45309;
+      background: #fff7ed;
+    }
+
+    .success {
+      border-left: 4px solid #15803d;
+      background: #f0fdf4;
+    }
+
+    .neutral {
+      border-left: 4px solid #2563eb;
+      background: #eff6ff;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .small {
+      font-size: 11px;
+      color: #536173;
+    }
+
+    .source-list {
+      font-size: 10.5px;
+      word-break: break-word;
+    }
+
+    /* Column widths for the per-hardware-profile table (3.2) */
+    .profile-table th:nth-child(1), .profile-table td:nth-child(1) { width: 9%; }
+    .profile-table th:nth-child(2), .profile-table td:nth-child(2) { width: 16%; }
+    .profile-table th:nth-child(3), .profile-table td:nth-child(3) { width: 13%; }
+    .profile-table th:nth-child(4), .profile-table td:nth-child(4) { width: 7%; }
+    .profile-table th:nth-child(5), .profile-table td:nth-child(5) { width: 7%; }
+    .profile-table th:nth-child(6), .profile-table td:nth-child(6) { width: 10%; }
+    .profile-table th:nth-child(7), .profile-table td:nth-child(7) { width: 12%; }
+    .profile-table th:nth-child(8), .profile-table td:nth-child(8) { width: 11%; }
+    .profile-table th:nth-child(9), .profile-table td:nth-child(9) { width: 15%; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="cover-panel">
+      <h1>Talvyn AI Model Selection Report</h1>
+      <p class="subtitle">
+        Why Talvyn's AI test-generation and evaluation pipeline is built on the Google
+        Gemma 3 model family, how a single model design scales across four model sizes and
+        six hardware profiles, and the exact sampling/configuration parameters used for every
+        Ollama call in the codebase.
+      </p>
+
+      <div class="meta">
+        <div>
+          <span class="label">Project</span>
+          Talvyn &mdash; FastAPI backend, Next.js frontend, PostgreSQL, local AI via Ollama.
+        </div>
+        <div>
+          <span class="label">Model family</span>
+          Google Gemma 3 &mdash; <code>gemma3:1b</code>, <code>gemma3:4b</code>,
+          <code>gemma3:12b</code>, <code>gemma3:27b</code>.
+        </div>
+        <div>
+          <span class="label">Selection mechanism</span>
+          <code>start.sh</code> auto-detects GPU VRAM / CPU / RAM and writes
+          <code>backend/.env.hardware</code> with the matching profile.
+        </div>
+        <div>
+          <span class="label">Runtime</span>
+          Ollama <code>/api/generate</code>, JSON mode, single persistent HTTP client,
+          retry with exponential backoff.
+        </div>
+      </div>
+
+      <p class="verdict">
+        Gemma 3 was selected because one model family, with one prompt design, covers the
+        entire range from a CPU-only fallback machine to a 16GB+ VRAM GPU server &mdash;
+        while reliably returning valid, schema-conformant JSON.
+      </p>
+    </div>
+
+    <div class="small">
+      Prepared by: A. M. Rafinul Huq | Date: June 15, 2026<br>
+      Generated from inspection of the Talvyn repository: <code>start.sh</code>,
+      <code>backend/app/config.py</code>, <code>backend/app/services/ollama_service.py</code>,
+      <code>backend/app/services/test_generation_service.py</code>,
+      <code>backend/app/services/evaluation_service.py</code>,
+      <code>backend/app/services/skill_extraction_service.py</code>, and
+      <code>backend/.env.hardware</code>.
+    </div>
+  </section>
+
+  <h2>1. Executive Summary</h2>
+  <div class="callout success">
+    <p>
+      Talvyn uses Google's <strong>Gemma 3</strong> model family, served locally through
+      <strong>Ollama</strong>, for three AI-driven jobs: extracting structured skills from a
+      job description, generating three full assessment tests (Technical, Reasoning, Problem
+      Solving) from those skills, and scoring open-ended candidate answers during evaluation.
+      All three jobs depend on the model returning <strong>valid JSON that matches a Pydantic
+      schema</strong> &mdash; not free-form prose &mdash; so model choice was driven primarily
+      by JSON reliability, not just raw benchmark scores.
+    </p>
+    <p>
+      Gemma 3 ships in four sizes &mdash; 1B, 4B, 12B, and 27B parameters &mdash; all sharing
+      the same prompt format, system-prompt conventions, and JSON-mode behavior in Ollama.
+      This lets Talvyn run the <em>identical</em> generation and evaluation code on hardware
+      ranging from a 4GB laptop GPU up to a dedicated 16GB+ VRAM server, simply by changing the
+      <code>OLLAMA_MODEL</code> environment variable. <code>start.sh</code> automates this
+      choice via a six-tier hardware profile table (Section 3.2).
+    </p>
+  </div>
+
+  <h2>2. Why Gemma 3</h2>
+
+  <h3>2.1 Reliable structured JSON output at every size</h3>
+  <p>
+    Every Ollama call in Talvyn sets <code>"format": "json"</code>, which constrains the
+    model's token sampling to always emit syntactically valid JSON. Gemma 3 follows this
+    constraint well even at the smallest 1B size, and the resulting JSON consistently matches
+    the expected shape (question lists, option keys, scores) closely enough that
+    <code>GeneratedTestAI</code> / <code>MCQQuestionAI</code> / <code>OpenEndedQuestionAI</code>
+    Pydantic models validate it on the first or second attempt in the large majority of cases.
+    The remaining cases are caught by a bounded "correction prompt" retry loop
+    (<code>MAX_CORRECTION_ATTEMPTS = 3</code>, see Section 3.1).
+  </p>
+
+  <h3>2.2 One family, four sizes, zero pipeline changes</h3>
+  <p>
+    Because <code>gemma3:1b</code>, <code>gemma3:4b</code>, <code>gemma3:12b</code>, and
+    <code>gemma3:27b</code> all behave consistently under the same system prompt and JSON-mode
+    settings, Talvyn does not need per-model prompt variants. The hardware-detection script
+    (<code>start.sh</code>) simply substitutes the model name and adjusts concurrency
+    (<code>OLLAMA_NUM_PARALLEL</code>), thread count, and per-request timeout. This is what
+    makes the six-profile table in Section 3.2 possible with a single codebase.
+  </p>
+
+  <h3>2.3 Fully local, fully offline inference via Ollama</h3>
+  <p>
+    Gemma 3 has first-class Ollama packaging (<code>ollama pull gemma3:&lt;size&gt;</code>),
+    so the entire AI pipeline runs on the same machine as the backend &mdash; no API keys, no
+    per-token cost, and no job-description or candidate-answer text ever leaves the server.
+    <code>OLLAMA_KEEP_ALIVE=-1</code> keeps the model resident in VRAM/RAM between requests so
+    there is no reload penalty between the skill-extraction, generation, and evaluation calls
+    that make up a single workflow.
+  </p>
+
+  <h3>2.4 Strong instruction-following at small parameter counts</h3>
+  <p>
+    The default and most common configuration is <code>gemma3:4b</code> (the "medium" profile,
+    matching the 4GB-VRAM development machine this project targets day to day). At 4B
+    parameters, Gemma 3 reliably produces on-topic Technical / Reasoning / Problem-Solving
+    questions, plausible distractor options for MCQs, and usable open-ended grading rationale
+    &mdash; output quality that was not realistic with older small models, and which is what
+    makes the "medium" and "low" hardware tiers viable at all.
+  </p>
+
+  <h3>2.5 Headroom to scale up without re-architecting</h3>
+  <p>
+    On machines with 8GB or more VRAM, Talvyn switches to <code>gemma3:12b</code> or
+    <code>gemma3:27b</code> and raises <code>OLLAMA_NUM_PARALLEL</code> so the three test types
+    can be generated concurrently instead of sequentially. The same prompts, the same JSON
+    schemas, and the same retry/correction logic apply unchanged &mdash; only the model name,
+    parallelism, and timeout budget change. This means a hardware upgrade alone (no code
+    changes) is enough to move from the "medium" profile to "high" or "ultra".
+  </p>
+
+  <h2 class="page-break">3. Generation Configuration</h2>
+
+  <h3>3.1 Sampling parameters</h3>
+  <p>
+    These parameters are set on every <code>OllamaClient.generate()</code> call
+    (<code>backend/app/services/ollama_service.py</code>), with per-call seed values layered on
+    top for reproducibility and controlled variation across retries.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%">Parameter</th>
+        <th style="width:18%">Value</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>format</code></td>
+        <td><code>"json"</code></td>
+        <td>Ollama JSON mode &mdash; constrains decoding so the response is always
+          syntactically valid JSON, required for Pydantic schema validation.</td>
+      </tr>
+      <tr>
+        <td><code>temperature</code></td>
+        <td><code>0.1</code></td>
+        <td>Low randomness for structured, repeatable output. Used for all generation,
+          extraction, and scoring calls.</td>
+      </tr>
+      <tr>
+        <td><code>num_predict</code></td>
+        <td><code>8192</code></td>
+        <td>Maximum tokens per response &mdash; enough headroom for a full test (5 MCQ + 2
+          open-ended questions) in one call.</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; test generation (initial)</td>
+        <td><code>101</code> / <code>202</code> / <code>303</code></td>
+        <td>Fixed per test type (Technical / Reasoning / Problem Solving) so each test type is
+          deterministic and distinct from the others.</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; test generation (correction retry)</td>
+        <td><code>seed + attempt &times; 13</code></td>
+        <td>Each correction-prompt retry (up to <code>MAX_CORRECTION_ATTEMPTS = 3</code>) uses a
+          new seed derived from the base seed, so a retry is not just a repeat of the same
+          failed output.</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; single-test regeneration</td>
+        <td><code>random.randint(1000, 9999)</code></td>
+        <td>When an admin regenerates one test, a random seed is used deliberately so the new
+          version differs from the original.</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; skill extraction retry</td>
+        <td><code>attempt &times; 7 + 42</code></td>
+        <td>Varies the seed on each retry of JD skill extraction
+          (<code>skill_extraction_service.py</code>).</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; open-ended answer scoring</td>
+        <td><code>attempt &times; 23 + 9</code> and <code>attempt &times; 17 + 5</code></td>
+        <td>Two independent seed sequences used during open-ended evaluation retries
+          (<code>evaluation_service.py</code>).</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; aggregate AI recommendation</td>
+        <td><code>99</code> (fixed)</td>
+        <td>Fixed seed for the final per-attempt hiring recommendation summary, so the same
+          attempt always produces the same overall verdict text.</td>
+      </tr>
+      <tr>
+        <td><code>seed</code> &mdash; evaluation correction retry</td>
+        <td><code>attempt &times; 31 + 7</code></td>
+        <td>Additional retry seed sequence used elsewhere in
+          <code>evaluation_service.py</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Per-hardware-profile configuration</h3>
+  <p>
+    <code>start.sh</code> detects GPU VRAM (via <code>nvidia-smi</code>), CPU core count, and
+    total system RAM, then selects exactly one of six profiles below and writes the result to
+    <code>backend/.env.hardware</code>. "Threads" is the value assigned to
+    <code>OLLAMA_NUM_THREADS</code>; "Half" means <code>CPU cores &divide; 2</code>, "All" means
+    every detected CPU core. "Sequential" reflects <code>TEST_SEQUENTIAL_GENERATION</code> &mdash;
+    when <code>true</code>, the three tests are generated one at a time instead of concurrently.
+  </p>
+  <table class="profile-table">
+    <thead>
+      <tr>
+        <th>Profile</th>
+        <th>Hardware trigger</th>
+        <th>Model</th>
+        <th>MCQ</th>
+        <th>OE</th>
+        <th>Parallel</th>
+        <th>Threads</th>
+        <th>Timeout</th>
+        <th>Sequential</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>ultra</code></td>
+        <td>GPU, VRAM &ge; 16 GB</td>
+        <td><code>gemma3:27b</code></td>
+        <td>5</td>
+        <td>2</td>
+        <td>3</td>
+        <td>Half</td>
+        <td>900s</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td><code>high</code></td>
+        <td>GPU, VRAM &ge; 8 GB</td>
+        <td><code>gemma3:12b</code></td>
+        <td>5</td>
+        <td>2</td>
+        <td>2</td>
+        <td>Half</td>
+        <td>600s</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td><code>medium</code></td>
+        <td>GPU, VRAM &ge; 4 GB</td>
+        <td><code>gemma3:4b</code></td>
+        <td>5</td>
+        <td>2</td>
+        <td>1</td>
+        <td>Half</td>
+        <td>600s</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td><code>low</code></td>
+        <td>GPU, VRAM &ge; 2 GB</td>
+        <td><code>gemma3:1b</code></td>
+        <td>3</td>
+        <td>1</td>
+        <td>1</td>
+        <td>Half</td>
+        <td>300s</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td><code>cpu_fast</code></td>
+        <td>No usable GPU, RAM &ge; 16 GB</td>
+        <td><code>gemma3:4b</code></td>
+        <td>3</td>
+        <td>1</td>
+        <td>1</td>
+        <td>All</td>
+        <td>900s</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td><code>cpu_slow</code></td>
+        <td>No usable GPU, RAM &lt; 16 GB</td>
+        <td><code>gemma3:1b</code></td>
+        <td>2</td>
+        <td>1</td>
+        <td>1</td>
+        <td>All</td>
+        <td>1200s</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="small">
+    Note: a GPU with less than 2GB VRAM is treated as "no usable GPU" and falls through to the
+    <code>cpu_fast</code> / <code>cpu_slow</code> rows based on total system RAM.
+  </p>
+
+  <h3>3.3 Additional global Ollama settings</h3>
+  <p>
+    These are set once when <code>start.sh</code> launches the native Ollama server (not inside
+    Docker, so it has direct GPU access), or come from <code>backend/app/config.py</code>
+    defaults.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:28%">Setting</th>
+        <th style="width:18%">Value</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>OLLAMA_HOST</code></td>
+        <td><code>0.0.0.0:11434</code></td>
+        <td>Binds Ollama to all interfaces so the Dockerized backend can reach the
+          host-native Ollama process.</td>
+      </tr>
+      <tr>
+        <td><code>OLLAMA_KEEP_ALIVE</code></td>
+        <td><code>-1</code></td>
+        <td>Keeps the loaded model resident indefinitely &mdash; avoids reload latency between
+          the skill-extraction, generation, and evaluation calls of one workflow.</td>
+      </tr>
+      <tr>
+        <td><code>OLLAMA_FLASH_ATTENTION</code></td>
+        <td><code>1</code></td>
+        <td>Enables flash attention for faster inference and lower memory use.</td>
+      </tr>
+      <tr>
+        <td><code>OLLAMA_MAX_LOADED_MODELS</code></td>
+        <td><code>1</code></td>
+        <td>Only one model resident at a time &mdash; avoids VRAM contention on small GPUs.</td>
+      </tr>
+      <tr>
+        <td><code>OLLAMA_NUM_PARALLEL</code></td>
+        <td>1&ndash;3 (by profile)</td>
+        <td>Number of requests Ollama will batch/serve concurrently; see Section 3.2.</td>
+      </tr>
+      <tr>
+        <td><code>ollama_timeout_seconds</code></td>
+        <td>300&ndash;1200s (by profile)</td>
+        <td>Per-request HTTP read timeout for <code>/api/generate</code>; default
+          <code>600</code> in <code>config.py</code>, overridden per profile.</td>
+      </tr>
+      <tr>
+        <td><code>ollama_max_retries</code></td>
+        <td><code>3</code></td>
+        <td>HTTP-level retries with exponential backoff (2s &rarr; 4s &rarr; 8s) on transient
+          connection/timeout failures. Does not retry on 4xx errors.</td>
+      </tr>
+      <tr>
+        <td><code>MAX_CORRECTION_ATTEMPTS</code></td>
+        <td><code>3</code></td>
+        <td>Application-level retries that resend the prompt with a "correction" instruction
+          when the JSON response fails Pydantic validation.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Sources</h2>
+  <ul class="source-list">
+    <li>Talvyn repository: <code>start.sh</code> (hardware detection and profile table).</li>
+    <li>Talvyn repository: <code>backend/app/config.py</code> (Ollama and test-generation
+      defaults).</li>
+    <li>Talvyn repository: <code>backend/app/services/ollama_service.py</code> (Ollama HTTP
+      client, JSON-mode payload, retry logic).</li>
+    <li>Talvyn repository: <code>backend/app/services/test_generation_service.py</code> (test
+      generation pipeline, seeds, correction retries).</li>
+    <li>Talvyn repository: <code>backend/app/services/evaluation_service.py</code> (open-ended
+      scoring and aggregate recommendation seeds).</li>
+    <li>Talvyn repository: <code>backend/app/services/skill_extraction_service.py</code>
+      (skill extraction retry seeds).</li>
+    <li>Talvyn repository: <code>backend/.env.hardware</code> (example generated profile on
+      the current development machine).</li>
+  </ul>
+</body>
+</html>

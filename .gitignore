@@ -1,0 +1,68 @@
+# Environment & Secrets (NEVER commit secrets or real env files)
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.local.example
+!**/.env.hardware.example
+
+# Databases & Redis
+*.rdb
+dump.rdb
+*.sqlite
+*.sqlite3
+*.db
+
+# Backend Python
+backend/venv/
+backend/.venv/
+backend/.venv_test/
+backend/uploads/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Frontend Node / Next.js
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Testing & Coverage
+coverage/
+**/coverage/
+playwright-report/
+**/playwright-report/
+test-results/
+**/test-results/
+.auth/
+**/.auth/
+
+# Go binaries & tools
+bin/
+**/bin/
+
+# Rust WebAssembly intermediates
+wasm-parser/target/
+wasm-parser/pkg/
+**/wasm-parser/target/
+**/wasm-parser/pkg/
+
+# OS & Logs
+.DS_Store
+Thumbs.db
+*.log
+logs/
+**/logs/
+site/
+/codex-audit
+

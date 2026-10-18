@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Talvyn Hardware Specification Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #18212f;
+      background: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12.5px;
+      line-height: 1.48;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin: 28px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #d6dde8;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin: 18px 0 8px;
+    }
+
+    p {
+      margin: 7px 0;
+    }
+
+    ul {
+      margin: 7px 0 10px 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 3px 0;
+    }
+
+    code {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 11.5px;
+      background: #eef2f7;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 18px;
+      page-break-inside: avoid;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccd5e1;
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #e8eef7;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .cover {
+      min-height: 246mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    .cover-panel {
+      padding: 28px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      font-size: 15px;
+      color: #405064;
+      margin-top: 10px;
+    }
+
+    .meta {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .meta div,
+    .callout,
+    .option {
+      border: 1px solid #d6dde8;
+      background: #f8fafc;
+      padding: 12px;
+      page-break-inside: avoid;
+    }
+
+    .label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #64748b;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+
+    .verdict {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f5132;
+      margin-top: 12px;
+    }
+
+    .warning {
+      border-left: 4px solid #b45309;
+      background: #fff7ed;
+    }
+
+    .success {
+      border-left: 4px solid #15803d;
+      background: #f0fdf4;
+    }
+
+    .neutral {
+      border-left: 4px solid #2563eb;
+      background: #eff6ff;
+    }
+
+    .option {
+      margin: 12px 0 18px;
+    }
+
+    .option h3 {
+      margin-top: 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .badge {
+      white-space: nowrap;
+      font-size: 10px;
+      color: #ffffff;
+      background: #1e40af;
+      border-radius: 10px;
+      padding: 3px 8px;
+      align-self: flex-start;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .spec-grid div {
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      padding: 8px;
+      min-height: 48px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .small {
+      font-size: 11px;
+      color: #536173;
+    }
+
+    .source-list {
+      font-size: 10.5px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="cover-panel">
+      <h1>Talvyn Hardware Specification Report</h1>
+      <p class="subtitle">
+        Multiple computer and server specifications for running Talvyn and generating
+        AI assessment tests in under 2 minutes, with practical GPU formats and purchasing guidance.
+      </p>
+
+      <div class="meta">
+        <div>
+          <span class="label">Project</span>
+          Talvyn - FastAPI backend, Next.js frontend, PostgreSQL, and Ollama/Gemma local AI.
+        </div>
+        <div>
+          <span class="label">Target</span>
+          Generate 3 complete candidate assessment tests from one JD in under 2 minutes.
+        </div>
+        <div>
+          <span class="label">Current detected machine</span>
+          NVIDIA GeForce RTX 3050 Laptop GPU, 4GB VRAM, 16 CPU cores, 22GB RAM.
+        </div>
+        <div>
+          <span class="label">Current outcome</span>
+          Medium profile: <code>gemma3:4b</code>, sequential generation, about 15 minutes.
+        </div>
+      </div>
+
+      <p class="verdict">
+        Main recommendation: choose at least 32GB VRAM for a minimum practical local system,
+        and 48GB+ VRAM for a reliable under-2-minute target.
+      </p>
+    </div>
+
+    <div class="small">
+      Prepared for local/server planning. Generated from inspection of the Talvyn repository
+      and current NVIDIA GPU specifications.
+    </div>
+  </section>
+
+  <h2>Executive Summary</h2>
+  <div class="callout success">
+    <p>
+      The normal backend and frontend app workloads do not need extreme hardware. The expensive
+      part is local AI generation through Ollama. Talvyn creates 3 tests per job description:
+      Technical, Reasoning, and Problem Solving. Each test generation can ask the model to return
+      a structured JSON test with 5 MCQ questions and 2 open-ended questions.
+    </p>
+    <p>
+      To reach under 2 minutes, the system needs enough GPU memory to keep the model and the
+      parallel request KV cache in VRAM. If the model spills into system RAM, generation speed
+      drops sharply. This is why GPU VRAM is the most important purchasing variable.
+    </p>
+  </div>
+
+  <h2>Project Findings</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Area</th>
+        <th>What I found</th>
+        <th>Hardware impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Backend</td>
+        <td>Python FastAPI with SQLAlchemy async, PostgreSQL, pytest suite with mocked AI.</td>
+        <td>Needs solid CPU and RAM, but not a large GPU for normal automated tests.</td>
+      </tr>
+      <tr>
+        <td>Frontend</td>
+        <td>Next.js 15, React 19, Prisma, TypeScript, Tailwind.</td>
+        <td>Build/type-check speed benefits from modern CPU and NVMe storage.</td>
+      </tr>
+      <tr>
+        <td>AI generation</td>
+        <td>Ollama/Gemma generates 3 tests per JD. The code can dispatch all 3 in parallel when configured.</td>
+        <td>This is the true bottleneck. Requires strong NVIDIA GPU and enough VRAM.</td>
+      </tr>
+      <tr>
+        <td>Current machine</td>
+        <td>RTX 3050 Laptop GPU, 4GB VRAM, configured as <code>gemma3:4b</code> sequential.</td>
+        <td>Appropriate for development, not for under-2-minute generation.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>How To Read The GPU Format</h2>
+  <p>
+    When choosing the GPU, use the exact model name, VRAM amount, memory type, and cooling/form factor.
+    This avoids buying the wrong class of card.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Correct format</th>
+        <th>Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>1x NVIDIA GeForce RTX 5090 32GB GDDR7</code></td>
+        <td>Consumer/workstation-style GPU with 32GB VRAM. Good minimum practical local choice.</td>
+      </tr>
+      <tr>
+        <td><code>1x NVIDIA RTX 6000 Ada Generation 48GB GDDR6 ECC</code></td>
+        <td>Professional active-cooled workstation GPU with ECC memory.</td>
+      </tr>
+      <tr>
+        <td><code>1x NVIDIA L40S 48GB GDDR6 ECC, PCIe, passive cooling</code></td>
+        <td>Data-center/server GPU. Requires proper rack server airflow.</td>
+      </tr>
+      <tr>
+        <td><code>1x NVIDIA RTX PRO 6000 Blackwell Server Edition 96GB GDDR7 ECC</code></td>
+        <td>High-end Blackwell server GPU with much more VRAM for future models and concurrency.</td>
+      </tr>
+      <tr>
+        <td><code>1x NVIDIA H100 SXM 80GB HBM3</code> or <code>1x NVIDIA H200 141GB</code></td>
+        <td>Enterprise/cloud AI accelerator class. Best performance, highest cost.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Recommended Options</h2>
+
+  <div class="option">
+    <h3>Option 1: Minimum Practical Local Workstation <span class="badge">Budget Serious</span></h3>
+    <div class="spec-grid">
+      <div><span class="label">CPU</span>Modern 16-core desktop CPU, such as Ryzen 9 / Core i9 class.</div>
+      <div><span class="label">RAM</span>64GB DDR5 minimum.</div>
+      <div><span class="label">Storage</span>2TB NVMe Gen4 or Gen5 SSD.</div>
+      <div><span class="label">GPU format</span><code>1x NVIDIA GeForce RTX 5090 32GB GDDR7</code></div>
+      <div><span class="label">Power</span>1000W to 1200W quality PSU.</div>
+      <div><span class="label">OS</span>Ubuntu 24.04 LTS preferred.</div>
+    </div>
+    <p><strong>Why it should be considered:</strong> This is the lowest-cost machine I would take seriously
+      for the under-2-minute goal. The 32GB VRAM gives enough headroom for faster local inference than
+      16GB or 24GB GPUs, and the RTX 5090 has very high compute throughput.</p>
+    <p><strong>Best use:</strong> Local development plus fast generation using <code>gemma3:12b</code>, with
+      <code>OLLAMA_NUM_PARALLEL=3</code> and <code>TEST_SEQUENTIAL_GENERATION=false</code>.</p>
+    <p><strong>Caution:</strong> This is the minimum practical tier, not the safest one. For <code>gemma3:27b</code>
+      and three parallel generations, 32GB can be tight depending on context length, quantization, and retries.</p>
+  </div>
+
+  <div class="option">
+    <h3>Option 2: Recommended Reliable Workstation <span class="badge">Best Balance</span></h3>
+    <div class="spec-grid">
+      <div><span class="label">CPU</span>16 to 24 modern cores.</div>
+      <div><span class="label">RAM</span>128GB DDR5, ECC preferred if available.</div>
+      <div><span class="label">Storage</span>2TB NVMe SSD, plus optional 2TB backup/data SSD.</div>
+      <div><span class="label">GPU format</span><code>1x NVIDIA RTX 6000 Ada Generation 48GB GDDR6 ECC</code></div>
+      <div><span class="label">Power</span>1000W+ PSU, workstation-grade cooling.</div>
+      <div><span class="label">OS</span>Ubuntu 24.04 LTS.</div>
+    </div>
+    <p><strong>Why it should be considered:</strong> This is the workstation I would recommend first.
+      The 48GB ECC VRAM gives better reliability and more room for 3 parallel AI generations than 32GB.
+      It is active cooled, so it fits conventional workstations better than passive server GPUs.</p>
+    <p><strong>Best use:</strong> Serious local AI generation, development, and production-style testing on one
+      machine. Suitable for <code>gemma3:27b</code> in parallel with more confidence than consumer GPUs.</p>
+    <p><strong>Caution:</strong> It costs more than consumer GeForce cards, but it is easier to trust for long-running
+      professional workloads because of ECC memory and workstation drivers.</p>
+  </div>
+
+  <div class="option page-break">
+    <h3>Option 3: Recommended Rack Server <span class="badge">Production Server</span></h3>
+    <div class="spec-grid">
+      <div><span class="label">CPU</span>AMD EPYC or Intel Xeon, 24+ cores.</div>
+      <div><span class="label">RAM</span>128GB to 256GB ECC.</div>
+      <div><span class="label">Storage</span>2TB enterprise NVMe SSD, with backup/RAID strategy for production.</div>
+      <div><span class="label">GPU format</span><code>1x NVIDIA L40S 48GB GDDR6 ECC, PCIe, passive cooling</code></div>
+      <div><span class="label">Network</span>1GbE minimum, 10GbE preferred for office/server use.</div>
+      <div><span class="label">OS</span>Ubuntu Server 24.04 LTS.</div>
+    </div>
+    <p><strong>Why it should be considered:</strong> This is the best server-style choice for Talvyn if the
+      app will run continuously for a team. L40S is made for data-center AI and graphics workloads, has
+      48GB ECC VRAM, and works well in certified server chassis.</p>
+    <p><strong>Best use:</strong> Deployed Talvyn server, shared access by multiple admins, background generation,
+      and candidate evaluations.</p>
+    <p><strong>Caution:</strong> L40S is passively cooled. Do not put it in a normal desktop case. It needs a real
+      rack/server chassis with strong front-to-back airflow.</p>
+  </div>
+
+  <div class="option">
+    <h3>Option 4: Future-Proof AI Server or Workstation <span class="badge">Buy Once</span></h3>
+    <div class="spec-grid">
+      <div><span class="label">CPU</span>32+ cores.</div>
+      <div><span class="label">RAM</span>256GB ECC.</div>
+      <div><span class="label">Storage</span>4TB enterprise NVMe SSD.</div>
+      <div><span class="label">GPU format</span><code>1x NVIDIA RTX PRO 6000 Blackwell Server Edition 96GB GDDR7 ECC</code></div>
+      <div><span class="label">Alternative</span><code>1x NVIDIA RTX PRO 6000 Blackwell Workstation Edition 96GB GDDR7 ECC</code></div>
+      <div><span class="label">OS</span>Ubuntu 24.04 LTS.</div>
+    </div>
+    <p><strong>Why it should be considered:</strong> This is the cleanest single-GPU future-proof option.
+      The 96GB VRAM is far beyond the current app requirement, which means more room for larger models,
+      more concurrent requests, and future changes to prompt size or question count.</p>
+    <p><strong>Best use:</strong> Production AI server, heavier local models, multiple generations at the same time,
+      or future expansion without replacing the GPU quickly.</p>
+    <p><strong>Caution:</strong> This is expensive and may be unnecessary if Talvyn will only serve one admin
+      generating one JD at a time.</p>
+  </div>
+
+  <div class="option">
+    <h3>Option 5: Cloud or Enterprise AI Accelerator <span class="badge">Maximum Performance</span></h3>
+    <div class="spec-grid">
+      <div><span class="label">CPU</span>32+ vCPU or physical cores.</div>
+      <div><span class="label">RAM</span>256GB+.</div>
+      <div><span class="label">Storage</span>2TB+ NVMe, depending on retention and backup policy.</div>
+      <div><span class="label">GPU format</span><code>1x NVIDIA H100 SXM 80GB HBM3</code></div>
+      <div><span class="label">Alternatives</span><code>1x NVIDIA H100 NVL 94GB</code> or <code>1x NVIDIA H200 141GB</code></div>
+      <div><span class="label">OS</span>Provider-supported Linux image with current NVIDIA drivers.</div>
+    </div>
+    <p><strong>Why it should be considered:</strong> Choose this tier if many people will use Talvyn at once,
+      if candidate submissions arrive concurrently, or if you want the strongest inference performance without
+      worrying about local workstation limits.</p>
+    <p><strong>Best use:</strong> Enterprise deployment, high concurrency, hosted AI service, or future migration
+      from Ollama to a higher-throughput inference server.</p>
+    <p><strong>Caution:</strong> This is usually overkill for a small internal team. Cost can be much higher than
+      the application itself unless the server is shared across multiple AI workloads.</p>
+  </div>
+
+  <h2>Comparison Matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Option</th>
+        <th>Expected fit for under 2 minutes</th>
+        <th>Cost level</th>
+        <th>Reliability</th>
+        <th>Best buyer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RTX 5090 32GB workstation</td>
+        <td>Good for <code>gemma3:12b</code>; less certain for <code>gemma3:27b</code>.</td>
+        <td>Medium-high</td>
+        <td>Good, but consumer-class.</td>
+        <td>Developer or small team.</td>
+      </tr>
+      <tr>
+        <td>RTX 6000 Ada 48GB workstation</td>
+        <td>Strong fit for the target.</td>
+        <td>High</td>
+        <td>Very good, ECC workstation GPU.</td>
+        <td>Professional workstation buyer.</td>
+      </tr>
+      <tr>
+        <td>L40S 48GB rack server</td>
+        <td>Strong fit for the target.</td>
+        <td>High</td>
+        <td>Very good in proper server chassis.</td>
+        <td>Production server buyer.</td>
+      </tr>
+      <tr>
+        <td>RTX PRO 6000 Blackwell 96GB</td>
+        <td>Excellent, with future headroom.</td>
+        <td>Very high</td>
+        <td>Excellent.</td>
+        <td>Long-term AI infrastructure buyer.</td>
+      </tr>
+      <tr>
+        <td>H100/H200</td>
+        <td>Excellent, especially for concurrency.</td>
+        <td>Enterprise</td>
+        <td>Excellent.</td>
+        <td>Cloud/enterprise deployment.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Configuration Notes For Talvyn</h2>
+  <div class="callout neutral">
+    <p>For the under-2-minute goal, the server should run with parallel generation enabled:</p>
+    <ul>
+      <li><code>OLLAMA_NUM_PARALLEL=3</code></li>
+      <li><code>OLLAMA_KEEP_ALIVE=-1</code></li>
+      <li><code>OLLAMA_FLASH_ATTENTION=1</code></li>
+      <li><code>OLLAMA_MAX_LOADED_MODELS=1</code></li>
+      <li><code>TEST_SEQUENTIAL_GENERATION=false</code></li>
+    </ul>
+    <p>
+      The current launcher already sets these ideas by hardware profile. The key difference is that
+      the current detected 4GB GPU forces sequential mode. A 32GB to 48GB+ GPU allows the generation
+      path to run the 3 test requests in parallel.
+    </p>
+  </div>
+
+  <h2>Hardware I Would Avoid For This Goal</h2>
+  <div class="callout warning">
+    <ul>
+      <li><strong>4GB VRAM GPUs:</strong> fine for development only. Your current RTX 3050 Laptop GPU is in this category.</li>
+      <li><strong>8GB to 16GB VRAM GPUs:</strong> can run smaller models, but not reliable for sub-2-minute full generation.</li>
+      <li><strong>RTX 4090 24GB GDDR6X:</strong> powerful, but still not my first recommendation for the strict target because VRAM is tighter than 32GB/48GB options.</li>
+      <li><strong>CPU-only servers:</strong> acceptable for app hosting, but not for fast local AI generation.</li>
+    </ul>
+  </div>
+
+  <h2>Final Recommendation</h2>
+  <p>
+    If you want the best balance of cost, speed, and reliability, choose <strong>Option 2:
+    NVIDIA RTX 6000 Ada Generation 48GB GDDR6 ECC workstation</strong>. If this will be a real
+    production server in a rack, choose <strong>Option 3: NVIDIA L40S 48GB GDDR6 ECC</strong>.
+  </p>
+  <p>
+    If budget is tight and this is mostly for one user or a small team, choose <strong>Option 1:
+    RTX 5090 32GB GDDR7</strong>. If you want room for much larger future models and more concurrency,
+    choose <strong>Option 4: RTX PRO 6000 Blackwell 96GB GDDR7 ECC</strong>.
+  </p>
+
+  <h2>Sources</h2>
+  <ul class="source-list">
+    <li>Talvyn repository: <code>README.md</code>, <code>start.sh</code>, <code>backend/.env.hardware</code>, <code>backend/app/services/test_generation_service.py</code>.</li>
+    <li>NVIDIA GeForce RTX 5090 official page: https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/</li>
+    <li>NVIDIA GeForce RTX 4090 official page: https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/</li>
+    <li>NVIDIA L40S official page: https://www.nvidia.com/en-us/data-center/l40s/</li>
+    <li>NVIDIA RTX 6000 Ada official page: https://www.nvidia.com/en-us/products/workstations/rtx-6000/</li>
+    <li>NVIDIA RTX PRO 6000 Blackwell official page: https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000-family/</li>
+    <li>NVIDIA H100 official page: https://www.nvidia.com/en-us/data-center/h100/</li>
+    <li>NVIDIA H200 official page: https://www.nvidia.com/en-us/data-center/h200/</li>
+  </ul>
+</body>
+</html>

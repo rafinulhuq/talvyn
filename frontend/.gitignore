@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.env
+.env.local
+.env*.local
+out/
+build/
+tsconfig.tsbuildinfo
+playwright-report/
+test-results/
+.auth/
+
+# Rust build intermediates for wasm-parser — only the final output in
+# public/wasm/ and src/lib/wasm/ is committed (see wasm-parser/build.sh)
+wasm-parser/target/
+wasm-parser/pkg/

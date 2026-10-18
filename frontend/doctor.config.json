@@ -1,0 +1,109 @@
+{
+  "$schema": "https://react.doctor/schema/config.json",
+  "ignore": {
+    "overrides": [
+      // Pure passthrough proxy: relays the FastAPI backend's real
+      // status/body verbatim to the client on both success and failure.
+      // Branching on `.ok` here would be ceremony with zero behavior
+      // difference — both branches would do the same thing (forward as-is).
+      { "files": ["src/app/api/cms/media/route.ts"], "rules": ["react-doctor/no-fetch-response-used-without-status-check"] },
+      { "files": ["src/app/api/jd/[id]/analyze/route.ts"], "rules": ["react-doctor/no-fetch-response-used-without-status-check"] },
+
+      // healthApi.ready() branches on the parsed payload (`data?.checks`)
+      // rather than `res.ok` on purpose: /health/ready intentionally
+      // returns HTTP 503 with real check details when degraded (see the
+      // serverFetchRaw docstring below for the same API's documented
+      // contract) — gating on res.ok would treat a legitimate degraded
+      // response as a hard failure and hide the very data the dashboard
+      // needs to show.
+      { "files": ["src/lib/api/health.ts"], "rules": ["react-doctor/no-fetch-response-used-without-status-check"] },
+
+      // serverFetchRaw's own docstring explains it returns the parsed body
+      // regardless of HTTP status for exactly this reason (health/ready-style
+      // endpoints that put real data in a non-2xx response).
+      { "files": ["src/lib/api/serverFetch.ts"], "rules": ["react-doctor/no-fetch-response-used-without-status-check"] },
+
+      // Renders arbitrary image URLs embedded in markdown/CMS blog content.
+      // Matches the rule's own documented exception: an MDX/markdown
+      // renderer where next/image's loader can't resolve author-supplied
+      // runtime URLs (would need every possible source domain allowlisted).
+      { "files": ["src/components/MarkdownContent.tsx"], "rules": ["react-doctor/nextjs-no-img-element"] },
+
+      // Formatted date/time only ever renders after a client-only effect or
+      // state change completes (never during the actual server render), so
+      // no server-rendered value exists to mismatch against the client.
+      // Verified per-file by tracing each value's data source.
+      { "files": ["src/components/admin/InvitationRow.tsx"], "rules": ["react-doctor/no-locale-format-in-render"] },
+      { "files": ["src/components/admin/InviteForm.tsx"], "rules": ["react-doctor/no-locale-format-in-render"] },
+      { "files": ["src/components/admin/WebhooksSection.tsx"], "rules": ["react-doctor/no-locale-format-in-render"] },
+      { "files": ["src/components/candidate/SectionExamHeader.tsx"], "rules": ["react-doctor/no-locale-format-in-render"] },
+      { "files": ["src/components/candidate/TestComplete.tsx"], "rules": ["react-doctor/no-locale-format-in-render"] },
+      { "files": ["src/components/admin/PublicLinkSection.tsx"], "rules": ["react-doctor/no-locale-format-in-render"] },
+
+      // Each already guards post-await state updates against a stale/
+      // unmounted run (mountedRef / `active` flag / stoppedRef, checked
+      // after the await, mirroring the canonical AbortController.signal
+      // .aborted pattern) — the detector only recognizes the
+      // AbortController shape specifically, not an equivalent boolean-ref
+      // guard.
+      { "files": ["src/components/admin/PublicLinkSection.tsx"], "rules": ["react-doctor/no-set-state-after-await-in-effect"] },
+      { "files": ["src/components/admin/TestEditorPanel.tsx"], "rules": ["react-doctor/no-set-state-after-await-in-effect"] },
+      { "files": ["src/components/candidate/SectionedExamComplete.tsx"], "rules": ["react-doctor/no-set-state-after-await-in-effect"] },
+
+      // Both return a named helper (`stopProgressStream` / `clearBgPoll`)
+      // directly as the effect's cleanup function, which does release the
+      // resource — this is the exact documented detector limitation from
+      // react.doctor's own rule page: "a local helper ... invoked from the
+      // returned teardown" is a known false positive, not a real leak.
+      { "files": ["src/components/admin/QuestionBankPanel.tsx"], "rules": ["react-doctor/effect-needs-cleanup"] },
+      { "files": ["src/contexts/GenerationContext.tsx"], "rules": ["react-doctor/effect-needs-cleanup"] },
+
+      // useGenerateTestsFlow.ts: the EventSource and the phase-message
+      // interval are both closed via ref in the mount/unmount effect's
+      // returned cleanup (lines 89-100) — the same "resource set inside an
+      // async/observer callback, released from one returned teardown"
+      // pattern the rule's own docs list as a false positive.
+      { "files": ["src/hooks/useGenerateTestsFlow.ts"], "rules": ["react-doctor/effect-needs-cleanup"] },
+
+      // Intentional optimistic local-state override applied right after a
+      // save completes, not a prop-resync bug — the parent is a server
+      // component page with no polling, so props on a mounted instance
+      // never actually change out from under this state.
+      { "files": ["src/components/admin/UserRoleSelect.tsx"], "rules": ["react-doctor/no-derived-useState"] },
+      { "files": ["src/components/admin/UserStatusToggle.tsx"], "rules": ["react-doctor/no-derived-useState"] },
+
+      // This file IS the deferred half of the prefer-dynamic-import fix:
+      // ActivityChart.tsx loads it via next/dynamic({ ssr: false }) so
+      // recharts ships in its own chunk; ActivityChartInner.tsx legitimately
+      // imports recharts directly since it's the code that actually uses it
+      // once loaded. Verified via `next build` that recharts is a separate
+      // chunk, not part of the shared bundle.
+      { "files": ["src/components/admin/dashboard/ActivityChartInner.tsx"], "rules": ["react-doctor/prefer-dynamic-import"] },
+
+      // Already resets the loading flag inside a `finally` block; flagged
+      // only because of the added `if (!cancelled)` stale-response guard
+      // around the state updates themselves, not a missing finally.
+      { "files": ["src/components/admin/settings/AuditLogSection.tsx"], "rules": ["react-doctor/no-loading-flag-reset-outside-finally"] },
+
+      // Fire-and-forget analytics beacon (sendBeacon / fetch with
+      // keepalive:true) triggered by user interaction/lifecycle events, not
+      // data fetched for rendering — the rule's render-waterfall concern
+      // doesn't apply, and adding request cancellation here would be wrong
+      // (keepalive exists specifically so the beacon survives navigation).
+      { "files": ["src/components/tracking/HighGardenTracker.tsx"], "rules": ["react-doctor/no-fetch-in-effect"] },
+
+      // Manual verification scripts run directly via `tsx` (see the usage
+      // comment referencing this in src/lib/phone.ts), not dead code that
+      // nothing imports.
+      { "files": ["src/lib/auth/signupRateLimit.selfcheck.ts"], "rules": ["deslop/unused-file"] },
+      { "files": ["src/lib/phone.selfcheck.ts"], "rules": ["deslop/unused-file"] },
+
+      // `once` is the string returned by TipTap's getMarkdown() — this is
+      // String.prototype.includes (substring search), not
+      // Array.prototype.includes (membership test). The rule's own docs say
+      // it excludes string-like receivers; a Set can't replace substring
+      // search, so "fixing" this would silently break the round-trip check.
+      { "files": ["scripts/check-markdown-roundtrip.ts"], "rules": ["react-doctor/js-set-map-lookups"] }
+    ]
+  }
+}

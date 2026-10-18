@@ -1,0 +1,46 @@
+<script>
+/* Load once, after the sections, or enqueue with defer. No libraries required. */
+(() => {
+  function init() {
+    document.querySelectorAll('.ov-landing [data-ov-tabs]:not([data-ov-ready])').forEach(group => {
+      const tabs = [...group.querySelectorAll('[data-ov-tab]')];
+      const panels = [...group.querySelectorAll('[data-ov-panel]')];
+      function select(index, focus = false) {
+        tabs.forEach((tab, i) => {
+          tab.setAttribute('aria-selected', String(i === index));
+          tab.tabIndex = i === index ? 0 : -1;
+          panels[i].hidden = i !== index;
+        });
+        if (focus) tabs[index].focus();
+      }
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => select(i));
+        tab.addEventListener('keydown', event => {
+          let target;
+          if (event.key === 'ArrowRight') target = (i + 1) % tabs.length;
+          if (event.key === 'ArrowLeft') target = (i - 1 + tabs.length) % tabs.length;
+          if (event.key === 'Home') target = 0;
+          if (event.key === 'End') target = tabs.length - 1;
+          if (target !== undefined) { event.preventDefault(); select(target, true); }
+        });
+      });
+      select(0);
+      group.setAttribute('data-ov-ready', '');
+    });
+    document.querySelectorAll('.ov-landing [data-ov-menu-toggle]:not([data-ov-ready])').forEach(button => {
+      const menu = button.closest('header').querySelector('[data-ov-menu]');
+      function toggle(open) { menu.hidden = !open; button.setAttribute('aria-expanded', String(open)); }
+      toggle(false);
+      button.addEventListener('click', () => toggle(menu.hidden));
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
+      button.closest('header').addEventListener('keydown', event => {
+        if (event.key === 'Escape') { toggle(false); button.focus(); }
+      });
+      button.setAttribute('data-ov-ready', '');
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+})();
+
+</script>
