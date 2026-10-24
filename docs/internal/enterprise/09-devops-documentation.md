@@ -69,7 +69,7 @@ prose and `docs/deployment.md` for the production-server equivalent.
    - Default seeded admin account (created automatically by
      `frontend/prisma/seed.ts` on first container start — see
      [Build / Release / Rollback](#build--release--rollback)):
-     `acmeai@Talvyn.com` / `acmeai@r2026p#`. Change it immediately via
+     `admin@talvyn.com` / `talvyn@r2026p#`. Change it immediately via
      Settings.
 7. **Stop the stack** with `./stop.sh` (preserves DB volumes) or
    `./stop.sh --wipe-db` (drops volumes — irreversible).

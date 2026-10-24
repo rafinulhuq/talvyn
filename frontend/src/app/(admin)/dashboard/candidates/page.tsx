@@ -76,22 +76,22 @@ function CandidateRow({ candidate }: { candidate: CandidateListItem }) {
   return (
     <Link
       href={`/dashboard/candidates/${candidate.id}`}
-      className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-xs transition-all duration-200 hover:border-slate-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+      className="group flex items-center gap-4 rounded-xl border border-white/8 bg-[#121317] p-4 shadow-xs transition-colors duration-200 hover:border-white/15 text-white"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-50 border border-indigo-200 text-sm font-semibold text-indigo-700 dark:bg-indigo-950/40 dark:border-indigo-900 dark:text-indigo-300">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-white/5 text-sm font-semibold text-[#F2D74E]">
         {initial}
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="truncate font-display text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 transition-colors">
+          <p className="truncate font-display text-sm font-semibold text-white group-hover:text-[#F2D74E] transition-colors">
             {candidate.name}
           </p>
           <Badge variant="indigo">#{candidate.candidate_number}</Badge>
         </div>
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/80">
           <span className="inline-flex min-w-0 items-center gap-1.5">
-            <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            <Mail className="h-3.5 w-3.5 shrink-0 text-white/60" />
             <span className="truncate">{candidate.email}</span>
           </span>
           {candidate.phone && <span>· {candidate.phone}</span>}
@@ -99,20 +99,20 @@ function CandidateRow({ candidate }: { candidate: CandidateListItem }) {
       </div>
 
       <div className="hidden shrink-0 flex-col items-end gap-1 md:flex">
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white">
           {hasAttempts ? (
-            <CheckCircle2 className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+            <CheckCircle2 className="h-3.5 w-3.5 text-[#4ADE80]" />
           ) : (
-            <Clock className="h-3.5 w-3.5 text-slate-400" />
+            <Clock className="h-3.5 w-3.5 text-white/60" />
           )}
           {completionLabel(candidate)}
         </span>
-        <span className="text-[11px] text-slate-400">
+        <span className="text-[11px] text-white/60">
           Last: {formatDateTime(candidate.last_activity_at)}
         </span>
       </div>
 
-      <ChevronRight className="h-4 w-4 shrink-0 text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all" />
+      <ChevronRight className="h-4 w-4 shrink-0 text-white/60 group-hover:text-[#F2D74E] group-hover:translate-x-0.5 transition-all" />
     </Link>
   );
 }
@@ -128,7 +128,7 @@ function CandidatesToolbar({
 }) {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+      <span className="text-xs font-medium text-white/80">
         {data ? (
           <>
             {data.total} candidate{data.total !== 1 ? "s" : ""}
@@ -146,13 +146,13 @@ function CandidatesToolbar({
             Search candidates
           </label>
           <div className="relative w-64">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/60" />
             <input
               id="candidates-search"
               name="search"
               defaultValue={search}
               placeholder="Search by name or email..."
-              className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-8 pr-3 text-xs text-slate-900 placeholder:text-slate-400 outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 shadow-xs dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+              className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] pl-8 pr-3 text-xs text-white placeholder:text-white/40 outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
             />
           </div>
         </div>
@@ -162,7 +162,7 @@ function CandidatesToolbar({
         {hasSearch && (
           <Link
             href="/dashboard/candidates"
-            className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] px-3 text-xs font-semibold text-white shadow-xs hover:bg-white/10 transition-colors"
           >
             Clear
           </Link>
@@ -237,18 +237,18 @@ function CandidatesPagination({
       {data.page > 1 && (
         <Link
           href={pageHref(data.page - 1, search)}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-50 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+          className="rounded-lg border border-white/10 bg-[#181A1F] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-white/10 transition-colors"
         >
           Previous
         </Link>
       )}
-      <span className="text-xs text-slate-500">
+      <span className="text-xs text-white/80">
         Page {data.page} of {data.total_pages}
       </span>
       {data.page < data.total_pages && (
         <Link
           href={pageHref(data.page + 1, search)}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-50 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+          className="rounded-lg border border-white/10 bg-[#181A1F] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-white/10 transition-colors"
         >
           Next
         </Link>

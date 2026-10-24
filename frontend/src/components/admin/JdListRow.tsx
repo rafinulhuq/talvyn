@@ -64,17 +64,17 @@ export function JdListRow({ jd }: { jd: JobDescriptionListItem }) {
     <div className="group relative">
       <Link
         href={`/dashboard/jds/${jd.id}`}
-        className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 pr-12 shadow-xs transition-all duration-200 hover:border-slate-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+        className="flex items-center gap-4 rounded-xl border border-white/8 bg-[#121317] p-4 pr-12 shadow-xs transition-colors duration-200 hover:border-white/15"
       >
-        <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 sm:flex dark:bg-indigo-950/40 dark:text-indigo-400">
+        <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#181A1F] border border-white/5 text-[#F2D74E] sm:flex">
           <FileText className="h-5 w-5" />
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="truncate font-display text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 transition-colors">{title}</p>
-          <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+          <p className="truncate font-display text-sm font-semibold text-white group-hover:text-[#F2D74E] transition-colors">{title}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-white/80">
             {jd.seniority_level && (
-              <span className="rounded-full border border-indigo-100 bg-indigo-50/70 px-2 py-0.5 text-[10px] font-semibold text-indigo-700 dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300">
+              <span className="rounded-full border border-[#F2D74E]/30 bg-[#F2D74E]/10 px-2 py-0.5 text-[10px] font-semibold text-[#F2D74E]">
                 {jd.seniority_level}
               </span>
             )}
@@ -95,17 +95,17 @@ export function JdListRow({ jd }: { jd: JobDescriptionListItem }) {
           <JdStatusBadge status={jd.parse_status} />
         </div>
 
-        <ChevronRight className="hidden h-4 w-4 shrink-0 text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all sm:block" />
+        <ChevronRight className="hidden h-4 w-4 shrink-0 text-white/70 group-hover:text-[#F2D74E] group-hover:translate-x-0.5 transition-all sm:block" />
       </Link>
 
       <button
         type="button"
         aria-label={`Delete ${title}`}
         onClick={() => setShowDeleteDialog(true)}
-        className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-colors sm:pointer-events-none sm:opacity-0 sm:group-hover:pointer-events-auto sm:group-hover:opacity-100 dark:hover:bg-rose-950/40"
+        className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-white/80 hover:bg-[#F87171]/10 hover:text-[#F87171] transition-colors sm:pointer-events-none sm:opacity-0 sm:group-hover:pointer-events-auto sm:group-hover:opacity-100"
       >
         {deleting ? (
-          <Loader2 className="h-4 w-4 animate-spin text-rose-600" />
+          <Loader2 className="h-4 w-4 animate-spin text-[#F87171]" />
         ) : (
           <Trash2 className="h-4 w-4" />
         )}

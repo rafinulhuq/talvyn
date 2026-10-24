@@ -58,7 +58,7 @@ export function CmpClient() {
             type="button"
             onClick={loadCms}
             disabled={busy === "load"}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition-colors hover:border-slate-300 hover:text-indigo-600 disabled:opacity-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-indigo-400"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#181A1F] px-3 py-1.5 text-xs font-medium text-white shadow-xs transition-colors hover:border-white/20 hover:text-[#F2D74E] disabled:opacity-50"
           >
             <RefreshCw className={clsx("h-3.5 w-3.5", busy === "load" && "animate-spin")} />
             <span>Refresh</span>
@@ -66,7 +66,7 @@ export function CmpClient() {
         }
       />
 
-      <div className="mb-6 flex w-fit items-center gap-1.5 rounded-xl border border-slate-200/80 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-900/80">
+      <div className="mb-6 flex w-fit items-center gap-1.5 rounded-xl border border-white/10 bg-[#181A1F] p-1 shadow-2xs">
         {tabConfigs.map((tab) => {
           const TabIcon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -78,11 +78,11 @@ export function CmpClient() {
               className={clsx(
                 "flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all",
                 isActive
-                  ? "bg-white text-slate-900 shadow-xs dark:bg-slate-800 dark:text-slate-100"
-                  : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+                  ? "bg-[#F2D74E] text-[#1A1600] font-semibold shadow-xs"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
               )}
             >
-              <TabIcon className={clsx("h-4 w-4", isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400")} />
+              <TabIcon className={clsx("h-4 w-4", isActive ? "text-[#1A1600]" : "text-white/70")} />
               {tab.label}
             </button>
           );

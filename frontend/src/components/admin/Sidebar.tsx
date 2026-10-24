@@ -146,29 +146,29 @@ function SidebarNavLinkBody({
         className={clsx(
           "h-4 w-4 shrink-0 transition-colors duration-200",
           pending && "animate-pulse-dot",
-          active ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300"
+          active ? "text-[#F2D74E]" : "text-white group-hover:text-white"
         )}
       />
       <span
         className={clsx(
-          "flex-1 overflow-hidden whitespace-nowrap transition-all duration-200 text-sm font-medium",
+          "flex-1 overflow-hidden whitespace-nowrap transition-all duration-200 text-sm font-medium text-white",
           collapsed ? "w-0 opacity-0" : "w-auto opacity-100"
         )}
       >
         {item.label}
       </span>
       {item.soon && !collapsed && (
-        <span className="shrink-0 rounded-full bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+        <span className="shrink-0 rounded-full bg-white/10 px-1.5 py-0.5 text-[10px] font-medium text-white/80">
           Soon
         </span>
       )}
       {item.minRole && item.minRole !== "USER" && !collapsed && (
         <span
           className={clsx(
-            "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+            "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold border",
             active
-              ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300"
-              : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+              ? "bg-[#F2D74E]/20 text-[#F2D74E] border-[#F2D74E]/40"
+              : "bg-white/10 text-white border-white/15"
           )}
         >
           {item.minRole === "SUPER_ADMIN" ? "SUPER" : "ADMIN"}
@@ -179,8 +179,8 @@ function SidebarNavLinkBody({
           className={clsx(
             "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold",
             active
-              ? "bg-indigo-600 text-white"
-              : "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300"
+              ? "bg-[#F2D74E] text-[#1A1600]"
+              : "bg-[#F2D74E]/20 text-[#F2D74E] border border-[#F2D74E]/40"
           )}
         >
           {item.count}
@@ -209,8 +209,8 @@ function SidebarNavLink({
       className={clsx(
         "group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-150 ease-out",
         active
-          ? "bg-indigo-50/80 text-indigo-700 font-semibold border border-indigo-100/80 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-900/50 shadow-xs"
-          : "border border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-800/50"
+          ? "bg-[#181A1F] text-[#F2D74E] font-semibold border border-[#F2D74E]/30 shadow-xs"
+          : "border border-transparent text-white hover:text-white hover:bg-white/10"
       )}
     >
       <SidebarNavLinkBody item={item} active={active} collapsed={collapsed} />
@@ -233,7 +233,7 @@ function SidebarNavGroup({
     <div>
       <p
         className={clsx(
-          "mb-1.5 overflow-hidden whitespace-nowrap px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-all duration-200",
+          "mb-1.5 overflow-hidden whitespace-nowrap px-3 text-[11px] font-bold uppercase tracking-wider text-white/80 transition-all duration-200",
           collapsed ? "h-0 opacity-0" : "h-auto opacity-100"
         )}
       >
@@ -259,19 +259,19 @@ function SidebarSystemStatusLink({ systemStatus, collapsed }: { systemStatus: Si
     <Link
       href="/dashboard/settings"
       title={collapsed ? "System status" : undefined}
-      className="mb-2 flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50 p-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-2xs"
+      className="mb-2 flex items-center gap-2 rounded-lg border border-white/8 bg-[#181A1F] p-2 text-xs text-white hover:bg-white/10 hover:border-white/15 transition-colors shadow-2xs"
     >
       <span
         className={clsx(
           "h-2 w-2 rounded-full shrink-0",
-          systemStatus.status === "ok" && "bg-emerald-500",
-          systemStatus.status === "degraded" && "bg-rose-500 animate-pulse-dot",
-          systemStatus.status === "unknown" && "bg-slate-400"
+          systemStatus.status === "ok" && "bg-[#4ADE80]",
+          systemStatus.status === "degraded" && "bg-[#F87171] animate-pulse-dot",
+          systemStatus.status === "unknown" && "bg-white/40"
         )}
       />
       <span
         className={clsx(
-          "flex-1 truncate overflow-hidden whitespace-nowrap transition-all duration-200 text-xs font-medium",
+          "flex-1 truncate overflow-hidden whitespace-nowrap transition-all duration-200 text-xs font-medium text-white",
           collapsed ? "w-0 opacity-0" : "w-auto opacity-100"
         )}
       >
@@ -299,7 +299,7 @@ function SidebarProfile({
   collapsed: boolean;
 }) {
   return (
-    <div className="flex items-center gap-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-3">
+    <div className="flex items-center gap-2.5 border-t border-white/8 pt-3">
       <Link
         href="/dashboard/profile"
         title={collapsed ? (userEmail ?? undefined) : "Edit your profile picture"}
@@ -308,7 +308,7 @@ function SidebarProfile({
         {userId ? (
           <UserAvatar userId={userId} name={userName} size={30} />
         ) : (
-          <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full bg-indigo-50 border border-indigo-200 text-xs font-semibold text-indigo-700">
+          <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-[#F2D74E]/30 text-xs font-semibold text-[#F2D74E]">
             {userName?.charAt(0).toUpperCase() ?? "A"}
           </div>
         )}
@@ -319,9 +319,9 @@ function SidebarProfile({
           collapsed ? "w-0 opacity-0" : "w-auto opacity-100"
         )}
       >
-        <p className="truncate whitespace-nowrap text-xs font-semibold text-slate-900 dark:text-slate-100">{userName}</p>
+        <p className="truncate whitespace-nowrap text-xs font-semibold text-white">{userName}</p>
         <div className="flex items-center gap-1.5 mt-0.5">
-          <span className="rounded-full bg-indigo-50 border border-indigo-100 dark:bg-indigo-950/40 dark:border-indigo-900 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.2 text-[9px] font-semibold">
+          <span className="rounded-full bg-[#F2D74E]/10 border border-[#F2D74E]/30 text-[#F2D74E] px-1.5 py-0.2 text-[9px] font-semibold">
             {roleLabel}
           </span>
         </div>
@@ -331,7 +331,7 @@ function SidebarProfile({
           onClick={handleSignOut}
           aria-label="Sign out"
           title="Sign out"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors shadow-2xs"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] text-white/70 hover:text-[#F87171] hover:border-[#F87171]/40 hover:bg-[#F87171]/10 transition-colors shadow-2xs"
         >
           <LogOut className="h-3.5 w-3.5" />
         </button>
@@ -389,13 +389,12 @@ export function Sidebar({
   return (
     <aside
       className={clsx(
-        "relative flex h-full flex-col bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 border-r border-slate-200 dark:border-slate-800",
+        "relative flex h-full flex-col bg-[#121317] text-white border-r border-white/8 shadow-2xl",
         "transition-[width] duration-300 ease-in-out",
         collapsed ? "w-16" : "w-64"
       )}
     >
-      {/* Collapse/expand toggle — desktop only (onToggleCollapse is never
-          passed to the mobile drawer instance). */}
+      {/* Collapse/expand toggle — desktop only */}
       {onToggleCollapse && (
         <button
           onClick={onToggleCollapse}
@@ -403,8 +402,8 @@ export function Sidebar({
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={clsx(
             "absolute -right-3 top-16 z-10 flex h-6 w-6 items-center justify-center rounded-full",
-            "border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 shadow-xs",
-            "transition-colors hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+            "border border-white/10 bg-[#181A1F] text-white/70 shadow-xs",
+            "transition-colors hover:bg-white/10 hover:text-white"
           )}
         >
           {collapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
@@ -412,11 +411,11 @@ export function Sidebar({
       )}
 
       {/* Logo — the mark when collapsed, the full wordmark when expanded. */}
-      <div className="flex h-14 items-center border-b border-slate-100 dark:border-slate-800 px-5 bg-white dark:bg-slate-950">
+      <div className="flex h-14 items-center border-b border-white/8 px-5 bg-[#121317]">
         {collapsed ? (
           <BrandMark className="h-6 w-auto shrink-0" />
         ) : (
-          <BrandWordmark variant="default" className="h-6 w-auto" />
+          <BrandWordmark variant="white" className="h-6 w-auto" />
         )}
       </div>
 
@@ -434,7 +433,7 @@ export function Sidebar({
       </nav>
 
       {/* System status + admin profile */}
-      <div className="border-t border-slate-100 dark:border-slate-800 p-3 bg-white dark:bg-slate-950">
+      <div className="border-t border-white/8 p-3 bg-[#121317]">
         {systemStatus && <SidebarSystemStatusLink systemStatus={systemStatus} collapsed={collapsed} />}
         <SidebarProfile
           userId={userId}

@@ -39,32 +39,32 @@ export function CandidatePipeline({ stages }: CandidatePipelineProps) {
           <div key={stage.key} className="flex items-center">
             <div
               className={clsx(
-                "flex min-w-[130px] flex-col gap-1.5 rounded-xl p-3.5 transition-all duration-150",
-                "border border-slate-200 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900",
-                "hover:border-slate-300 hover:shadow-sm dark:hover:border-slate-700",
-                isSubmitted && "ring-1 ring-indigo-500/30 bg-indigo-50/20 dark:bg-indigo-950/20"
+                "flex min-w-[130px] flex-col gap-1.5 rounded-xl p-3.5 transition-colors duration-150",
+                "border border-white/8 bg-[#121317] text-white shadow-xs",
+                "hover:border-white/15",
+                isSubmitted && "ring-1 ring-[#F2D74E]/40 border-[#F2D74E]/40 bg-[#181A1F]"
               )}
             >
               <div className="flex items-center justify-between">
-                <span className="font-display text-xl font-bold text-slate-900 dark:text-slate-100 tabular-nums">
+                <span className="font-display text-xl font-bold text-white tabular-nums">
                   {stage.count}
                 </span>
-                <span className="text-[10px] font-medium text-slate-400">
+                <span className="text-[10px] font-medium text-white/80">
                   {pct(stage.count, invited)}
                 </span>
               </div>
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-xs font-medium text-white">
                 {stage.label}
               </span>
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#181A1F] border border-white/5">
                 <div
-                  className="h-full rounded-full bg-indigo-600 transition-[width] duration-300"
+                  className="h-full rounded-full bg-[#F2D74E] transition-[width] duration-300"
                   style={{ width: pct(stage.count, invited) }}
                 />
               </div>
             </div>
             {i < funnel.length - 1 && (
-              <ChevronRight className="mx-1.5 h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600" />
+              <ChevronRight className="mx-1.5 h-4 w-4 shrink-0 text-white/70" />
             )}
           </div>
         );
@@ -72,40 +72,40 @@ export function CandidatePipeline({ stages }: CandidatePipelineProps) {
 
       {(recommended || rejected) && (
         <>
-          <ChevronRight className="mx-1.5 h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600" />
+          <ChevronRight className="mx-1.5 h-4 w-4 shrink-0 text-white/70" />
           <div className="flex gap-2">
             {recommended && (
-              <div className="flex min-w-[130px] flex-col gap-1 rounded-xl border border-emerald-200 bg-emerald-50/60 p-3.5 text-emerald-900 shadow-xs dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
+              <div className="flex min-w-[130px] flex-col gap-1 rounded-xl border border-[#4ADE80]/30 bg-[#4ADE80]/10 p-3.5 text-[#4ADE80] shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1 font-display text-xl font-bold tabular-nums text-emerald-800 dark:text-emerald-300">
+                  <span className="flex items-center gap-1 font-display text-xl font-bold tabular-nums text-[#4ADE80]">
                     <ThumbsUp className="h-4 w-4" />
                     {recommended.count}
                   </span>
-                  <span className="rounded-full bg-emerald-100 px-1.5 py-0.2 text-[9px] font-semibold text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                  <span className="rounded-full bg-[#4ADE80]/20 border border-[#4ADE80]/30 px-1.5 py-0.2 text-[9px] font-semibold text-[#4ADE80]">
                     Fit
                   </span>
                 </div>
-                <span className="text-xs font-semibold text-emerald-950 dark:text-emerald-200">
+                <span className="text-xs font-semibold text-white">
                   Recommended
                 </span>
-                <span className="text-[10px] text-emerald-700 dark:text-emerald-400">Passed benchmark</span>
+                <span className="text-[10px] text-[#4ADE80]/80">Passed benchmark</span>
               </div>
             )}
             {rejected && (
-              <div className="flex min-w-[130px] flex-col gap-1 rounded-xl border border-rose-200 bg-rose-50/60 p-3.5 text-rose-900 shadow-xs dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-200">
+              <div className="flex min-w-[130px] flex-col gap-1 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 p-3.5 text-[#F87171] shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1 font-display text-xl font-bold tabular-nums text-rose-800 dark:text-rose-300">
+                  <span className="flex items-center gap-1 font-display text-xl font-bold tabular-nums text-[#F87171]">
                     <ThumbsDown className="h-4 w-4" />
                     {rejected.count}
                   </span>
-                  <span className="rounded-full bg-rose-100 px-1.5 py-0.2 text-[9px] font-semibold text-rose-800 dark:bg-rose-900/50 dark:text-rose-300">
+                  <span className="rounded-full bg-[#F87171]/20 border border-[#F87171]/30 px-1.5 py-0.2 text-[9px] font-semibold text-[#F87171]">
                     Low
                   </span>
                 </div>
-                <span className="text-xs font-semibold text-rose-950 dark:text-rose-200">
+                <span className="text-xs font-semibold text-white">
                   Rejected
                 </span>
-                <span className="text-[10px] text-rose-700 dark:text-rose-400">Below threshold</span>
+                <span className="text-[10px] text-[#F87171]/80">Below threshold</span>
               </div>
             )}
           </div>

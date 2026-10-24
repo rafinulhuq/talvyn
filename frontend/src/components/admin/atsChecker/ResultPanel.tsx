@@ -157,8 +157,8 @@ export function ResultPanel({ result }: { result: ATSCheckResponse }) {
         )}
 
         {passing.length > 0 && (
-          <details className="mt-3 border-t border-slate-100 pt-3 dark:border-slate-800">
-            <summary className="cursor-pointer list-none text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200">
+          <details className="mt-3 border-t border-white/10 pt-3">
+            <summary className="cursor-pointer list-none text-xs font-medium text-white/80 hover:text-white transition-colors">
               <ChevronDown className="mr-1 inline h-3 w-3" />
               {passing.length} check(s) passed
             </summary>

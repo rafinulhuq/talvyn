@@ -17,7 +17,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
     <nav
       aria-label="Breadcrumb"
       className={clsx(
-        "scroll-row flex items-center gap-1.5 overflow-x-auto text-xs text-slate-500 dark:text-zinc-400 sm:text-sm",
+        "scroll-row flex items-center gap-1.5 overflow-x-auto text-xs text-white/70 sm:text-sm",
         className
       )}
     >
@@ -31,7 +31,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
             {item.href && !isLast ? (
               <Link
                 href={item.href}
-                className="max-w-[9rem] truncate transition-colors hover:text-slate-900 dark:hover:text-zinc-100 sm:max-w-none"
+                className="max-w-[9rem] truncate transition-colors hover:text-[#F2D74E] sm:max-w-none text-white/80"
               >
                 {item.label}
               </Link>
@@ -39,14 +39,14 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               <span
                 className={clsx(
                   "max-w-[9rem] truncate sm:max-w-none",
-                  isLast && "font-medium text-slate-800 dark:text-zinc-200"
+                  isLast && "font-semibold text-white"
                 )}
               >
                 {item.label}
               </span>
             )}
             {!isLast && (
-              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300 dark:text-zinc-600" />
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/40" />
             )}
           </span>
         );

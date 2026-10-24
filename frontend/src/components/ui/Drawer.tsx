@@ -58,20 +58,20 @@ export function Drawer({
       {/* Slide-over panel */}
       <div
         className={clsx(
-          "relative z-10 flex h-full w-full flex-col border-l border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-2xl animate-slide-in-right",
+          "relative z-10 flex h-full w-full flex-col border-l border-white/8 bg-[#121317] text-white shadow-2xl animate-slide-in-right",
           widthClasses[width]
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 p-5">
+        <div className="flex items-center justify-between border-b border-white/8 p-5 bg-[#121317]">
           <div>
             {title && (
-              <h2 className="font-display text-base font-semibold text-slate-900 dark:text-zinc-50">
+              <h2 className="font-display text-base font-semibold text-white">
                 {title}
               </h2>
             )}
             {description && (
-              <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">
+              <p className="mt-1 text-xs text-white/80">
                 {description}
               </p>
             )}
@@ -79,7 +79,7 @@ export function Drawer({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300 transition-colors"
+            className="rounded-lg p-1.5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           >
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
@@ -91,7 +91,7 @@ export function Drawer({
 
         {/* Footer */}
         {footer && (
-          <div className="border-t border-slate-100 dark:border-zinc-800 p-5 bg-slate-50/50 dark:bg-zinc-900/50">
+          <div className="border-t border-white/8 p-5 bg-[#181A1F]">
             {footer}
           </div>
         )}

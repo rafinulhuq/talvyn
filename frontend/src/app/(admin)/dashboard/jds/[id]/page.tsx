@@ -162,58 +162,58 @@ function JdNextStepActions({ jdId }: { jdId: string }) {
       {/* Tests */}
       <Link
         href={`/dashboard/jds/${jdId}/tests`}
-        className="group flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white p-4 shadow-xs transition-all hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-700/60"
+        className="group flex items-center gap-4 rounded-xl border border-white/8 bg-[#121317] p-4 shadow-xs transition-all hover:border-white/20 hover:bg-[#181A1F]"
       >
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white dark:bg-indigo-950/70 dark:text-indigo-400">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#181A1F] border border-white/5 text-[#F2D74E] transition-colors">
           <ClipboardList className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+          <p className="text-xs font-bold uppercase tracking-wider text-white">
             Assessment Tests
           </p>
-          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 text-xs text-white/70">
             Generate or review the 3 timed tests
           </p>
         </div>
-        <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+        <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-white/60 transition-transform group-hover:translate-x-1 group-hover:text-[#F2D74E]" />
       </Link>
 
       {/* Question Bank */}
       <Link
         href={`/dashboard/jds/${jdId}/question-bank`}
-        className="group flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white p-4 shadow-xs transition-all hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-700/60"
+        className="group flex items-center gap-4 rounded-xl border border-white/8 bg-[#121317] p-4 shadow-xs transition-all hover:border-white/20 hover:bg-[#181A1F]"
       >
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white dark:bg-indigo-950/70 dark:text-indigo-400">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#181A1F] border border-white/5 text-[#F2D74E] transition-colors">
           <Database className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+          <p className="text-xs font-bold uppercase tracking-wider text-white">
             Question Bank
           </p>
-          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 text-xs text-white/70">
             Reusable 3-section bank, shared across candidates
           </p>
         </div>
-        <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+        <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-white/60 transition-transform group-hover:translate-x-1 group-hover:text-[#F2D74E]" />
       </Link>
 
       {/* Candidates */}
       <Link
         href={`/dashboard/jds/${jdId}/candidates`}
-        className="group flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white p-4 shadow-xs transition-all hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-700/60 sm:col-span-2"
+        className="group flex items-center gap-4 rounded-xl border border-white/8 bg-[#121317] p-4 shadow-xs transition-all hover:border-white/20 hover:bg-[#181A1F] sm:col-span-2"
       >
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white dark:bg-indigo-950/70 dark:text-indigo-400">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#181A1F] border border-white/5 text-[#F2D74E] transition-colors">
           <Users className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+          <p className="text-xs font-bold uppercase tracking-wider text-white">
             Candidates
           </p>
-          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 text-xs text-white/70">
             Invite candidates and track status
           </p>
         </div>
-        <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+        <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-white/60 transition-transform group-hover:translate-x-1 group-hover:text-[#F2D74E]" />
       </Link>
     </div>
   );

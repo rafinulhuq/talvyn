@@ -142,19 +142,19 @@ export function UserPasswordResetModal({
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="open:flex m-0 h-full max-h-full w-full max-w-full items-center justify-center border-0 bg-transparent p-0 backdrop:bg-black/50 backdrop:backdrop-blur-md backdrop:animate-fade-backdrop motion-reduce:backdrop:animate-none"
+      className="open:flex m-0 h-full max-h-full w-full max-w-full items-center justify-center border-0 bg-transparent p-0 backdrop:bg-black/75 backdrop:backdrop-blur-md backdrop:animate-fade-backdrop motion-reduce:backdrop:animate-none"
     >
-      <div className="mx-4 w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl animate-fade-in motion-reduce:animate-none dark:bg-slate-900">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div className="mx-4 w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl bg-[#121317] border border-white/10 p-6 shadow-2xl animate-fade-in motion-reduce:animate-none text-white">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-400">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#181A1F] border border-white/10 text-[#F2D74E]">
               <KeyRound className="h-5 w-5" />
             </div>
             <div>
-              <h2 id={titleId} className="text-base font-semibold text-slate-900 dark:text-slate-50">
+              <h2 id={titleId} className="text-base font-semibold text-white">
                 Reset Password
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-white/70">
                 {userName} ({userEmail})
               </p>
             </div>
@@ -163,7 +163,7 @@ export function UserPasswordResetModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 dark:hover:bg-slate-800"
+            className="rounded-lg p-1 text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-50"
             aria-label="Close modal"
           >
             <X className="h-4 w-4" />
@@ -171,14 +171,14 @@ export function UserPasswordResetModal({
         </div>
 
         {/* Mode switcher tabs */}
-        <div className="mt-4 flex rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
+        <div className="mt-4 flex rounded-lg bg-[#181A1F] border border-white/10 p-1">
           <button
             type="button"
             onClick={() => { setTab("email"); setError(null); }}
-            className={`flex-1 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-semibold transition-colors ${
               tab === "email"
-                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-50"
-                : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                ? "bg-[#F2D74E] text-[#1A1600] shadow-sm"
+                : "text-white/80 hover:text-white hover:bg-white/10"
             }`}
           >
             <Mail className="h-3.5 w-3.5" />
@@ -187,10 +187,10 @@ export function UserPasswordResetModal({
           <button
             type="button"
             onClick={() => { setTab("direct"); setError(null); }}
-            className={`flex-1 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-semibold transition-colors ${
               tab === "direct"
-                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-50"
-                : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                ? "bg-[#F2D74E] text-[#1A1600] shadow-sm"
+                : "text-white/80 hover:text-white hover:bg-white/10"
             }`}
           >
             <Lock className="h-3.5 w-3.5" />
@@ -201,7 +201,7 @@ export function UserPasswordResetModal({
         {error && (
           <div
             role="alert"
-            className="mt-4 flex items-center gap-2 rounded-lg border border-danger/40 bg-danger-light p-3 text-xs text-danger-dark"
+            className="mt-4 flex items-center gap-2 rounded-lg border border-[#F87171]/40 bg-[#F87171]/10 p-3 text-xs text-[#F87171]"
           >
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
@@ -211,7 +211,7 @@ export function UserPasswordResetModal({
         {successMessage && (
           <div
             role="status"
-            className="mt-4 flex items-center gap-2 rounded-lg border border-success/40 bg-success-light p-3 text-xs text-success-dark"
+            className="mt-4 flex items-center gap-2 rounded-lg border border-[#4ADE80]/40 bg-[#4ADE80]/10 p-3 text-xs text-[#4ADE80]"
           >
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>{successMessage}</span>
@@ -220,8 +220,8 @@ export function UserPasswordResetModal({
 
         {tab === "email" ? (
           <div className="mt-4 flex flex-col gap-4">
-            <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-              Sends an email to <span className="font-medium text-slate-900 dark:text-slate-100">{userEmail}</span> containing
+            <p className="text-xs leading-relaxed text-white/80">
+              Sends an email to <span className="font-semibold text-white">{userEmail}</span> containing
               a secure link to choose a new password. The link is valid for 30 minutes.
             </p>
             <div className="flex justify-end gap-2 pt-2">
@@ -240,7 +240,7 @@ export function UserPasswordResetModal({
           </div>
         ) : (
           <form onSubmit={handleSetDirectly} noValidate className="mt-4 flex flex-col gap-3">
-            <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+            <p className="text-xs leading-relaxed text-white/80">
               Directly sets a new password. All currently active sessions for this account will be signed out immediately.
             </p>
 

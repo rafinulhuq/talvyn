@@ -397,7 +397,7 @@ function MagicLinkBox({ link }: { link: string }) {
         <button
           type="button"
           onClick={handleCopy}
-          className="shrink-0 p-1 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+          className="shrink-0 p-1 text-white/70 hover:text-white transition-colors"
           aria-label={copied ? "Magic link copied" : "Copy magic link"}
         >
           {copied ? (

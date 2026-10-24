@@ -9,80 +9,87 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // ─── Brand colors — Teal + Coral system ──────────────────
-      // Second reskin pass (see "Talvyn Color Directions", 2026-08-16) —
-      // the first attempt (Cobalt + Leaf, modeled directly on a competitor's
-      // extracted palette) read as generic/wrong once live. This is a
-      // deliberately distinct direction, chosen from 3 mocked-up options
-      // against the real dense admin layout, not another blind guess:
-      // `brand` (teal) carries almost the entire interface — sidebar,
-      // active/selected states, links, icons, badges. `accent` (coral) is
-      // new and reserved *only* for primary-action buttons, so it stays
-      // energetic instead of being diluted across every colored element.
-      // `success` is a teal-leaning green (not a generic Tailwind green) so
-      // it reads as part of the same family rather than a bolted-on hue.
+      // ─── Precision Developer Instrument Tokens ──────────────
       colors: {
         brand: {
-          50:  "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1",
-          600: "#4f46e5",
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
-          950: "#1e1b4b",
+          50:  "#FEFDF5",
+          100: "#FDFBE8",
+          200: "#FAF5C5",
+          300: "#F7EE9E",
+          400: "#F5E573",
+          500: "#F2D74E", // Signal Yellow Accent
+          600: "#E5C83B",
+          700: "#C9AE28",
+          800: "#A38B1C",
+          900: "#7A6715",
+          950: "#1A1600", // Accent Ink
         },
         accent: {
-          50:  "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1",
-          600: "#4f46e5",
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
+          DEFAULT: "#F2D74E",
+          hover: "#F7E27A",
+          ink: "#1A1600",
+          50:  "#FEFDF5",
+          100: "#FDFBE8",
+          200: "#FAF5C5",
+          300: "#F7EE9E",
+          400: "#F5E573",
+          500: "#F2D74E",
+          600: "#E5C83B",
+          700: "#C9AE28",
+          800: "#A38B1C",
+          900: "#7A6715",
         },
         ink: {
-          950: "#09090b",
-          900: "#121215",
-          800: "#18181b",
-          700: "#27272a",
-          600: "#3f3f46",
-          500: "#71717a",
-          400: "#a1a1aa",
+          950: "#0B0C0E", // Page graphite
+          900: "#121317", // Surface graphite
+          800: "#181A1F", // Raised graphite
+          700: "#22242B", // Overlay graphite
+          600: "#5A5F68", // Faint
+          500: "#8A8F98", // Muted
+          400: "#EDEEF0", // Text
         },
         mist: {
-          DEFAULT: "#f8fafc",
-          deep: "#f1f5f9",
+          DEFAULT: "#121317",
+          deep: "#0B0C0E",
+        },
+        indigo: {
+          50:  "#FEFDF5",
+          100: "#FDFBE8",
+          200: "#FAF5C5",
+          300: "#F7EE9E",
+          400: "#F5E573",
+          500: "#F2D74E",
+          600: "#F2D74E",
+          700: "#E5C83B",
+          800: "#C9AE28",
+          900: "#7A6715",
+          950: "#1A1600",
         },
         surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f8fafc",
-          subtle: "#f1f5f9",
-          border: "#e2e8f0",
+          canvas: "#0B0C0E",
+          DEFAULT: "#121317",
+          raised: "#181A1F",
+          muted: "#181A1F",
+          subtle: "#22242B",
+          border: "rgba(255, 255, 255, 0.08)",
         },
         success: {
-          light: "#ecfdf5",
-          DEFAULT: "#10b981",
-          dark: "#059669",
+          light: "rgba(74, 222, 128, 0.12)",
+          DEFAULT: "#4ADE80",
+          dark: "#22C55E",
         },
         warning: {
-          light: "#fffbeb",
-          DEFAULT: "#f59e0b",
-          dark: "#b45309",
+          light: "rgba(250, 204, 21, 0.12)",
+          DEFAULT: "#FACC15",
+          dark: "#EAB308",
         },
         danger: {
-          light: "#fef2f2",
-          DEFAULT: "#ef4444",
-          dark: "#b91c1c",
+          light: "rgba(248, 113, 113, 0.12)",
+          DEFAULT: "#F87171",
+          dark: "#EF4444",
         },
         info: {
-          light: "#f0f9ff",
+          light: "rgba(56, 189, 248, 0.12)",
           DEFAULT: "#38bdf8",
           dark: "#0369a1",
         },
@@ -255,7 +262,7 @@ const config: Config = {
         card: "0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)",
         "card-hover":
           "0 10px 18px -4px rgb(0 0 0 / 0.08), 0 4px 6px -2px rgb(0 0 0 / 0.05)",
-        "focus-ring": "0 0 0 3px rgb(99 102 241 / 0.35)",
+        "focus-ring": "0 0 0 2px #F2D74E",
       },
     },
   },

@@ -413,7 +413,7 @@ npm, PyPI, and Docker Hub. Names are cheap to claim now and expensive to
 litigate later.
 
 **5. Put licensing into the tree.** `LICENSE` (AGPL-3.0, per section 3),
-`NOTICE`, and copyright headers reading `Copyright (c) 2026 ACME AI` — the
+`NOTICE`, and copyright headers reading `Copyright (c) 2026 Talvyn` — the
 company as holder, not the individual. Then `CLA.md` and a CLA bot such as
 cla-assistant.
 

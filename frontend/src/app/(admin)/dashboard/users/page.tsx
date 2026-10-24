@@ -97,17 +97,17 @@ export default async function UsersPage() {
       <AddAdminSection />
 
       {signupRequests.length > 0 && (
-        <div className="mb-6 rounded-xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-4 border-b border-slate-100 pb-3 dark:border-slate-800">
+        <div className="mb-6 rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs">
+          <div className="mb-4 border-b border-white/8 pb-3">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+              <h2 className="text-sm font-semibold text-white">
                 Access Requests
               </h2>
-              <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-950/40 dark:text-amber-400">
+              <span className="inline-flex items-center rounded-full bg-[#FACC15]/10 px-2 py-0.5 text-xs font-medium text-[#FACC15] ring-1 ring-inset ring-[#FACC15]/20">
                 {signupRequests.length}
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-xs text-white/80">
               Company signups awaiting review. Approving grants a normal Admin account.
             </p>
           </div>
@@ -143,18 +143,18 @@ export default async function UsersPage() {
           return (
             <div
               key={user.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs transition-colors hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-white/8 bg-[#121317] p-4 sm:p-5 shadow-xs transition-colors hover:border-white/16"
             >
               <div className="flex items-center gap-3.5 min-w-0 flex-1">
                 <UserAvatar
                   userId={user.id}
                   name={user.name}
                   size={40}
-                  className="rounded-full ring-2 ring-slate-100 dark:ring-slate-800"
+                  className="rounded-full ring-2 ring-white/10"
                   fallbackClassName={
                     user.isActive
-                      ? "bg-indigo-600 text-white font-semibold"
-                      : "bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                      ? "bg-[#181A1F] text-[#F2D74E] border border-[#F2D74E]/30 font-semibold"
+                      : "bg-[#181A1F] text-white/70 border border-white/10"
                   }
                 />
                 <div className="min-w-0 flex-1">
@@ -162,43 +162,43 @@ export default async function UsersPage() {
                     <p
                       className={`truncate text-sm font-semibold ${
                         user.isActive
-                          ? "text-slate-900 dark:text-slate-100"
-                          : "text-slate-400 line-through dark:text-slate-500"
+                          ? "text-white"
+                          : "text-white/50 line-through"
                       }`}
                     >
                       {user.name}
                     </p>
                     {isSelf && (
-                      <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                      <span className="inline-flex items-center rounded-md bg-[#181A1F] border border-white/10 px-2 py-0.5 text-[11px] font-medium text-white">
                         You
                       </span>
                     )}
                     <span
                       className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium ${
                         user.role === "SUPER_ADMIN"
-                          ? "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-950/40 dark:text-indigo-400 dark:ring-indigo-500/20"
+                          ? "bg-[#F2D74E]/10 text-[#F2D74E] ring-1 ring-inset ring-[#F2D74E]/30"
                           : user.role === "ADMIN"
-                          ? "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                          : "bg-slate-50 text-slate-600 dark:bg-slate-800/60 dark:text-slate-400"
+                          ? "bg-[#181A1F] text-white border border-white/10"
+                          : "bg-[#181A1F] text-white/80 border border-white/8"
                       }`}
                     >
                       {badgeConfig.icon && <badgeConfig.icon className="h-3 w-3" />}
                       {badgeConfig.label}
                     </span>
                     {!user.isActive && (
-                      <span className="inline-flex items-center rounded-md bg-rose-50 px-2 py-0.5 text-[11px] font-medium text-rose-700 ring-1 ring-inset ring-rose-600/20 dark:bg-rose-950/40 dark:text-rose-400">
+                      <span className="inline-flex items-center rounded-md bg-[#F87171]/10 px-2 py-0.5 text-[11px] font-medium text-[#F87171] ring-1 ring-inset ring-[#F87171]/30">
                         Inactive
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
-                  <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
+                  <p className="mt-0.5 truncate text-xs text-white/80">{user.email}</p>
+                  <p className="mt-0.5 text-[11px] text-white/70">
                     Joined {formatDate(user.createdAt)}
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center sm:flex-col sm:items-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
+              <div className="flex flex-wrap items-center sm:flex-col sm:items-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/8">
                 <UserRoleSelect
                   userId={user.id}
                   currentRole={user.role}
@@ -228,22 +228,22 @@ export default async function UsersPage() {
         })}
       </div>
 
-      <p className="mt-4 text-xs text-slate-400 dark:text-slate-500">
+      <p className="mt-4 text-xs text-white/70">
         Deactivating an account blocks future sign-in · sessions expire after 8 hours.
       </p>
 
       {removedUsers.length > 0 && (
         <div className="mt-8">
-          <div className="mb-4 border-b border-slate-200/80 pb-3 dark:border-slate-800">
+          <div className="mb-4 border-b border-white/8 pb-3">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <h2 className="text-sm font-semibold text-white/90">
                 Removed Users
               </h2>
-              <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+              <span className="inline-flex items-center rounded-full bg-[#181A1F] border border-white/10 px-2 py-0.5 text-xs font-medium text-white">
                 {removedUsers.length}
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-xs text-white/70">
               Removed accounts cannot sign in but are preserved for restoration.
             </p>
           </div>
@@ -251,27 +251,27 @@ export default async function UsersPage() {
             {removedUsers.map((user) => (
               <div
                 key={user.id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-slate-200/60 bg-slate-50/50 p-4 opacity-80 dark:border-slate-800/60 dark:bg-slate-900/40"
+                className="flex items-center justify-between gap-4 rounded-xl border border-white/6 bg-[#121317]/60 p-4 opacity-70"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <UserAvatar
                     userId={user.id}
                     name={user.name}
                     size={36}
-                    className="rounded-full ring-1 ring-slate-200 dark:ring-slate-700"
-                    fallbackClassName="bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                    className="rounded-full ring-1 ring-white/10"
+                    fallbackClassName="bg-[#181A1F] text-white/70 border border-white/8"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="truncate text-xs font-medium text-slate-500 line-through dark:text-slate-400">
+                      <p className="truncate text-xs font-medium text-white/70 line-through">
                         {user.name}
                       </p>
-                      <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                      <span className="inline-flex items-center rounded-md bg-[#181A1F] border border-white/8 px-2 py-0.5 text-[10px] font-medium text-white/70">
                         {ROLE_BADGE[user.role].label}
                       </span>
                     </div>
-                    <p className="mt-0.5 truncate text-xs text-slate-400 dark:text-slate-500">{user.email}</p>
-                    <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
+                    <p className="mt-0.5 truncate text-xs text-white/70">{user.email}</p>
+                    <p className="mt-0.5 text-[11px] text-white/60">
                       Removed {user.deletedAt ? formatDate(user.deletedAt) : ""}
                     </p>
                   </div>

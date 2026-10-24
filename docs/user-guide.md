@@ -33,7 +33,7 @@ Once running, open your browser and go to:
 http://localhost
 ```
 
-Log in with the seeded admin account (`acmeai@talvyn.com` unless you set
+Log in with the seeded admin account (`admin@talvyn.com` unless you set
 `SEED_ADMIN_EMAIL`). The password is whatever you set as `SEED_ADMIN_PASSWORD`
 in `frontend/.env.local` before first startup — if you didn't set one, a
 random password was generated and printed once in the frontend logs
@@ -150,7 +150,7 @@ job post, careers page, or direct message.
 Public links use this format:
 
 ```text
-https://acmeTalvyn.vercel.app/apply/<slug>
+https://talvyn.vercel.app/apply/<slug>
 ```
 
 When a candidate opens that public link, they enter their name and email address.
@@ -158,7 +158,7 @@ The platform then creates a unique private assessment link for that candidate an
 sends them into the normal test flow:
 
 ```text
-https://acmeTalvyn.vercel.app/tests/<unique-token>
+https://talvyn.vercel.app/tests/<unique-token>
 ```
 
 This means one public link can be shared broadly, while every candidate is still
@@ -173,7 +173,7 @@ candidate.
 Magic links use this format:
 
 ```text
-https://acmeTalvyn.vercel.app/tests/<unique-token>
+https://talvyn.vercel.app/tests/<unique-token>
 ```
 
 Each candidate gets their own unique, private link. Do not reuse one candidate's

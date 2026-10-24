@@ -72,16 +72,16 @@ export function CreateUserForm({ onCreated, onCancel }: CreateUserFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="mb-6 flex flex-col gap-4 rounded-2xl bg-slate-100 p-5 dark:bg-slate-800/60">
+    <form onSubmit={handleSubmit} noValidate className="mb-6 flex flex-col gap-4 rounded-xl border border-white/8 bg-[#121317] p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <UserPlus className="h-4 w-4 text-slate-700 dark:text-slate-300" />
-          <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">New admin account</p>
+          <UserPlus className="h-4 w-4 text-[#F2D74E]" />
+          <p className="text-sm font-semibold text-white">New admin account</p>
         </div>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+          className="rounded p-1 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           aria-label="Cancel"
         >
           <X className="h-4 w-4" />
@@ -119,7 +119,7 @@ export function CreateUserForm({ onCreated, onCancel }: CreateUserFormProps) {
           autoComplete="new-password"
         />
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="new-user-role" className="text-sm font-medium text-slate-700">
+          <label htmlFor="new-user-role" className="text-xs font-semibold text-white">
             Role
           </label>
           <select
@@ -127,11 +127,11 @@ export function CreateUserForm({ onCreated, onCancel }: CreateUserFormProps) {
             value={role}
             disabled={saving}
             onChange={(e) => setRole(e.target.value as "USER" | "ADMIN" | "SUPER_ADMIN")}
-            className="h-9 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 transition-colors duration-150 hover:border-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="h-9 w-full rounded-lg border border-white/10 bg-[#181A1F] px-3 text-sm text-white transition-colors duration-150 hover:border-white/20 focus:border-[#F2D74E] focus:outline-none focus:ring-1 focus:ring-[#F2D74E]"
           >
-            <option value="USER">User</option>
-            <option value="ADMIN">Admin</option>
-            <option value="SUPER_ADMIN">Super Admin</option>
+            <option value="USER" className="bg-[#181A1F] text-white">User</option>
+            <option value="ADMIN" className="bg-[#181A1F] text-white">Admin</option>
+            <option value="SUPER_ADMIN" className="bg-[#181A1F] text-white">Super Admin</option>
           </select>
         </div>
       </div>

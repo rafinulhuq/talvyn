@@ -108,12 +108,12 @@ function StatCard({
   value: string | number;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-      <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+    <div className="rounded-xl border border-white/8 bg-[#121317] p-4 text-white">
+      <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-[#181A1F] border border-white/5 text-[#F2D74E]">
         {icon}
       </div>
-      <p className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{value}</p>
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
+      <p className="font-display text-2xl font-bold tracking-tight text-white">{value}</p>
+      <p className="text-xs font-medium text-white/80">{label}</p>
     </div>
   );
 }
@@ -130,10 +130,10 @@ function ContactRow({
   href?: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-900/50">
-      <div className="text-slate-400">{icon}</div>
+    <div className="flex items-center gap-3 rounded-lg border border-white/8 bg-[#181A1F] px-3 py-2.5">
+      <div className="text-white/80">{icon}</div>
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-white/70">
           {label}
         </p>
         {value ? (
@@ -142,16 +142,16 @@ function ContactRow({
               href={href}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex max-w-full items-center gap-1 truncate text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400"
+              className="inline-flex max-w-full items-center gap-1 truncate text-xs font-medium text-[#F2D74E] hover:underline"
             >
               <span className="truncate">{value}</span>
               <ExternalLink className="h-3 w-3 shrink-0" />
             </a>
           ) : (
-            <p className="truncate text-xs font-medium text-slate-800 dark:text-slate-200">{value}</p>
+            <p className="truncate text-xs font-medium text-white">{value}</p>
           )
         ) : (
-          <p className="text-xs text-slate-400">Not provided</p>
+          <p className="text-xs text-white/70">Not provided</p>
         )}
       </div>
     </div>
@@ -168,42 +168,42 @@ function AttemptRow({ attempt }: { attempt: CandidateAttemptItem }) {
     attempt.attempt_status === "SUBMITTED" || attempt.attempt_status === "EVALUATED";
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-xs transition-colors hover:border-slate-300 md:flex-row md:items-center dark:border-slate-800 dark:bg-slate-900">
+    <div className="flex flex-col gap-4 rounded-xl border border-white/8 bg-[#121317] px-5 py-4 text-white transition-colors hover:border-white/16 md:flex-row md:items-center">
       <div className="flex min-w-0 flex-1 gap-3.5">
-        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#181A1F] border border-white/5 text-[#F2D74E]">
           <ClipboardList className="h-5 w-5" />
         </div>
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="truncate font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+            <p className="truncate font-display text-sm font-semibold text-white">
               {attempt.test_title}
             </p>
             <Badge variant={attemptVariant(attempt.attempt_status)}>
               {titleCaseStatus(attempt.attempt_status)}
             </Badge>
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/80">
             <Link
               href={`/dashboard/jds/${attempt.jd_id}`}
-              className="inline-flex min-w-0 items-center gap-1 font-medium text-slate-700 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400 transition-colors"
+              className="inline-flex min-w-0 items-center gap-1 font-medium text-white hover:text-[#F2D74E] transition-colors"
             >
-              <Briefcase className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+              <Briefcase className="h-3.5 w-3.5 shrink-0 text-white/80" />
               <span className="truncate">{attempt.jd_title}</span>
             </Link>
             <span className="inline-flex items-center gap-1">
-              <CalendarClock className="h-3.5 w-3.5 text-slate-400" />
+              <CalendarClock className="h-3.5 w-3.5 text-white/80" />
               Started {formatDate(attempt.started_at)}
             </span>
             {attempt.submitted_at && (
               <span className="inline-flex items-center gap-1">
-                <CheckCircle2 className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#4ADE80]" />
                 Submitted {formatDate(attempt.submitted_at)}
               </span>
             )}
           </div>
           {attempt.attempt_status === "TERMINATED" && (
-            <div className="mt-2 flex items-start gap-1.5 rounded-lg border border-rose-200 bg-rose-50/70 px-2.5 py-1.5 text-rose-900 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-200">
-              <ShieldX className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-600" />
+            <div className="mt-2 flex items-start gap-1.5 rounded-lg border border-[#F87171]/20 bg-[#F87171]/10 px-2.5 py-1.5 text-[#F87171]">
+              <ShieldX className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#F87171]" />
               <p className="text-xs font-medium">
                 Integrity violation
                 {attempt.integrity_violation_reason &&
@@ -216,9 +216,9 @@ function AttemptRow({ attempt }: { attempt: CandidateAttemptItem }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 md:justify-end">
-        <div className="rounded-lg border border-slate-200 bg-slate-50/60 px-3 py-1.5 text-right dark:border-slate-800 dark:bg-slate-900">
-          <p className="font-display text-xs font-bold text-slate-900 dark:text-slate-100">{scoreText(attempt)}</p>
-          <p className="text-[10px] font-medium uppercase text-slate-400">Score</p>
+        <div className="rounded-lg border border-white/8 bg-[#181A1F] px-3 py-1.5 text-right">
+          <p className="font-display text-xs font-bold text-white">{scoreText(attempt)}</p>
+          <p className="text-[10px] font-medium uppercase text-white/80">Score</p>
         </div>
         {recommendationConfig && (
           <Badge
@@ -237,11 +237,11 @@ function AttemptRow({ attempt }: { attempt: CandidateAttemptItem }) {
         {canOpenResult && (
           <Link
             href={`/dashboard/results/${attempt.attempt_id}`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:border-slate-300 hover:bg-slate-50 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#181A1F] px-3 py-1.5 text-xs font-semibold text-white hover:border-white/20 hover:text-[#F2D74E] transition-colors"
           >
-            <BarChart2 className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+            <BarChart2 className="h-3.5 w-3.5 text-[#F2D74E]" />
             {attempt.has_evaluation ? "Open report" : "Run evaluation"}
-            <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
+            <ChevronRight className="h-3.5 w-3.5 text-white/80" />
           </Link>
         )}
       </div>
@@ -271,23 +271,23 @@ export default async function CandidateProfilePage({ params }: Props) {
 
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-indigo-50 border border-indigo-200 text-2xl font-bold text-indigo-700 dark:bg-indigo-950/40 dark:border-indigo-900 dark:text-indigo-300">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-[#F2D74E]/30 text-2xl font-bold text-[#F2D74E]">
             {candidate.name.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0">
             <div className="mb-1.5 flex flex-wrap items-center gap-2">
-              <h1 className="truncate font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              <h1 className="truncate font-display text-2xl font-bold tracking-tight text-white">
                 {candidate.name}
               </h1>
               <Badge variant="indigo">Candidate #{candidate.candidate_number}</Badge>
             </div>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/80">
               <span className="inline-flex items-center gap-1 font-mono text-[11px]">
-                <Hash className="h-3.5 w-3.5 text-slate-400" />
+                <Hash className="h-3.5 w-3.5 text-white/70" />
                 {candidate.id}
               </span>
               <span className="inline-flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5 text-slate-400" />
+                <Clock className="h-3.5 w-3.5 text-white/70" />
                 Created {formatDateTime(candidate.created_at)}
               </span>
             </div>
@@ -320,10 +320,10 @@ export default async function CandidateProfilePage({ params }: Props) {
       </div>
 
       <div className="mb-6 grid gap-6 lg:grid-cols-[340px_1fr]">
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2.5">
-            <UserRound className="h-4 w-4 text-indigo-600" />
-            <h2 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+        <div className="rounded-xl border border-white/8 bg-[#121317] p-5 text-white">
+          <div className="mb-4 flex items-center gap-2 border-b border-white/8 pb-2.5">
+            <UserRound className="h-4 w-4 text-[#F2D74E]" />
+            <h2 className="font-display text-sm font-semibold text-white">
               Profile Information
             </h2>
           </div>
@@ -355,16 +355,16 @@ export default async function CandidateProfilePage({ params }: Props) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-2.5">
+        <div className="rounded-xl border border-white/8 bg-[#121317] p-5 text-white">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-white/8 pb-2.5">
             <div>
               <div className="flex items-center gap-2">
-                <ClipboardList className="h-4 w-4 text-indigo-600" />
-                <h2 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <ClipboardList className="h-4 w-4 text-[#F2D74E]" />
+                <h2 className="font-display text-sm font-semibold text-white">
                   Test Summary
                 </h2>
               </div>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-xs text-white/80">
                 Candidate assessment history across every job description and invitation.
               </p>
             </div>
@@ -375,34 +375,34 @@ export default async function CandidateProfilePage({ params }: Props) {
             )}
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/50">
-              <p className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <div className="rounded-lg border border-white/8 bg-[#181A1F] p-4">
+              <p className="font-display text-2xl font-bold tracking-tight text-white">
                 {candidate.total_attempts}
               </p>
-              <p className="text-xs text-slate-500">Total tests</p>
+              <p className="text-xs text-white/80">Total tests</p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/50">
-              <p className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <div className="rounded-lg border border-white/8 bg-[#181A1F] p-4">
+              <p className="font-display text-2xl font-bold tracking-tight text-white">
                 {candidate.completed_attempts}
               </p>
-              <p className="text-xs text-slate-500">Submitted</p>
+              <p className="text-xs text-white/80">Submitted</p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/50">
-              <p className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <div className="rounded-lg border border-white/8 bg-[#181A1F] p-4">
+              <p className="font-display text-2xl font-bold tracking-tight text-white">
                 {evaluatedCount}
               </p>
-              <p className="text-xs text-slate-500">Evaluated</p>
+              <p className="text-xs text-white/80">Evaluated</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-4 flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-2.5">
+      <div className="mb-4 flex items-center justify-between gap-3 border-b border-white/8 pb-2.5">
         <div>
-          <h2 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <h2 className="font-display text-sm font-semibold text-white">
             Tests and Assessment History
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-white/80">
             One record per test attempt, tracked under this candidate profile.
           </p>
         </div>

@@ -25,8 +25,8 @@ export function DocumentModeTabs({
   onClear: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-200/80 px-5 py-3 bg-white dark:border-slate-800 dark:bg-slate-900">
-      <div className="flex items-center gap-1.5 rounded-lg bg-slate-100/80 p-1 dark:bg-slate-800/80">
+    <div className="flex items-center justify-between border-b border-white/8 px-5 py-3 bg-[#121317]">
+      <div className="flex items-center gap-1.5 rounded-lg bg-[#181A1F] border border-white/10 p-1">
         {tabs.map(({ mode, label, icon: Icon }) => {
           const isActive = activeMode === mode;
           return (
@@ -35,13 +35,13 @@ export function DocumentModeTabs({
               type="button"
               onClick={() => onModeChange(mode)}
               className={clsx(
-                "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all",
                 isActive
-                  ? "bg-white text-slate-900 shadow-xs dark:bg-slate-900 dark:text-slate-100"
-                  : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+                  ? "bg-[#F2D74E] text-[#1A1600] shadow-xs"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
               )}
             >
-              <Icon className={clsx("h-3.5 w-3.5", isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400")} />
+              <Icon className={clsx("h-3.5 w-3.5", isActive ? "text-[#1A1600]" : "text-white/70")} />
               {label}
             </button>
           );
@@ -77,17 +77,17 @@ export function ActiveFileBanner({
   return (
     <div className="flex items-center justify-between border-b border-slate-200/80 bg-slate-50/80 px-5 py-2.5 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-300">
       <div className="flex items-center gap-2">
-        <FileCode2 className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-        <span className="font-semibold text-slate-900 dark:text-slate-100">{sourceName}</span>
+        <FileCode2 className="h-4 w-4 text-[#F2D74E]" />
+        <span className="font-semibold text-white">{sourceName}</span>
         {sourceSize != null && (showSizeWhenZero || sourceSize > 0) && (
-          <span className="text-[11px] text-slate-400">({(sourceSize / 1024).toFixed(1)} KB)</span>
+          <span className="text-[11px] text-white/70">({(sourceSize / 1024).toFixed(1)} KB)</span>
         )}
       </div>
       <button
         type="button"
         onClick={onClear}
         aria-label="Remove file"
-        className="rounded p-0.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
+        className="rounded p-0.5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
       >
         <X className="h-3.5 w-3.5" />
       </button>

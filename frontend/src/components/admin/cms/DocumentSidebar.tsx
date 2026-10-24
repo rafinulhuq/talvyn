@@ -80,7 +80,7 @@ export function DocumentSidebar({
                 key={section.id}
                 type="button"
                 onClick={() => onJumpToSection(section.id)}
-                className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-sm text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50"
+                className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
               >
                 <span className="truncate">{section.label}</span>
                 {editedSections.has(section.id) && (

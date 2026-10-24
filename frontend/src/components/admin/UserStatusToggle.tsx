@@ -59,8 +59,8 @@ export function UserStatusToggle({ userId, userName, isActive, disabled }: UserS
         onClick={() => (active ? setShowConfirm(true) : setStatus(true))}
         className={
           active
-            ? "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-500 transition-colors hover:bg-danger-light hover:text-danger-dark disabled:cursor-not-allowed disabled:opacity-50"
-            : "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-success-dark transition-colors hover:bg-success-light disabled:cursor-not-allowed disabled:opacity-50"
+            ? "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white/80 transition-colors hover:bg-[#F87171]/10 hover:text-[#F87171] disabled:cursor-not-allowed disabled:opacity-50"
+            : "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#4ADE80] transition-colors hover:bg-[#4ADE80]/10 hover:text-[#4ADE80] disabled:cursor-not-allowed disabled:opacity-50"
         }
       >
         {saving ? (
@@ -79,7 +79,7 @@ export function UserStatusToggle({ userId, userName, isActive, disabled }: UserS
           title="Deactivate this account?"
           description={
             <>
-              <span className="font-medium text-slate-900">{userName}</span> will
+              <span className="font-semibold text-white">{userName}</span> will
               no longer be able to sign in. You can reactivate the account at
               any time from this page.
             </>

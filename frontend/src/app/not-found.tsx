@@ -35,13 +35,13 @@ export default function GlobalNotFound() {
       <div className="flex items-center gap-4 text-sm">
         <Link
           href="/dashboard"
-          className="rounded-lg bg-accent-600 px-4 py-2 font-medium text-white hover:bg-accent-700 transition-colors"
+          className="rounded-lg bg-[#F2D74E] px-4 py-2 font-semibold text-[#1A1600] hover:bg-[#F7E27A] transition-colors"
         >
           Go to dashboard
         </Link>
         <Link
           href="/login"
-          className="text-slate-500 hover:text-slate-900 transition-colors"
+          className="text-white/70 hover:text-white transition-colors"
         >
           Sign in
         </Link>

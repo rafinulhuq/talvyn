@@ -94,14 +94,14 @@ function ScoreBar({ score, max, label }: { score: number; max: number; label: st
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{label}</span>
-        <span className="text-xs font-semibold tabular-nums text-slate-900 dark:text-white">
+        <span className="text-xs font-medium text-white/80">{label}</span>
+        <span className="text-xs font-semibold tabular-nums text-white">
           {score}/{max} ({pct}%)
         </span>
       </div>
-      <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+      <div className="h-1.5 w-full rounded-full bg-[#181A1F] border border-white/5 overflow-hidden">
         <div
-          className="h-full rounded-full bg-indigo-600 dark:bg-indigo-500 origin-left transition-all duration-500"
+          className="h-full rounded-full bg-[#F2D74E] origin-left transition-all duration-500"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -131,26 +131,26 @@ export function LeaderboardCandidateRow({
   };
 
   return (
-    <div className="border-b border-slate-100 last:border-0 bg-white dark:border-slate-800/80 dark:bg-slate-900">
+    <div className="border-b border-white/8 last:border-0 bg-[#121317] text-white">
       <button
         onClick={() => setExpanded((e) => !e)}
-        className="group/row flex w-full flex-col gap-2 px-4 py-3 text-left transition-colors duration-150 ease-out hover:bg-slate-50/70 sm:flex-row sm:items-center sm:gap-3 sm:px-5 sm:py-4 dark:hover:bg-slate-800/50"
+        className="group/row flex w-full flex-col gap-2 px-4 py-3 text-left transition-colors duration-150 ease-out hover:bg-white/5 sm:flex-row sm:items-center sm:gap-3 sm:px-5 sm:py-4"
       >
         <div className="flex w-full min-w-0 items-center gap-3 sm:flex-1">
           <div className="shrink-0">
             <RankBadge rank={globalRank} />
           </div>
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 font-bold text-sm text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/60 shadow-xs">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#181A1F] font-bold text-sm text-[#F2D74E] border border-white/10 shadow-xs">
             {entry.candidate_name.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{entry.candidate_name}</p>
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+            <p className="truncate text-sm font-semibold text-white">{entry.candidate_name}</p>
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-white/80">
               <span className="truncate">{entry.candidate_email}</span>
               {(entry.company_name || entry.invited_by_name) && (
                 <>
-                  <span className="text-slate-300 dark:text-slate-600">&bull;</span>
-                  <span className="truncate font-medium text-slate-700 dark:text-slate-300">
+                  <span className="text-white/20">&bull;</span>
+                  <span className="truncate font-medium text-white">
                     🏢 {entry.company_name || entry.invited_by_name}
                   </span>
                 </>
@@ -163,9 +163,9 @@ export function LeaderboardCandidateRow({
             <p className={clsx("text-base font-bold tabular-nums", getScoreColor(entry.percentage))}>
               {entry.percentage}%
             </p>
-            <p className="text-[10px] text-slate-400">{entry.total_score}/{entry.max_score}</p>
+            <p className="text-[10px] text-white/80">{entry.total_score}/{entry.max_score}</p>
           </div>
-          <div className="shrink-0 text-slate-400 sm:hidden">
+          <div className="shrink-0 text-white/80 sm:hidden">
             <ChevronDown
               className={clsx(
                 "h-5 w-5 transition-transform duration-200",
@@ -178,11 +178,11 @@ export function LeaderboardCandidateRow({
         {/* Mobile status chips */}
         <div className="flex flex-wrap items-center gap-1.5 sm:hidden">
           {levelCfg && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[10px] font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#181A1F] px-2.5 py-0.5 text-[10px] font-medium text-white">
               {levelCfg.emoji} {levelCfg.label}
             </span>
           )}
-          <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-medium text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-300">
+          <span className="inline-flex items-center gap-1 rounded-full border border-[#F2D74E]/30 bg-[#F2D74E]/10 px-2.5 py-0.5 text-[10px] font-medium text-[#F2D74E]">
             {recCfg.emoji} {recCfg.label}
           </span>
           <PassBadge passed={entry.passed} />
@@ -190,25 +190,25 @@ export function LeaderboardCandidateRow({
 
         {/* ── Wide-screen columns ─────────────────────────────────── */}
         <div className="hidden w-48 min-w-0 shrink-0 flex-col items-end gap-1 lg:flex">
-          <p className="w-full truncate text-right text-xs font-medium text-slate-800 dark:text-slate-200">{entry.jd_title}</p>
-          <span className="rounded-md border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          <p className="w-full truncate text-right text-xs font-medium text-white">{entry.jd_title}</p>
+          <span className="rounded-md border border-white/10 bg-[#181A1F] px-1.5 py-0.5 text-[10px] font-medium text-white/80">
             {testType.label}
           </span>
         </div>
         <div className="hidden w-16 shrink-0 text-right sm:block">
-          <p className="text-sm font-bold tabular-nums text-slate-900 dark:text-white">
+          <p className="text-sm font-bold tabular-nums text-white">
             {entry.percentage}%
           </p>
-          <p className="text-[10px] text-slate-400">{entry.total_score}/{entry.max_score}</p>
+          <p className="text-[10px] text-white/80">{entry.total_score}/{entry.max_score}</p>
         </div>
         {levelCfg && (
           <div className="hidden w-28 shrink-0 items-center gap-1.5 md:flex">
             <span className="text-sm">{levelCfg.emoji}</span>
-            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">{levelCfg.label}</span>
+            <span className="text-xs font-medium text-white/80">{levelCfg.label}</span>
           </div>
         )}
         <div className="hidden w-28 shrink-0 xl:block">
-          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+          <span className="text-xs font-semibold text-white">
             {recCfg.emoji} {recCfg.label}
           </span>
         </div>
@@ -216,7 +216,7 @@ export function LeaderboardCandidateRow({
           <PassBadge passed={entry.passed} />
         </div>
         <div className="hidden w-16 lg:flex shrink-0 items-center">
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 px-2 py-0.5 text-[10px] font-medium dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <span className="inline-flex items-center gap-1 rounded-full border border-[#4ADE80]/30 bg-[#4ADE80]/10 text-[#4ADE80] px-2 py-0.5 text-[10px] font-medium">
             <ShieldCheck className="h-3 w-3" />
             Verified
           </span>
@@ -229,13 +229,13 @@ export function LeaderboardCandidateRow({
                 e.stopPropagation();
                 onOpenDossier(entry);
               }}
-              className="rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 px-2.5 py-1 text-xs font-semibold shadow-xs transition-colors dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              className="rounded-lg border border-white/10 bg-[#181A1F] text-white hover:border-[#F2D74E]/40 hover:text-[#F2D74E] px-2.5 py-1 text-xs font-semibold shadow-xs transition-colors"
             >
               Dossier
             </button>
           </div>
         )}
-        <div className="hidden shrink-0 text-slate-400 sm:block">
+        <div className="hidden shrink-0 text-white/80 sm:block">
           <ChevronDown
             className={clsx(
               "h-4 w-4 transition-transform duration-200",
@@ -246,16 +246,16 @@ export function LeaderboardCandidateRow({
       </button>
 
       {expanded && (
-        <div className="border-t border-slate-100 bg-slate-50/60 px-4 py-5 sm:px-6 dark:border-slate-800 dark:bg-slate-850/50">
+        <div className="border-t border-white/8 bg-[#181A1F]/50 px-4 py-5 sm:px-6">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 flex flex-col gap-1">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Candidate</p>
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">{entry.candidate_name}</p>
-              <p className="text-xs text-slate-500">{entry.candidate_email}</p>
+            <div className="rounded-xl border border-white/8 bg-[#121317] p-4 flex flex-col gap-1 text-white">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-white/80">Candidate</p>
+              <p className="text-sm font-semibold text-white">{entry.candidate_name}</p>
+              <p className="text-xs text-white/80">{entry.candidate_email}</p>
               {entry.candidate_number && (
-                <p className="text-[10px] text-slate-400 font-mono">Candidate #{entry.candidate_number}</p>
+                <p className="text-[10px] text-white/70 font-mono">Candidate #{entry.candidate_number}</p>
               )}
-              <p className="text-[10px] text-slate-400 mt-1">
+              <p className="text-[10px] text-white/70 mt-1">
                 Evaluated {formatDate(entry.evaluated_at)}
               </p>
             </div>

@@ -144,13 +144,13 @@ export function SettingsClient({
               onClick={() => setActiveTab(tab.id)}
               className={`rounded-xl border p-3.5 text-left transition-all shadow-xs ${
                 selected
-                  ? "border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-1 ring-indigo-500/20 dark:border-indigo-500 dark:bg-indigo-950/50 dark:text-indigo-200"
-                  : "border-slate-200/80 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                  ? "border-[#F2D74E]/40 bg-[#181A1F] text-[#F2D74E] ring-1 ring-[#F2D74E]/30"
+                  : "border-white/8 bg-[#121317] text-white hover:border-white/16 hover:bg-[#181A1F]"
               }`}
             >
               <span className="block text-xs font-bold uppercase tracking-wider">{tab.label}</span>
               <span className={`mt-1 block text-xs leading-tight ${
-                selected ? "text-indigo-700/80 dark:text-indigo-300" : "text-slate-500 dark:text-slate-400"
+                selected ? "text-[#F2D74E]/90" : "text-white/80"
               }`}>
                 {tab.description}
               </span>

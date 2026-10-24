@@ -27,15 +27,15 @@ export function LeaderboardStats({ entries }: { entries: GlobalLeaderboardEntry[
     // the vertical space and stays legible.
     <div className="mb-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
       {stats.map(({ label, value, icon: Icon }) => (
-        <div key={label} className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 flex items-center gap-3.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+        <div key={label} className="rounded-xl border border-white/8 bg-[#121317] p-4 text-white flex items-center gap-3.5">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#181A1F] border border-white/5 text-[#F2D74E]">
             <Icon className="h-5 w-5" />
           </span>
           <div className="min-w-0">
-            <p className="truncate font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 tabular-nums">
+            <p className="truncate font-display text-2xl font-bold tracking-tight text-white tabular-nums">
               {value}
             </p>
-            <p className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
+            <p className="truncate text-xs font-medium text-white/80">{label}</p>
           </div>
         </div>
       ))}

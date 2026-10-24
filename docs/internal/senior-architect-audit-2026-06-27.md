@@ -66,7 +66,7 @@ Important note: running bare `backend/.venv_test/bin/pytest` from repo root coll
 
 Evidence:
 
-- `frontend/prisma/seed.ts:6-12` hardcodes `acmeai@Talvyn.com` / `acmeai@r2026p#` as `SUPER_ADMIN`.
+- `frontend/prisma/seed.ts:6-12` hardcodes `admin@talvyn.com` / `talvyn@r2026p#` as `SUPER_ADMIN`.
 - `docker-compose.prod.yml:228` runs `npx prisma db seed && npm run start` in production.
 - `README.md:13-16` advertises the same default login.
 

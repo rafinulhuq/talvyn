@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Terminal, CheckCircle2, Code2, Briefcase, Cpu } from "lucide-react";
-import { TiltBlock } from "@/components/ui/TiltBlock";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import type { HomeContent } from "@/lib/cms/content";
 
 interface RoleDemoItem {
@@ -21,7 +20,7 @@ interface RoleDemoItem {
 const roleDemos: RoleDemoItem[] = [
   {
     id: "backend",
-    tabLabel: "[01: DISTRIBUTED_BACKEND_LEAD]",
+    tabLabel: "Distributed Backend Lead",
     badge: "ROLE // DISTRIBUTED_SYSTEMS_ARCHITECT",
     scenarioTitle: "Scenario: 50,000 req/sec Spike & Database Lock Contention",
     scenarioDesc:
@@ -35,7 +34,7 @@ const roleDemos: RoleDemoItem[] = [
   },
   {
     id: "frontend",
-    tabLabel: "[02: LEAD_FRONTEND_ENGINEER]",
+    tabLabel: "Lead Frontend Engineer",
     badge: "ROLE // SENIOR_FULLSTACK_ENGINEER",
     scenarioTitle: "Scenario: Next.js Hydration Mismatch & Micro-Frontend Drift",
     scenarioDesc:
@@ -49,7 +48,7 @@ const roleDemos: RoleDemoItem[] = [
   },
   {
     id: "ai_eng",
-    tabLabel: "[03: LLM_APPLICATIONS_ENGINEER]",
+    tabLabel: "LLM Applications Engineer",
     badge: "ROLE // AI_PLATFORM_ENGINEER",
     scenarioTitle: "Scenario: RAG Hallucination & High-Volume Token Cost Optimization",
     scenarioDesc:
@@ -68,129 +67,129 @@ export function AssessmentTypesSection({ content }: { content: HomeContent["asse
   const demo = roleDemos[activeTab] ?? roleDemos[0];
 
   return (
-    <section id="assessment-types" className="border-b border-slate-300 bg-white py-24 font-sans text-slate-900 scroll-mt-20 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="mb-14 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+    <section id="assessment-types" className="mt-28">
+      <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
+        {/* Header */}
+        <div className="text-center">
+          <span className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#F2D74E] block">
             {content.eyebrow || "Evaluation Specs & Role Matrices"}
-          </p>
-          <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white">
+          </span>
+          <h2 className="mt-3.5 text-[clamp(30px,4vw,44px)] font-[650] tracking-[-0.035em] max-w-[20ch] mx-auto text-balance text-white">
             {content.title || "Engineered for High-Stakes Roles"}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base text-slate-600 font-normal dark:text-slate-300">
+          <p className="mt-4 text-[16px] text-[#8A8F98] max-w-[56ch] mx-auto">
             {content.body || "Real-world engineering challenges that expose genuine intuition and filter out prompt-engineers."}
           </p>
         </div>
 
         {/* Role Selector Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-10 mb-8">
           {roleDemos.map((item, idx) => (
             <button
               key={item.id}
               type="button"
               onClick={() => setActiveTab(idx)}
-              className={`rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-150 ${
+              className={`rounded-[10px] px-4 py-2.5 text-xs font-semibold transition-colors ${
                 activeTab === idx
-                  ? "bg-indigo-600 text-white shadow-xs"
-                  : "border border-slate-300 bg-white text-slate-700 shadow-xs hover:border-slate-400 hover:text-indigo-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:text-indigo-400"
+                  ? "bg-[#F2D74E] text-[#1A1600]"
+                  : "border border-white/12 bg-transparent text-[#8A8F98] hover:text-white hover:border-white/24"
               }`}
             >
-              {item.tabLabel.replace(/\[\d+:\s*|_\]/g, " ").trim()}
+              {item.tabLabel}
             </button>
           ))}
         </div>
 
-        {/* Interactive Scenario & Analysis Display Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column (7 cols): Challenge Specification */}
-          <div className="lg:col-span-7 rounded-2xl border border-slate-300 bg-white p-6 sm:p-8 flex flex-col justify-between shadow-sm ring-1 ring-slate-900/5 dark:border-slate-800 dark:bg-slate-900">
+        {/* Display Blocks */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* Left Column (7 cols): Challenge Spec */}
+          <div className="lg:col-span-7 rounded-[14px] border border-white/[0.08] bg-[#121317] p-6 sm:p-7 flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-5 text-xs text-slate-500 font-medium dark:text-slate-400">
-                <span className="font-semibold text-indigo-600 dark:text-indigo-400">{demo.badge}</span>
-                <span className="text-slate-700 dark:text-slate-300 font-semibold">Production-Grade Difficulty</span>
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-5 text-xs font-mono">
+                <span className="font-semibold text-[#F2D74E]">{demo.badge}</span>
+                <span className="text-[#8A8F98]">Production Difficulty</span>
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-3 dark:text-white">
+              <h3 className="text-[17px] font-semibold text-white mb-3">
                 {demo.scenarioTitle}
               </h3>
-              <div className="rounded-xl border border-indigo-200 bg-indigo-50/40 p-4 text-xs sm:text-sm text-slate-800 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-slate-200 leading-relaxed italic my-4">
+              <div className="rounded-[10px] border border-white/[0.08] bg-[#181A1F] p-4 text-[13px] text-white leading-relaxed italic my-4 font-mono">
                 {demo.scenarioDesc}
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
-                <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1 font-semibold dark:text-slate-400">
+              <div className="mt-6 pt-4 border-t border-white/[0.06]">
+                <span className="text-[11px] text-[#5A5F68] uppercase tracking-[0.08em] block mb-1 font-mono">
                   Evaluation Rationale
                 </span>
-                <p className="text-xs text-slate-600 leading-relaxed font-normal dark:text-slate-300">
+                <p className="text-[13px] text-[#8A8F98] leading-relaxed">
                   {demo.whyItWorks}
                 </p>
               </div>
             </div>
 
-            <div className="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
-              <span className="text-xs text-slate-500 font-medium dark:text-slate-400">Generated via Talvyn AI Taxonomy</span>
+            <div className="mt-8 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+              <span className="text-[12px] text-[#5A5F68] font-mono">Generated via Talvyn Engine</span>
               <Link
                 href="/dashboard/jds/upload"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 active:scale-95 transition-all"
+                className="inline-flex items-center gap-1.5 rounded-[10px] bg-[#F2D74E] px-4 py-2 text-xs font-semibold text-[#1A1600] hover:bg-[#F7E27A] transition-colors"
               >
-                <span>Generate Test Like This</span>
+                <span>Generate Assessment</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </div>
 
-          {/* Right Column (5 cols): AI Grading Matrix Telemetry */}
-          <div className="lg:col-span-5 rounded-2xl border border-slate-300 bg-white p-6 sm:p-8 flex flex-col justify-between shadow-sm ring-1 ring-slate-900/5 dark:border-slate-800 dark:bg-slate-900">
+          {/* Right Column (5 cols): AI Scorecard */}
+          <div className="lg:col-span-5 rounded-[14px] border border-white/[0.08] bg-[#121317] p-6 sm:p-7 flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-5 text-xs text-slate-500 font-medium dark:text-slate-400">
-                <span className="font-semibold text-indigo-600 dark:text-indigo-400">Evaluation Scorecard</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Verified</span>
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-5 text-xs font-mono">
+                <span className="font-semibold text-white">Evaluation Scorecard</span>
+                <span className="text-[#4ADE80] font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5 inline" /> Verified
+                </span>
               </div>
 
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider dark:text-slate-400">Candidate</span>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{demo.candidateName}</p>
+                  <span className="text-[11px] text-[#5A5F68] uppercase tracking-[0.08em] font-mono">Candidate</span>
+                  <p className="text-[15px] font-semibold text-white">{demo.candidateName}</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider dark:text-slate-400">Score</span>
-                  <p className="text-sm font-bold text-indigo-600 dark:text-indigo-400">{demo.candidateScore}</p>
+                  <span className="text-[11px] text-[#5A5F68] uppercase tracking-[0.08em] font-mono">Fit Index</span>
+                  <p className="text-[15px] font-mono font-bold text-[#F2D74E]">{demo.candidateScore.split("//")[0]}</p>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-300 bg-slate-50/60 p-4 mb-4 shadow-xs dark:border-slate-800 dark:bg-slate-800/40">
-                <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider block mb-1 dark:text-slate-400">
-                  Defensible AI Summary
+              <div className="rounded-[10px] border border-white/[0.08] bg-[#181A1F] p-4 mb-4">
+                <span className="text-[11px] text-[#5A5F68] uppercase tracking-[0.08em] block mb-1 font-mono">
+                  Defensible Audit Summary
                 </span>
-                <p className="text-xs text-slate-700 leading-relaxed font-normal dark:text-slate-300">
+                <p className="text-[13px] text-[#8A8F98] leading-relaxed">
                   {demo.candidateAnalysis}
                 </p>
               </div>
 
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 py-1.5">
-                  <span className="text-slate-500 dark:text-slate-400">Latency to Grade</span>
-                  <span className="text-slate-900 font-semibold dark:text-white">1.8s</span>
+              <div className="space-y-2 text-xs font-mono">
+                <div className="flex justify-between border-b border-white/[0.06] py-1.5">
+                  <span className="text-[#8A8F98]">Latency to Grade</span>
+                  <span className="text-white font-semibold">1.8s</span>
                 </div>
-                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 py-1.5">
-                  <span className="text-slate-500 dark:text-slate-400">Proctor Integrity</span>
-                  <span className="text-emerald-600 font-semibold dark:text-emerald-400">100% (0 flags)</span>
+                <div className="flex justify-between border-b border-white/[0.06] py-1.5">
+                  <span className="text-[#8A8F98]">Proctor Integrity</span>
+                  <span className="text-[#4ADE80] font-semibold">100% (0 flags)</span>
                 </div>
                 <div className="flex justify-between py-1.5">
-                  <span className="text-slate-500 dark:text-slate-400">Recommendation</span>
-                  <span className="text-indigo-600 font-semibold dark:text-indigo-400">Strong Hire</span>
+                  <span className="text-[#8A8F98]">Verdict</span>
+                  <span className="text-[#F2D74E] font-semibold">Strong Hire</span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-center">
-              <span className="text-[11px] text-slate-400 font-medium">All scores backed by explainable criteria</span>
+            <div className="mt-6 pt-4 border-t border-white/[0.08] text-center font-mono">
+              <span className="text-[11px] text-[#5A5F68]">100% explainable rubric telemetry</span>
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );

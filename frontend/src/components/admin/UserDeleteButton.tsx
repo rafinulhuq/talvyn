@@ -52,7 +52,7 @@ export function UserDeleteButton({ userId, userName, disabled }: UserDeleteButto
         type="button"
         disabled={disabled || saving}
         onClick={() => setShowConfirm(true)}
-        className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-500 transition-colors hover:bg-danger-light hover:text-danger-dark disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white/80 transition-colors hover:bg-[#F87171]/10 hover:text-[#F87171] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserMinus className="h-3.5 w-3.5" />}
         Remove
@@ -64,7 +64,7 @@ export function UserDeleteButton({ userId, userName, disabled }: UserDeleteButto
           title="Remove this account?"
           description={
             <>
-              <span className="font-medium text-slate-900">{userName}</span> will
+              <span className="font-semibold text-white">{userName}</span> will
               lose access immediately and disappear from this list. Nothing is
               deleted for good — you can restore the account from the Removed
               section below at any time.

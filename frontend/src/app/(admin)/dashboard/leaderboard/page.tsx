@@ -419,7 +419,7 @@ export default function LeaderboardPage() {
               <button
                 type="button"
                 onClick={() => setShowPodium((prev) => !prev)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#181A1F] px-3 py-2 text-xs font-semibold text-white hover:border-white/20 transition-colors"
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
                 <span>{showPodium ? "Hide Podium" : "Show Podium"}</span>
@@ -429,7 +429,7 @@ export default function LeaderboardPage() {
                 type="button"
                 onClick={handleExportCsv}
                 disabled={displayed.length === 0}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#F2D74E] px-3.5 py-2 text-xs font-semibold text-[#1A1600] hover:bg-[#F7E27A] transition-colors disabled:opacity-50"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Export CSV</span>
@@ -441,7 +441,7 @@ export default function LeaderboardPage() {
 
       {loading ? (
         <div className="flex justify-center py-24">
-          <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#F2D74E]" />
         </div>
       ) : entries.length === 0 ? (
         <EmptyState
@@ -450,7 +450,7 @@ export default function LeaderboardPage() {
           description={
             <>
               Run evaluations from{" "}
-              <Link href="/dashboard/results" className="text-brand-700 hover:underline">
+              <Link href="/dashboard/results" className="text-[#F2D74E] hover:underline">
                 Results
               </Link>{" "}
               to see the leaderboard.

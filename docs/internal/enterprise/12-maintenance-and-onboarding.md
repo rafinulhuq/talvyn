@@ -240,7 +240,7 @@ drift (it is flagged there, not resolved).
   is currently only caught by manual testing or a user report.
 - **`create-admin.sh` is likely redundant given automatic seeding.** Since
   `future-improvements.md` S4-3, `frontend/prisma/seed.ts` automatically and idempotently
-  creates the default admin (`acmeai@Talvyn.com`) on every container start via
+  creates the default admin (`admin@talvyn.com`) on every container start via
   `frontend/scripts/start-dev.sh`. `create-admin.sh` (a standalone bash script supporting
   `--local`/`--docker`/`--prod` modes, custom email/password/role, and a custom
   `ADMIN_DATABASE_URL` override) still exists at the repo root and is more
@@ -345,7 +345,7 @@ timeouts, question counts), starts Ollama natively on the host, and brings up al
 services. **Access the app at `http://localhost` — Nginx listens on host port 81 in the
 primary `docker-compose.yml` topology** (`_facts.md` §13; note port 80 is commented out in
 the compose file). Default admin login is auto-seeded:
-`acmeai@Talvyn.com` / `acmeai@r2026p#`. Use `./stop.sh` to shut down
+`admin@talvyn.com` / `talvyn@r2026p#`. Use `./stop.sh` to shut down
 (`--wipe-db` for a full reset).
 
 ### 4. Important modules to know

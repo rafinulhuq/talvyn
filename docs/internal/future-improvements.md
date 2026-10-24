@@ -55,7 +55,7 @@ their name and email. The backend then creates or reuses a `Candidate` and
 creates a unique private invitation token, then redirects the candidate to:
 
 ```text
-https://acmeTalvyn.vercel.app/tests/<unique-private-token>
+https://talvyn.vercel.app/tests/<unique-private-token>
 ```
 
 **Implemented flow:**
@@ -1965,7 +1965,7 @@ that legitimately take 15–30 minutes no longer time out prematurely.
 ### ✅ DONE — [S4-3] Persistent Admin Account — Seeded on Container Start, Survives Git Pushes
 
 **Problem:**
-The admin account (`acmeai@Talvyn.com`) had to be created manually with a one-off script
+The admin account (`admin@talvyn.com`) had to be created manually with a one-off script
 after each fresh deployment. On a new machine or after a `--wipe-db`, the account was gone
 and the app was inaccessible until someone ran the create-admin script. This was
 undocumented and easy to forget.
@@ -1985,8 +1985,8 @@ on every container start):
 
 ```typescript
 const SEED_ADMINS = [
-  { email: 'acmeai@Talvyn.com', name: 'ACME AI Admin',
-    password: 'acmeai@r2026p#', role: Role.ADMIN },
+  { email: 'admin@talvyn.com', name: 'Talvyn Admin',
+    password: 'talvyn@r2026p#', role: Role.ADMIN },
 ];
 
 async function main() {

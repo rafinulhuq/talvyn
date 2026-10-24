@@ -1,23 +1,42 @@
 import type { HomeContent } from "@/lib/cms/content";
-import { cmsIcon } from "@/lib/cms/icons";
-import { TiltBlock } from "@/components/ui/TiltBlock";
 
 export function TrustedBySection({ content }: { content: HomeContent["trustedBy"] }) {
   return (
-    <section className="border-b border-slate-300 bg-slate-50/50 py-10 font-sans text-slate-900 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <p className="mb-6 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          {content.eyebrow || "Systems deployed across modern engineering teams"}
+    <section className="mt-24 text-center">
+      <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
+        <p className="text-[13px] text-[#5A5F68]">
+          {content.eyebrow || "Trusted by engineering teams at"}
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-          {content.companies.map((company) => (
-            <span
-              key={company}
-              className="cursor-default rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold tracking-wider text-slate-700 shadow-xs hover:border-indigo-300 hover:text-indigo-600 transition-all dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-indigo-800 dark:hover:text-indigo-400"
-            >
-              {company}
-            </span>
-          ))}
+
+        <div className="mt-6 flex items-center justify-center flex-wrap gap-12 max-[600px]:gap-7 text-white/55">
+          {content.companies && content.companies.length > 0 ? (
+            content.companies.map((company, i) => {
+              // Give each company a distinct clean typographic treatment
+              const treatments = [
+                "text-[20px] font-bold tracking-[-0.03em]",
+                "text-[22px] font-light tracking-[0.02em]",
+                "text-[14px] font-semibold tracking-[0.32em]",
+                "text-[22px] italic font-semibold font-serif",
+                "font-mono text-[17px] font-medium",
+                "text-[20px] font-extrabold tracking-[-0.05em]",
+              ];
+              const treatment = treatments[i % treatments.length];
+              return (
+                <span key={company} className={treatment}>
+                  {company}
+                </span>
+              );
+            })
+          ) : (
+            <>
+              <span className="text-[20px] font-bold tracking-[-0.03em]">Northwind</span>
+              <span className="text-[22px] font-light tracking-[0.02em]">lumen</span>
+              <span className="text-[14px] font-semibold tracking-[0.32em]">ARCADIA</span>
+              <span className="text-[22px] italic font-semibold font-serif">Kite</span>
+              <span className="font-mono text-[17px] font-medium">parallel</span>
+              <span className="text-[20px] font-extrabold tracking-[-0.05em]">Oxide</span>
+            </>
+          )}
         </div>
       </div>
     </section>
@@ -26,31 +45,27 @@ export function TrustedBySection({ content }: { content: HomeContent["trustedBy"
 
 export function StatsSection({ items }: { items: HomeContent["stats"] }) {
   return (
-    <section className="border-b border-slate-300 bg-white py-16 sm:py-20 font-sans text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.map(({ value, label, icon }, idx) => {
-            const Icon = cmsIcon(icon);
-            return (
-              <TiltBlock
-                key={label}
-                tag={`Metric 0${idx + 1}`}
-                className="flex flex-col justify-between"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight dark:text-white">
-                    {value}
-                  </span>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                </div>
-                <p className="text-xs text-slate-600 font-medium dark:text-slate-300">
+    <section className="mt-20">
+      <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
+        <div className="grid grid-cols-4 max-[800px]:grid-cols-2 max-[500px]:grid-cols-1 gap-4">
+          {items.map(({ value, label }, idx) => (
+            <div
+              key={label}
+              className="rounded-[14px] border border-white/[0.08] bg-[#121317] p-6 flex flex-col justify-between"
+            >
+              <span className="text-[11px] uppercase tracking-[0.08em] text-[#5A5F68] font-mono">
+                {`Metric 0${idx + 1}`}
+              </span>
+              <div className="mt-4">
+                <span className="text-3xl sm:text-4xl font-semibold font-mono tracking-tight text-white tabular-nums">
+                  {value}
+                </span>
+                <p className="mt-1 text-[13px] text-[#8A8F98] leading-relaxed">
                   {label}
                 </p>
-              </TiltBlock>
-            );
-          })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

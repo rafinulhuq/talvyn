@@ -184,11 +184,11 @@ function DashboardAttentionSection({
     return (
       <section className="space-y-3">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-indigo-600" />
-          <h2 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <span className="h-2 w-2 rounded-full bg-[#F2D74E]" />
+          <h2 className="font-display text-sm font-semibold text-white">
             Action Required · Bottlenecks
           </h2>
-          <span className="rounded-full bg-rose-50 border border-rose-200/80 px-2 py-0.5 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-300">
+          <span className="rounded-full bg-[#F87171]/10 border border-[#F87171]/30 px-2 py-0.5 text-xs font-semibold text-[#F87171]">
             {attentionItems.length} Pending
           </span>
         </div>
@@ -199,29 +199,29 @@ function DashboardAttentionSection({
               <Link
                 key={item.kind}
                 href={item.href}
-                className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-xs transition-all duration-200 hover:border-slate-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+                className="group flex flex-col justify-between rounded-xl border border-white/8 bg-[#121317] p-4 shadow-xs transition-colors hover:border-white/15"
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#181A1F] border border-white/5 text-[#F2D74E]">
                     <Icon className="h-4.5 w-4.5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       {item.count > 0 && (
-                        <span className="font-display text-base font-bold text-slate-900 dark:text-slate-100 tabular-nums">
+                        <span className="font-display text-base font-bold text-white tabular-nums">
                           {item.count}
                         </span>
                       )}
-                      <p className="text-xs font-semibold text-slate-900 dark:text-slate-100">
+                      <p className="text-xs font-semibold text-white">
                         {item.title}
                       </p>
                     </div>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                    <p className="mt-1 text-xs leading-relaxed text-white/80">
                       {item.description}
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-800/60 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 transition-colors group-hover:bg-indigo-50 group-hover:text-indigo-700 dark:group-hover:bg-indigo-950/50 dark:group-hover:text-indigo-300">
+                <div className="mt-4 flex items-center justify-between rounded-lg bg-[#181A1F] px-3 py-2 text-xs font-medium text-white transition-colors group-hover:bg-[#F2D74E] group-hover:text-[#1A1600]">
                   <span>Take Action</span>
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </div>
@@ -235,13 +235,13 @@ function DashboardAttentionSection({
 
   if (hasAttentionData) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-emerald-200/80 bg-emerald-50/50 p-4 shadow-xs dark:border-emerald-900/50 dark:bg-emerald-950/30">
-        <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+      <div className="flex items-center gap-3 rounded-xl border border-[#4ADE80]/30 bg-[#4ADE80]/10 p-4 shadow-xs">
+        <CheckCircle className="h-5 w-5 text-[#4ADE80]" />
         <div>
-          <p className="text-xs font-semibold text-emerald-950 dark:text-emerald-200">
+          <p className="text-xs font-semibold text-white">
             System Operating Optimally
           </p>
-          <p className="text-xs text-emerald-700 dark:text-emerald-400">
+          <p className="text-xs text-[#4ADE80]">
             No drafts, unreviewed attempts, or pending evaluations need attention right now.
           </p>
         </div>
@@ -256,13 +256,13 @@ function DashboardPipelineSection({ pipeline }: { pipeline: PipelineResponse | n
   if (!pipeline || !pipeline.stages.some((s) => s.count > 0)) return null;
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <section className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <h3 className="font-display text-sm font-semibold text-white">
             Candidate Assessment Funnel
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-white/80">
             Active candidate yield and progression across assessment stages.
           </p>
         </div>
@@ -276,23 +276,23 @@ function DashboardVelocitySection({ timeline }: { timeline: TimelineResponse | n
   const hasActivity = !!timeline?.points.some((p) => p.invitations + p.submitted + p.evaluated > 0);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <h3 className="font-display text-sm font-semibold text-white">
             Assessment Velocity
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-white/80">
             Daily invitations, submissions, and evaluations over the last 14 days.
           </p>
         </div>
         <div className="flex items-center gap-3 text-xs">
-          <span className="flex items-center gap-1.5 font-medium text-slate-500">
-            <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+          <span className="flex items-center gap-1.5 font-medium text-white/80">
+            <span className="h-2 w-2 rounded-full bg-white/40" />
             Invitations
           </span>
-          <span className="flex items-center gap-1.5 font-semibold text-indigo-600 dark:text-indigo-400">
-            <span className="h-2 w-2 rounded-full bg-indigo-600" />
+          <span className="flex items-center gap-1.5 font-semibold text-[#F2D74E]">
+            <span className="h-2 w-2 rounded-full bg-[#F2D74E]" />
             Submitted
           </span>
         </div>
@@ -300,7 +300,7 @@ function DashboardVelocitySection({ timeline }: { timeline: TimelineResponse | n
       {hasActivity ? (
         <ActivityChartClient points={timeline!.points} />
       ) : (
-        <p className="py-12 text-center text-xs text-slate-400">
+        <p className="py-12 text-center text-xs text-white/80">
           No activity recorded in the last 14 days yet.
         </p>
       )}
@@ -398,19 +398,19 @@ export default async function DashboardPage() {
       />
 
       {/* 2. Top Page Header with Action Button */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/80 pb-4 dark:border-slate-800">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/8 pb-4">
         <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-white">
             Workspace Overview
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-sm text-white/80">
             Hiring assessment telemetry, active pipelines, and candidate integrity signals.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/jds/upload"
-            className="inline-flex h-9 items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 px-3.5 text-xs font-semibold text-white shadow-xs transition-colors"
+            className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#F2D74E] hover:bg-[#F7E27A] px-3.5 text-xs font-semibold text-[#1A1600] shadow-sm transition-colors"
           >
             <Plus className="h-4 w-4" />
             Upload Job Description
@@ -439,19 +439,19 @@ export default async function DashboardPage() {
           <DashboardVelocitySection timeline={timeline} />
 
           {/* Top Roles by Completion */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h3 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <h3 className="font-display text-sm font-semibold text-white">
                   Top Roles by Completion
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-white/80">
                   Job descriptions ranked by candidate exam completion rate.
                 </p>
               </div>
               <Link
                 href="/dashboard/jds"
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 hover:underline"
+                className="text-xs font-semibold text-[#F2D74E] hover:underline"
               >
                 View all &rarr;
               </Link>
@@ -463,12 +463,12 @@ export default async function DashboardPage() {
         {/* Right (5 cols): Live Activity Feed & Infrastructure Health */}
         <div className="space-y-6 lg:col-span-5">
           {/* Filterable Activity Feed */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs">
             <div className="mb-3">
-              <h3 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+              <h3 className="font-display text-sm font-semibold text-white">
                 Live Activity Feed
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-white/80">
                 Candidate submissions and sensitive workspace audit events.
               </p>
             </div>
@@ -476,17 +476,17 @@ export default async function DashboardPage() {
           </div>
 
           {/* Infrastructure Health */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h3 className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <h3 className="font-display text-sm font-semibold text-white">
                   Local Infrastructure
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-white/80">
                   100% self-hosted zero-cost service health telemetry.
                 </p>
               </div>
-              <span className="rounded-full bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 text-[10px] font-semibold uppercase text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-300">
+              <span className="rounded-full bg-[#4ADE80]/10 border border-[#4ADE80]/30 px-2 py-0.5 text-[10px] font-semibold uppercase text-[#4ADE80]">
                 Zero-Cost
               </span>
             </div>

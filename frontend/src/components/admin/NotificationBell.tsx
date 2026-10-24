@@ -145,7 +145,7 @@ export function NotificationBell() {
       {/* Bell button */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+        className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] text-white hover:bg-white/10 transition-colors"
         aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
         aria-haspopup="dialog"
         aria-expanded={open}
@@ -153,29 +153,28 @@ export function NotificationBell() {
       >
         <Bell className="h-4.5 w-4.5" />
         {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white leading-none">
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#F2D74E] text-[9px] font-bold text-[#1A1600] leading-none">
             {unread > 9 ? "9+" : unread}
           </span>
         )}
       </button>
 
-      {/* Dropdown panel — a native, non-modal <dialog> carries the "dialog"
-          accessibility role on its own, so no aria-modal/role is needed. */}
+      {/* Dropdown panel */}
       {open && (
         <dialog
           open
           id={panelId}
           aria-labelledby={titleId}
-          className="absolute right-0 top-10 left-auto z-50 m-0 max-h-none w-80 max-w-[calc(100vw-1rem)] rounded-xl border border-slate-200 bg-white p-0 shadow-lg animate-fade-in motion-reduce:animate-none"
+          className="absolute right-0 top-10 left-auto z-50 m-0 max-h-none w-80 max-w-[calc(100vw-1rem)] rounded-xl border border-white/10 bg-[#121317] text-white p-0 shadow-2xl animate-fade-in motion-reduce:animate-none"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-            <p id={titleId} className="text-sm font-semibold text-slate-900">Notifications</p>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/8 bg-[#121317]">
+            <p id={titleId} className="text-sm font-semibold text-white">Notifications</p>
             <div className="flex items-center gap-2">
               {unread > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 transition-colors"
+                  className="flex items-center gap-1 text-xs text-white/80 hover:text-[#F2D74E] transition-colors"
                   aria-label="Mark all notifications as read"
                 >
                   <CheckCheck className="h-3.5 w-3.5" />
@@ -184,7 +183,7 @@ export function NotificationBell() {
               )}
               <button
                 onClick={() => setOpen(false)}
-                className="text-slate-300 hover:text-slate-500 transition-colors"
+                className="text-white/80 hover:text-white transition-colors"
                 aria-label="Close notifications"
               >
                 <X className="h-4 w-4" />
@@ -193,12 +192,12 @@ export function NotificationBell() {
           </div>
 
           {/* Items */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-slate-50">
+          <div className="max-h-80 overflow-y-auto divide-y divide-white/5">
             {items.length === 0 && (
               <div className="flex flex-col items-center gap-2 py-10 text-center">
-                <Bell className="h-8 w-8 text-slate-200" />
-                <p className="text-xs text-slate-400">No completions yet</p>
-                <p className="text-[10px] text-slate-300">
+                <Bell className="h-8 w-8 text-white/70" />
+                <p className="text-xs text-white/80">No completions yet</p>
+                <p className="text-[10px] text-white/70">
                   Refreshes every 15 seconds
                 </p>
               </div>
@@ -210,35 +209,35 @@ export function NotificationBell() {
                   key={item.attempt_id}
                   href={`/dashboard/results/${item.attempt_id}`}
                   onClick={() => handleItemClick(item.attempt_id)}
-                  className={`flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors ${
-                    isUnread ? "bg-brand-50/40" : ""
+                  className={`flex items-start gap-3 px-4 py-3 hover:bg-[#181A1F] transition-colors ${
+                    isUnread ? "bg-[#181A1F]/70" : ""
                   }`}
                 >
                   {/* Icon */}
-                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-50">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-white/5">
                     {item.has_evaluation ? (
-                      <BarChart2 className="h-3.5 w-3.5 text-success" />
+                      <BarChart2 className="h-3.5 w-3.5 text-[#4ADE80]" />
                     ) : (
-                      <Wand2 className="h-3.5 w-3.5 text-brand-700" />
+                      <Wand2 className="h-3.5 w-3.5 text-[#F2D74E]" />
                     )}
                   </div>
 
                   {/* Text */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-slate-900 truncate">
+                    <p className="text-xs font-medium text-white truncate">
                       {item.candidate_name}
                     </p>
-                    <p className="text-[11px] text-slate-500 truncate">
+                    <p className="text-[11px] text-white/80 truncate">
                       Candidate #{item.candidate_number} · {item.jd_title}
                     </p>
-                    <p className="mt-0.5 text-[10px] text-slate-400">
+                    <p className="mt-0.5 text-[10px] text-white/70">
                       {item.has_evaluation ? "Evaluated · " : "Awaiting evaluation · "}
                       {formatRelative(item.submitted_at)}
                     </p>
                   </div>
 
                   {isUnread && (
-                    <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
+                    <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#F2D74E]" />
                   )}
                 </Link>
               );
@@ -246,11 +245,11 @@ export function NotificationBell() {
           </div>
 
           {items.length > 0 && (
-            <div className="border-t border-slate-100 px-4 py-2 text-center">
+            <div className="border-t border-white/8 px-4 py-2 text-center bg-[#121317]">
               <Link
                 href="/dashboard/results"
                 onClick={() => setOpen(false)}
-                className="text-xs font-medium text-brand-700 hover:underline"
+                className="text-xs font-semibold text-[#F2D74E] hover:underline"
               >
                 View all results →
               </Link>

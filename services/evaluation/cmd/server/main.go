@@ -33,7 +33,7 @@ type Config struct {
 func loadConfig() Config {
 	return Config{
 		Port:        getEnv("PORT", getEnv("EVALUATION_PORT", "8004")),
-		DatabaseURL: getEnv("DATABASE_URL", "postgresql://acmeai:acmeai_dev_password@localhost:5440/talvyn?sslmode=disable"),
+		DatabaseURL: getEnv("DATABASE_URL", "postgresql://talvyn_user:talvyn_pass@localhost:5440/talvyn_db?sslmode=disable"),
 		RedisURL:    getEnv("REDIS_URL", "localhost:6379"),
 		OllamaHost:  getEnv("OLLAMA_HOST", getEnv("OLLAMA_BASE_URL", "http://localhost:11434")),
 	}

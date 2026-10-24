@@ -27,11 +27,11 @@ export function DashboardMockup() {
             onClick={() => setActiveTab("leaderboard")}
             className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs transition font-semibold ${
               activeTab === "leaderboard"
-                ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-bold"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                ? "bg-[#F2D74E] text-[#1A1600] font-bold"
+                : "text-white/70 hover:text-white"
             }`}
           >
-            <Trophy className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+            <Trophy className={`h-3.5 w-3.5 ${activeTab === "leaderboard" ? "text-[#1A1600]" : "text-[#F2D74E]"}`} />
             <span>Shortlist (3)</span>
           </button>
           <button
@@ -39,11 +39,11 @@ export function DashboardMockup() {
             onClick={() => setActiveTab("integrity")}
             className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs transition font-semibold ${
               activeTab === "integrity"
-                ? "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-bold"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                ? "bg-[#F87171] text-white font-bold"
+                : "text-white/70 hover:text-white"
             }`}
           >
-            <ShieldAlert className="h-3.5 w-3.5 text-rose-500" />
+            <ShieldAlert className="h-3.5 w-3.5" />
             <span>Anti-Cheat</span>
           </button>
           <button
@@ -51,11 +51,11 @@ export function DashboardMockup() {
             onClick={() => setActiveTab("summary")}
             className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs transition font-semibold ${
               activeTab === "summary"
-                ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-bold"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                ? "bg-[#F2D74E] text-[#1A1600] font-bold"
+                : "text-white/70 hover:text-white"
             }`}
           >
-            <FileText className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+            <FileText className={`h-3.5 w-3.5 ${activeTab === "summary" ? "text-[#1A1600]" : "text-[#F2D74E]"}`} />
             <span>Recruiter Notes</span>
           </button>
         </div>

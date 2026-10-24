@@ -285,8 +285,8 @@ export default async function HighgardenPage({
 
 function pillClass(selected: boolean): string {
   return selected
-    ? "rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white shadow-xs"
-    : "rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition-colors hover:bg-slate-50 hover:text-indigo-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-750 dark:hover:text-indigo-400";
+    ? "rounded-lg bg-[#F2D74E] px-3 py-1.5 text-xs font-semibold text-[#1A1600] shadow-xs"
+    : "rounded-lg border border-white/10 bg-[#181A1F] px-3 py-1.5 text-xs font-medium text-white shadow-xs transition-colors hover:border-white/20";
 }
 
 function Metric({

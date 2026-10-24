@@ -1,9 +1,9 @@
-"""Lock the acmeai@talvyn.com Super Admin account's role.
+"""Lock the admin@talvyn.com Super Admin account's role.
 
 Revision ID: c4f9e2a7d1b8
 Revises: b7e2a9c4d6f1
 
-acmeai@talvyn.com (id ed5b90d3-bb0c-483f-b756-026f1e33dda9) is the
+admin@talvyn.com (id ed5b90d3-bb0c-483f-b756-026f1e33dda9) is the
 platform's primary Super Admin account. Its role was accidentally changed
 to USER via the admin UI on 2026-09-07 and had to be restored by hand.
 

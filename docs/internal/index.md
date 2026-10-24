@@ -31,7 +31,7 @@ All documentation lives in this folder. Pick the guide that matches what you nee
 
 - **Start the platform:** `./start.sh` from the project root
 - **Stop the platform:** `./stop.sh`
-- **Admin dashboard:** `http://localhost` (port 80 — Nginx) — `acmeai@talvyn.com` (or `SEED_ADMIN_EMAIL`) / password from `SEED_ADMIN_PASSWORD`, or check `docker compose logs frontend | grep seed` if you didn't set one
+- **Admin dashboard:** `http://localhost` (port 80 — Nginx) — `admin@talvyn.com` (or `SEED_ADMIN_EMAIL`) / password from `SEED_ADMIN_PASSWORD`, or check `docker compose logs frontend | grep seed` if you didn't set one
 - **API explorer:** `http://localhost:9000/docs` (requires `DEBUG=true` or `SHOW_DOCS=true` in `backend/.env`)
 - **Email catcher (dev):** `http://localhost:8026`
 - **MinIO console (dev):** `http://localhost:9002`

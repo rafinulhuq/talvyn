@@ -60,8 +60,8 @@ export function BlogEditorFields({
                   className={clsx(
                     "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
                     contentMode === mode
-                      ? "bg-slate-200 text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-50"
-                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                      ? "bg-[#F2D74E] text-[#1A1600] font-semibold shadow-sm"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
                   )}
                 >
                   {mode === "rich" ? "Editor" : "Markdown"}

@@ -229,8 +229,8 @@ password is documented in user-facing docs.
 
 Evidence:
 
-- `frontend/prisma/seed.ts:6-12` hardcodes `acmeai@Talvyn.com` and
-  `acmeai@r2026p#`.
+- `frontend/prisma/seed.ts:6-12` hardcodes `admin@talvyn.com` and
+  `talvyn@r2026p#`.
 - `README.md:13-16` shows the default credentials.
 - `docs/deployment.md:278-283` documents the same production bootstrap account.
 

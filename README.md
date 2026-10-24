@@ -12,7 +12,7 @@ An AI-powered hiring assessment platform. Upload a job description, get three co
 
 # 2. Open the admin dashboard
 #    http://localhost        (port 80 — via Nginx reverse proxy)
-#    Email: acmeai@talvyn.com (or SEED_ADMIN_EMAIL if you set one)
+#    Email: admin@talvyn.com (or SEED_ADMIN_EMAIL if you set one)
 #    Password: whatever you set as SEED_ADMIN_PASSWORD in frontend/.env.local —
 #    if unset, a random one is printed once in the frontend container logs
 #    (docker compose logs frontend | grep seed)
@@ -136,7 +136,7 @@ The model is written to `backend/.env.hardware` and automatically loaded by Dock
 - **MinIO** optional S3-compatible file storage — switch from local filesystem with `STORAGE_BACKEND=s3`
 - **GlitchTip** self-hosted error tracking (Sentry-compatible) — zero overhead when `GLITCHTIP_DSN` is not set
 - **Prometheus + Grafana** metrics stack — FastAPI exposes `/metrics`, Prometheus scrapes it every 15s, Grafana is pre-configured with Prometheus as the default datasource
-- **Persistent admin seeding** — `acmeai@talvyn.com` is created automatically on every fresh stack, no manual `create-admin.sh` needed
+- **Persistent admin seeding** — `admin@talvyn.com` is created automatically on every fresh stack, no manual `create-admin.sh` needed
 
 ### Bug Fixes
 

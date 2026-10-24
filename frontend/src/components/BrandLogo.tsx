@@ -1,7 +1,7 @@
 import React from "react";
 import { clsx } from "clsx";
 
-export type BrandLogoVariant = "auto" | "default" | "on-light" | "on-dark";
+export type BrandLogoVariant = "auto" | "default" | "on-light" | "on-dark" | "white";
 
 interface BrandLogoProps {
   className?: string;
@@ -19,8 +19,8 @@ export function BrandMark({
   variant = "auto",
   ariaLabel = "Talvyn",
 }: BrandLogoProps) {
-  const isDark = variant === "on-dark";
-  const isLight = !isDark;
+  const isDark = variant === "on-dark" || variant === "white";
+  const isLight = variant === "on-light" || variant === "default";
 
   return (
     <svg
@@ -167,8 +167,8 @@ export function BrandWordmark({
   ariaLabel = "Talvyn",
   showBadge = true,
 }: BrandLogoProps) {
-  const isDark = variant === "on-dark";
-  const isLight = !isDark;
+  const isDark = variant === "on-dark" || variant === "white";
+  const isLight = variant === "on-light";
 
   return (
     <div

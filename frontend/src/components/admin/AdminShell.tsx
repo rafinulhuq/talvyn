@@ -171,10 +171,10 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
   }, [drawer, closeDrawer]);
 
   return (
-    <div className="admin-shell-root flex h-dvh overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div className="admin-shell-root flex h-dvh overflow-hidden bg-[#0B0C0E] text-white">
       <a
         href="#admin-main"
-        className="sr-only fixed left-3 top-3 z-[60] rounded-lg border border-indigo-600 bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-md focus:not-sr-only"
+        className="sr-only fixed left-3 top-3 z-[60] rounded-lg border border-[#F2D74E] bg-[#F2D74E] px-3 py-2 text-sm font-semibold text-[#1A1600] shadow-md focus:not-sr-only"
       >
         Skip to main content
       </a>
@@ -199,7 +199,7 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
           ref={drawerRef}
           id="mobile-navigation"
           aria-label="Navigation menu"
-          className={`fixed inset-y-0 left-0 z-50 m-0 h-full max-h-none w-64 max-w-none border-0 bg-transparent p-0 shadow-2xl backdrop:bg-slate-900/50 md:hidden ${
+          className={`fixed inset-y-0 left-0 z-50 m-0 h-full max-h-none w-64 max-w-none border-0 bg-transparent p-0 shadow-2xl backdrop:bg-[#0B0C0E]/75 md:hidden ${
             drawer === "closing"
               ? "animate-slide-out-left backdrop:animate-fade-backdrop-out"
               : "animate-slide-in-left backdrop:animate-fade-backdrop"
@@ -219,13 +219,13 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
       )}
 
       {/* Main area */}
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-slate-50 dark:bg-slate-950">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-[#0B0C0E]">
         {/* Top header */}
-        <header className="z-20 flex h-14 shrink-0 items-center gap-3 border-b border-slate-200/80 bg-white/90 backdrop-blur-md px-4 shadow-xs dark:border-slate-800 dark:bg-slate-900/90">
+        <header className="z-20 flex h-14 shrink-0 items-center gap-3 border-b border-white/8 bg-[#121317]/90 backdrop-blur-md px-4 shadow-xs">
           {/* Hamburger — mobile only */}
           <button
             ref={menuButtonRef}
-            className="touch-target rounded-lg border border-slate-200 bg-white p-2 text-slate-600 md:hidden shadow-xs hover:bg-slate-50 hover:text-slate-900 active:scale-95 transition-all dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+            className="touch-target rounded-lg border border-white/10 bg-[#181A1F] p-2 text-white md:hidden shadow-xs hover:bg-white/10 transition-colors"
             onClick={openDrawer}
             aria-label="Open navigation menu"
             aria-controls="mobile-navigation"
@@ -236,7 +236,7 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
 
           {/* Logo — mobile only (desktop logo is inside Sidebar) */}
           <div className="flex min-w-0 flex-1 items-center gap-2 md:hidden">
-            <BrandWordmark className="h-6 w-auto shrink-0" />
+            <BrandWordmark variant="white" className="h-6 w-auto shrink-0" />
           </div>
 
           {/* Admin global search */}
@@ -252,18 +252,18 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
               aria-label={mobileSearchOpen ? "Close search" : "Open search"}
               aria-expanded={mobileSearchOpen}
               aria-controls="mobile-admin-search"
-              className="touch-target rounded-lg border border-slate-200 bg-white p-2 text-slate-600 md:hidden shadow-xs hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+              className="touch-target rounded-lg border border-white/10 bg-[#181A1F] p-2 text-white md:hidden shadow-xs hover:bg-white/10 transition-colors"
             >
               {mobileSearchOpen ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
             </button>
             <NotificationBell />
             <div className="hidden sm:flex items-center gap-2.5">
-              <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-300">
+              <span className="rounded-full border border-[#F2D74E]/30 bg-[#F2D74E]/10 px-2.5 py-0.5 text-xs font-semibold text-[#F2D74E]">
                 {userRole === "SUPER_ADMIN" ? "SUPER" : userRole || "USER"}
               </span>
               <div className="text-right">
-                <p className="max-w-[140px] truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{userName}</p>
-                <p className="max-w-[140px] truncate text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="max-w-[140px] truncate text-xs font-semibold text-white">{userName}</p>
+                <p className="max-w-[140px] truncate text-[11px] text-white/70">
                   {userRole === "SUPER_ADMIN" ? "Super Admin" : userRole === "ADMIN" ? "Admin" : "User"}
                 </p>
               </div>
@@ -276,7 +276,7 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
               {userId ? (
                 <UserAvatar userId={userId} name={userName} size={30} />
               ) : (
-                <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full bg-indigo-50 border border-indigo-200 text-xs font-semibold text-indigo-700">
+                <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-[#F2D74E]/30 text-xs font-semibold text-[#F2D74E]">
                   {userName?.charAt(0).toUpperCase() ?? "A"}
                 </div>
               )}
@@ -288,7 +288,7 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
           <div
             id="mobile-admin-search"
             ref={mobileSearchRef}
-            className="origin-top animate-scale-in border-b border-slate-200 bg-white px-4 py-2 motion-reduce:animate-none md:hidden dark:border-slate-800 dark:bg-slate-900"
+            className="origin-top animate-scale-in border-b border-white/8 bg-[#121317] px-4 py-2 motion-reduce:animate-none md:hidden"
           >
             <AdminSearch />
           </div>
@@ -297,12 +297,11 @@ export function AdminShell({ userId, userEmail, userName, userRole, systemStatus
         {/* Generation banner — spans full width below header */}
         <GenerationBanner />
 
-        {/* Page content — the extra bottom padding clears iOS Safari's floating
-            toolbar, which otherwise sits over the last row of a scrolled page. */}
+        {/* Page content */}
         <main
           id="admin-main"
           tabIndex={-1}
-          className="flex-1 overflow-y-auto px-4 pt-4 pb-[calc(2rem+env(safe-area-inset-bottom))] md:p-6 md:pb-8 lg:p-8 lg:pb-10"
+          className="flex-1 overflow-y-auto px-4 pt-4 pb-[calc(2rem+env(safe-area-inset-bottom))] md:p-6 md:pb-8 lg:p-8 lg:pb-10 bg-[#0B0C0E] text-white"
         >
           <PageTransition>{children}</PageTransition>
         </main>

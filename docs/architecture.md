@@ -102,7 +102,7 @@ then the mechanics.
   calls to FastAPI.
 - **What it does:** Next.js 15 admin dashboard + candidate test-taking UI. On
   container start, `scripts/start-dev.sh` runs `npx prisma db seed` (idempotent
-  — creates `acmeai@Talvyn.com` if missing) then `npm run dev` (Turbopack).
+  — creates `admin@talvyn.com` if missing) then `npm run dev` (Turbopack).
   Hosts the Next.js API routes that proxy authenticated calls to FastAPI
   (`/api/proxy/[...path]`) and the JD upload endpoint.
 - **Depends on:** postgres (healthy — for its own NextAuth/admin tables),

@@ -38,7 +38,7 @@ export function DevSignature({ onClose }: { onClose: () => void }) {
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 text-slate-400 transition-colors hover:text-slate-700"
+          className="absolute right-4 top-4 text-white/50 transition-colors hover:text-white"
         >
           <X className="h-4 w-4" />
         </button>

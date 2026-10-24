@@ -6,7 +6,7 @@
 > by direct codebase extraction, not narrative writing) — fix the other file.
 >
 > Verified against the live repository on 2026-06-18. Repo root:
-> `/home/a-m-rafinul-huq/Desktop/Office/ACME AI/Talvyn-main/Talvyn`
+> `/home/a-m-rafinul-huq/Desktop/Office/Talvyn/Talvyn-main/Talvyn`
 
 ---
 

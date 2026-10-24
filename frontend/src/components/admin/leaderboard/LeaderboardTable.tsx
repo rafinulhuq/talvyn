@@ -16,9 +16,9 @@ export function LeaderboardTable({
   onSelectCandidate?: (entry: GlobalLeaderboardEntry) => void;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+    <div className="rounded-xl border border-white/8 bg-[#121317] text-white overflow-hidden">
       {/* Column header */}
-      <div className="hidden items-center gap-3 border-b border-slate-200 bg-slate-50/80 text-slate-500 px-5 py-3 sm:flex text-xs font-semibold uppercase tracking-wider dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
+      <div className="hidden items-center gap-3 border-b border-white/8 bg-[#181A1F] text-white/80 px-5 py-3 sm:flex text-xs font-semibold uppercase tracking-wider">
         <span className="w-8">#</span>
         <span className="w-9 shrink-0" />
         <span className="flex-1">Candidate</span>
@@ -33,14 +33,14 @@ export function LeaderboardTable({
       </div>
 
       {displayed.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center bg-white dark:bg-slate-900">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-800">
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center bg-[#121317]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#181A1F] text-[#F2D74E] border border-white/5">
             <Search className="h-5 w-5" />
           </div>
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-300">No candidates match your filters.</p>
+          <p className="text-sm font-medium text-white/80">No candidates match your filters.</p>
           <button
             onClick={onClearFilters}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 transition-colors"
+            className="rounded-lg bg-[#F2D74E] px-4 py-2 text-xs font-semibold text-[#1A1600] hover:bg-[#F7E27A] transition-colors"
           >
             Clear all filters
           </button>

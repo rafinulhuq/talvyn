@@ -74,17 +74,17 @@ export function BlogPostListView({
               />
             </div>
           </div>
-          <div className="flex gap-1 rounded-lg bg-white p-1 dark:bg-slate-900">
+          <div className="flex gap-1 rounded-lg bg-[#181A1F] border border-white/10 p-1">
             {(["all", "draft", "published"] as const).map((filter) => (
               <button
                 key={filter}
                 type="button"
                 onClick={() => onStatusFilterChange(filter)}
                 className={clsx(
-                  "rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors",
+                  "rounded-md px-3 py-1 text-xs font-semibold capitalize transition-colors",
                   statusFilter === filter
-                    ? "bg-slate-200 text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-50"
-                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                    ? "bg-[#F2D74E] text-[#1A1600] shadow-sm"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
                 )}
               >
                 {filter}

@@ -24,7 +24,7 @@ function dotClass(status: ServiceCheck["status"] | undefined) {
 
 export function SystemStatusCard({ checks }: SystemStatusCardProps) {
   if (!checks) {
-    return <p className="text-sm text-slate-500">System status is currently unavailable.</p>;
+    return <p className="text-sm text-white/80">System status is currently unavailable.</p>;
   }
 
   return (
@@ -35,24 +35,24 @@ export function SystemStatusCard({ checks }: SystemStatusCardProps) {
         return (
           <div
             key={key}
-            className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-xs dark:border-slate-800 dark:bg-slate-900 transition-colors hover:border-slate-300"
+            className="flex items-center gap-3 rounded-xl border border-white/8 bg-[#181A1F] p-3 shadow-xs transition-colors hover:border-white/15"
           >
             <span className="relative flex h-2.5 w-2.5 shrink-0">
               {ok && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#4ADE80] opacity-75" />
               )}
               <span
                 className={clsx(
                   "relative inline-flex h-2.5 w-2.5 rounded-full",
-                  ok ? "bg-emerald-500" : "bg-rose-500"
+                  ok ? "bg-[#4ADE80]" : "bg-[#F87171]"
                 )}
               />
             </span>
             <div className="min-w-0">
-              <p className="truncate text-xs font-semibold text-slate-800 dark:text-slate-200">
+              <p className="truncate text-xs font-semibold text-white">
                 {label}
               </p>
-              <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="truncate text-[11px] text-white/80">
                 {check
                   ? check.model_configured
                     ? "Operational · Ready"

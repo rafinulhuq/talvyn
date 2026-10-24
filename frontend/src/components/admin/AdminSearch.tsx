@@ -15,11 +15,11 @@ import { searchApi } from "@/lib/api/search";
 import type { SearchResult } from "@/types/search";
 
 function iconFor(kind: string) {
-  if (kind === "candidate") return <UserRound className="h-3.5 w-3.5 text-black dark:text-white" />;
-  if (kind === "jd") return <FileText className="h-3.5 w-3.5 text-black dark:text-white" />;
-  if (kind === "test") return <ClipboardList className="h-3.5 w-3.5 text-black dark:text-white" />;
-  if (kind === "result") return <BarChart2 className="h-3.5 w-3.5 text-black dark:text-white" />;
-  return <Search className="h-3.5 w-3.5 text-zinc-500" />;
+  if (kind === "candidate") return <UserRound className="h-3.5 w-3.5 text-[#F2D74E]" />;
+  if (kind === "jd") return <FileText className="h-3.5 w-3.5 text-[#F2D74E]" />;
+  if (kind === "test") return <ClipboardList className="h-3.5 w-3.5 text-[#F2D74E]" />;
+  if (kind === "result") return <BarChart2 className="h-3.5 w-3.5 text-[#F2D74E]" />;
+  return <Search className="h-3.5 w-3.5 text-white/80" />;
 }
 
 function labelFor(kind: string): string {
@@ -45,48 +45,48 @@ function SearchResultsPanel({
       id={resultsId}
       role="region"
       aria-label="Search results"
-      className="absolute left-0 right-0 top-11 z-50 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg animate-fade-in motion-reduce:animate-none"
+      className="absolute left-0 right-0 top-11 z-50 overflow-hidden rounded-xl border border-white/10 bg-[#121317] text-white shadow-2xl animate-fade-in motion-reduce:animate-none"
     >
       {error && (
-        <div className="px-4 py-3 text-sm text-danger-dark">{error}</div>
+        <div className="px-4 py-3 text-sm text-[#F87171]">{error}</div>
       )}
       {!error && !loading && items.length === 0 && (
         <div className="px-4 py-8 text-center">
-          <Search className="mx-auto h-7 w-7 text-slate-200" />
-          <p className="mt-2 text-sm font-medium text-slate-700">No matches</p>
-          <p className="mt-0.5 text-xs text-slate-400">
+          <Search className="mx-auto h-7 w-7 text-white/70" />
+          <p className="mt-2 text-sm font-medium text-white">No matches</p>
+          <p className="mt-0.5 text-xs text-white/80">
             Try a candidate name, email, job title, test, or candidate number.
           </p>
         </div>
       )}
       {!error && items.length > 0 && (
-        <div className="max-h-96 overflow-y-auto divide-y divide-slate-50">
+        <div className="max-h-96 overflow-y-auto divide-y divide-white/5">
           {items.map((item) => (
             <Link
               key={`${item.kind}-${item.href}`}
               href={item.href}
               onClick={onSelect}
-              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
+              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-[#181A1F]"
             >
-              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-50">
+              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#181A1F] border border-white/5">
                 {iconFor(item.kind)}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="truncate text-sm font-medium text-slate-900">
+                  <p className="truncate text-sm font-medium text-white">
                     {item.title}
                   </p>
-                  <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+                  <span className="shrink-0 rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-medium text-white/80">
                     {labelFor(item.kind)}
                   </span>
                 </div>
                 {item.subtitle && (
-                  <p className="mt-0.5 truncate text-xs text-slate-500">
+                  <p className="mt-0.5 truncate text-xs text-white/80">
                     {item.subtitle}
                   </p>
                 )}
                 {item.meta && (
-                  <p className="mt-0.5 text-[10px] text-slate-400">
+                  <p className="mt-0.5 text-[10px] text-white/70">
                     {item.meta}
                   </p>
                 )}
@@ -163,7 +163,7 @@ export function AdminSearch() {
   return (
     <div ref={ref} className="relative w-full max-w-xl">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/80" />
         <input
           value={query}
           type="search"
@@ -176,16 +176,10 @@ export function AdminSearch() {
           }}
           onFocus={() => hasQuery && setOpen(true)}
           placeholder="Search candidates, jobs, tests, results..."
-          // No custom focus ring here — `focus:ring-brand-100` used to win
-          // over the app-wide `*:focus-visible` ring (same box-shadow
-          // property, higher specificity since it targets `:focus`), and
-          // brand-100 only manages ~1.2:1 contrast against white, making
-          // keyboard focus on this input nearly invisible. Letting the
-          // global rule apply instead.
-          className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-9 text-sm text-slate-900 outline-none transition focus:border-brand-400 focus:bg-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] pl-9 pr-9 text-sm text-white placeholder-white/40 outline-none transition focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E]"
         />
         {loading ? (
-          <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-slate-400" />
+          <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-white/80" />
         ) : query ? (
           <button
             type="button"
@@ -195,7 +189,7 @@ export function AdminSearch() {
               setOpen(false);
               setError(null);
             }}
-            className="absolute right-2 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="absolute right-2 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white/80 hover:bg-white/10 hover:text-white"
             aria-label="Clear search"
           >
             <X className="h-3.5 w-3.5" />

@@ -1,57 +1,55 @@
 import { Star } from "lucide-react";
-import { TiltBlock } from "@/components/ui/TiltBlock";
 import type { HomeContent } from "@/lib/cms/content";
 
 export function TestimonialsSection({ content }: { content: HomeContent["testimonials"] }) {
   return (
-    <section id="testimonials" className="border-b border-slate-300 bg-white py-24 font-sans text-slate-900 scroll-mt-20 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="mb-16 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+    <section id="testimonials" className="mt-28">
+      <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <span className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#F2D74E] block">
             {content.eyebrow || "Field Reports & Operator Feedback"}
-          </p>
-          <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white">
+          </span>
+          <h2 className="mt-3.5 text-[clamp(30px,4vw,44px)] font-[650] tracking-[-0.035em] max-w-[20ch] mx-auto text-balance text-white">
             {content.title || "Validated by Engineering Leaders"}
           </h2>
         </div>
 
-        {/* Testimonials Block Grid */}
-        <div className="grid gap-6 md:grid-cols-3">
+        {/* Testimonials Grid */}
+        <div className="grid gap-4 md:grid-cols-3">
           {content.quotes.map(({ text, name, role, stars }, idx) => (
-            <TiltBlock
+            <div
               key={`${name}-${role}`}
-              tag={`Feedback 0${idx + 1}`}
-              className="flex flex-col justify-between h-full"
+              className="rounded-[14px] border border-white/[0.08] bg-[#121317] p-6 flex flex-col justify-between"
             >
               <div>
                 <div className="mb-4 flex gap-1">
                   {Array.from({ length: Math.max(0, Math.min(stars, 5)) }).map((_, i) => (
                     <Star
                       key={i}
-                      className="h-4 w-4 fill-amber-400 text-amber-400"
+                      className="h-3.5 w-3.5 fill-[#FACC15] text-[#FACC15]"
                     />
                   ))}
                 </div>
-                <p className="text-xs sm:text-sm leading-relaxed text-slate-700 italic font-normal dark:text-slate-300">
-                  &ldquo;{text}&rdquo;
-                </p>
+                <blockquote className="text-[14px] leading-relaxed text-white">
+                  <span className="text-[#F2D74E] font-bold text-base mr-1">“</span>
+                  {text}
+                  <span className="text-[#F2D74E] font-bold text-base ml-1">”</span>
+                </blockquote>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 border border-indigo-200 text-xs font-bold text-indigo-600 dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-400">
-                  {name.charAt(0)}
+              <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-white/[0.08] text-xs font-mono font-bold text-[#F2D74E]">
+                  {name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{name}</p>
-                  <p className="text-[11px] text-slate-500 font-normal dark:text-slate-400">{role}</p>
+                  <p className="text-[14px] font-semibold text-white">{name}</p>
+                  <p className="text-[12px] text-[#8A8F98]">{role}</p>
                 </div>
               </div>
-            </TiltBlock>
+            </div>
           ))}
         </div>
-
       </div>
     </section>
   );

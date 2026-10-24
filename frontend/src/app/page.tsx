@@ -64,7 +64,7 @@ export default async function LandingPage() {
     : [];
 
   return (
-    <div className="min-h-screen bg-white text-black selection:bg-black selection:text-white antialiased relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#0B0C0E] text-white selection:bg-[#F2D74E] selection:text-[#1A1600] antialiased relative overflow-x-hidden">
       <LandingNav content={cms.site} />
       {sectionOrder.map((sectionKey, index) => {
         if (sectionKey === "hero") {

@@ -82,7 +82,7 @@ export function SectionCard({
               aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
               aria-expanded={open}
               onClick={onToggle}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white"
             >
               <ChevronDown className={clsx("h-4 w-4 transition-transform", open && "rotate-180")} />
             </button>

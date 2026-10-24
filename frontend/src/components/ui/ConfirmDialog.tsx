@@ -60,16 +60,16 @@ export function ConfirmDialog({
       ref={dialogRef}
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
-      className="open:flex m-0 h-full max-h-full w-full max-w-full items-center justify-center border-0 bg-transparent p-0 backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm backdrop:animate-fade-backdrop motion-reduce:backdrop:animate-none"
+      className="open:flex m-0 h-full max-h-full w-full max-w-full items-center justify-center border-0 bg-transparent p-0 backdrop:bg-[#0B0C0E]/75 backdrop:backdrop-blur-sm backdrop:animate-fade-backdrop motion-reduce:backdrop:animate-none"
     >
-      <div className="mx-4 w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xl animate-fade-in motion-reduce:animate-none">
+      <div className="mx-4 w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl border border-white/10 bg-[#121317] p-6 shadow-2xl animate-fade-in motion-reduce:animate-none text-white">
         {/* Icon */}
         <div
           className={clsx(
             "mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl",
             variant === "danger"
-              ? "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400"
-              : "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400"
+              ? "bg-[#F87171]/10 border border-[#F87171]/30 text-[#F87171]"
+              : "bg-[#181A1F] border border-white/5 text-[#F2D74E]"
           )}
         >
           {icon ?? (
@@ -78,12 +78,12 @@ export function ConfirmDialog({
         </div>
 
         {/* Title */}
-        <h2 id={titleId} className="text-center font-display text-lg font-semibold text-slate-900 dark:text-slate-100">
+        <h2 id={titleId} className="text-center font-display text-lg font-semibold text-white">
           {title}
         </h2>
 
         {/* Body */}
-        <div id={descriptionId} className="mt-2 text-center text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+        <div id={descriptionId} className="mt-2 text-center text-sm leading-relaxed text-white/80">
           {description}
         </div>
 

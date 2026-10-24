@@ -12,9 +12,9 @@ import { healthApi, type HealthReadyResponse, type ServiceCheck } from "@/lib/ap
 import { Button } from "@/components/ui/Button";
 
 function statusTone(status: ServiceCheck["status"]) {
-  if (status === "ok") return "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-400";
-  if (status === "warning") return "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-400";
-  return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800/60 dark:bg-rose-950/40 dark:text-rose-400 font-semibold";
+  if (status === "ok") return "border-[#4ADE80]/30 bg-[#4ADE80]/10 text-[#4ADE80]";
+  if (status === "warning") return "border-[#FACC15]/30 bg-[#FACC15]/10 text-[#FACC15]";
+  return "border-[#F87171]/30 bg-[#F87171]/10 text-[#F87171] font-semibold";
 }
 
 function resolveDetail(check: ServiceCheck | undefined, fallbackDetail: string): string {
@@ -38,9 +38,9 @@ function ollamaDetail(check?: ServiceCheck): string {
 }
 
 function statusIcon(status: ServiceCheck["status"]) {
-  if (status === "ok") return <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />;
-  if (status === "warning") return <AlertTriangle className="h-4 w-4 text-amber-500 dark:text-amber-400" />;
-  return <XCircle className="h-4 w-4 text-rose-600 dark:text-rose-400" />;
+  if (status === "ok") return <CheckCircle2 className="h-4 w-4 text-[#4ADE80]" />;
+  if (status === "warning") return <AlertTriangle className="h-4 w-4 text-[#FACC15]" />;
+  return <XCircle className="h-4 w-4 text-[#F87171]" />;
 }
 
 function HealthCheckRow({
@@ -57,13 +57,13 @@ function HealthCheckRow({
   const status = check?.status ?? "unknown";
 
   return (
-    <div className="flex items-start gap-3.5 rounded-lg border border-slate-100 bg-slate-50/70 p-3.5 dark:border-slate-800/60 dark:bg-slate-800/40">
+    <div className="flex items-start gap-3.5 rounded-lg border border-white/8 bg-[#181A1F] p-3.5">
       <div className="mt-0.5">{statusIcon(status)}</div>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-xs font-semibold text-slate-900 dark:text-slate-100">{label}</p>
+          <p className="text-xs font-semibold text-white">{label}</p>
           {aiAccent && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300">
+            <span className="inline-flex items-center gap-1 rounded-full border border-[#F2D74E]/30 bg-[#F2D74E]/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-[#F2D74E]">
               <BrainCircuit className="h-3 w-3" />
               AI Core
             </span>
@@ -74,14 +74,14 @@ function HealthCheckRow({
             {status}
           </span>
           {typeof check?.latency_ms === "number" && (
-            <span className="text-xs font-medium text-slate-400">[{check.latency_ms}ms]</span>
+            <span className="text-xs font-medium text-white/80">[{check.latency_ms}ms]</span>
           )}
         </div>
-        <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+        <p className="mt-1 text-xs text-white/80">
           {check?.detail ?? fallbackDetail}
         </p>
         {check?.action && (
-          <p className="mt-1 text-xs font-medium text-slate-800 dark:text-slate-200">
+          <p className="mt-1 text-xs font-medium text-white">
             Action: {check.action}
           </p>
         )}
@@ -125,19 +125,19 @@ export function SystemHealthSection() {
     : 0;
 
   return (
-    <div className="rounded-xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
+    <div className="rounded-xl border border-white/8 bg-[#121317] p-6 shadow-xs text-white">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between border-b border-white/8 pb-4">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/70 dark:text-indigo-400">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#181A1F] border border-white/5 text-[#F2D74E]">
             <Activity className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">System Health</h2>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+            <h2 className="text-sm font-semibold text-white">System Health</h2>
+            <p className="mt-0.5 text-xs text-white/80">
               Readiness checks for the services admins depend on before sending candidate links.
             </p>
             {lastChecked && (
-              <p className="mt-1 text-[11px] font-medium text-slate-400">
+              <p className="mt-1 text-[11px] font-medium text-white/70">
                 Last checked: {lastChecked.toLocaleTimeString()}
               </p>
             )}
@@ -155,7 +155,7 @@ export function SystemHealthSection() {
       </div>
 
       {error && (
-        <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300">
+        <div className="mb-4 rounded-xl border border-[#F87171]/20 bg-[#F87171]/10 p-4 text-xs font-medium text-[#F87171]">
           {error}
         </div>
       )}
@@ -164,8 +164,8 @@ export function SystemHealthSection() {
         <div
           className={`mb-4 rounded-xl border p-3.5 text-xs font-semibold ${
             issueCount === 0
-              ? "border-emerald-200 bg-emerald-50/70 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300"
-              : "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300"
+              ? "border-[#4ADE80]/20 bg-[#4ADE80]/10 text-[#4ADE80]"
+              : "border-[#FACC15]/20 bg-[#FACC15]/10 text-[#FACC15]"
           }`}
         >
           {issueCount === 0

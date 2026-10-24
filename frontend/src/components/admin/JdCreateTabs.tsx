@@ -18,7 +18,7 @@ export function JdCreateTabs() {
       <div
         role="tablist"
         aria-label="Create a job description"
-        className="mb-6 inline-flex rounded-xl border border-slate-200 bg-slate-100/70 p-1 dark:border-slate-800 dark:bg-slate-800"
+        className="mb-6 inline-flex rounded-xl border border-white/10 bg-[#181A1F] p-1 shadow-2xs"
       >
         <button
           type="button"
@@ -28,8 +28,8 @@ export function JdCreateTabs() {
           className={clsx(
             "flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all",
             mode === "upload"
-              ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-900 dark:text-indigo-400"
-              : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+              ? "bg-[#F2D74E] text-[#1A1600] shadow-xs"
+              : "text-white/80 hover:text-white hover:bg-white/10"
           )}
         >
           <Upload className="h-4 w-4" />
@@ -43,8 +43,8 @@ export function JdCreateTabs() {
           className={clsx(
             "flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all",
             mode === "generate"
-              ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-900 dark:text-indigo-400"
-              : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+              ? "bg-[#F2D74E] text-[#1A1600] shadow-xs"
+              : "text-white/80 hover:text-white hover:bg-white/10"
           )}
         >
           <Sparkles className="h-4 w-4" />

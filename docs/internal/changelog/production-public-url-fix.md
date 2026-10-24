@@ -4,7 +4,7 @@ Date: 2026-06-22
 
 User-reported: the sign-out button (and other app-issued redirects) sent
 the browser to `https://citadel-apache-bonelike.ngrok-free.dev` instead of
-the clean `https://acmeTalvyn.vercel.app` domain — visible directly in
+the clean `https://talvyn.vercel.app` domain — visible directly in
 the address bar after clicking sign-out. This is the production
 URL/auth-redirect cleanup item flagged in the very first system audit of
 this project and never actually finished.
@@ -12,7 +12,7 @@ this project and never actually finished.
 ## Architecture (confirmed live, not assumed)
 
 ```
-Browser → https://acmeTalvyn.vercel.app
+Browser → https://talvyn.vercel.app
             (Vercel project, vercel-proxy/vercel.json — a pure rewrite
              proxy, not a real Next.js deployment)
           → rewrites every path to →
@@ -49,7 +49,7 @@ Applied directly on the production server (confirmed via SSH, with the
 user's explicit go-ahead before touching anything):
 
 - `backend/.env`: `MAGIC_LINK_BASE_URL` and `ALLOWED_ORIGINS` updated to
-  `https://acmeTalvyn.vercel.app` (kept the ngrok origin in
+  `https://talvyn.vercel.app` (kept the ngrok origin in
   `ALLOWED_ORIGINS` too, harmless to leave and avoids needing to know
   whether anything still calls the API via the bare ngrok URL directly).
 - `frontend/.env.local`: `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_URL`, and
@@ -78,16 +78,16 @@ the health check then showed the correct URL.
 
 All against the real public domain, not just the server's internals:
 
-- `GET https://acmeTalvyn.vercel.app/dashboard` (unauthenticated) →
-  redirects to `https://acmeTalvyn.vercel.app/login?callbackUrl=...` —
+- `GET https://talvyn.vercel.app/dashboard` (unauthenticated) →
+  redirects to `https://talvyn.vercel.app/login?callbackUrl=...` —
   stays on the Vercel domain.
 - Logged in via a real NextAuth credentials POST against the public
-  domain → returned `{"url": "https://acmeTalvyn.vercel.app"}`.
+  domain → returned `{"url": "https://talvyn.vercel.app"}`.
 - Signed out via a real NextAuth signout POST → returned
-  `{"url": "https://acmeTalvyn.vercel.app"}`, session subsequently
+  `{"url": "https://talvyn.vercel.app"}`, session subsequently
   empty — this is the exact action the user reported as broken.
 - Backend health check's `magic_links.base_url` →
-  `https://acmeTalvyn.vercel.app`.
+  `https://talvyn.vercel.app`.
 - `backend`/`frontend` containers: `RestartCount: 0`, `Status: running`
   after the fix — no crash-loop introduced.
 

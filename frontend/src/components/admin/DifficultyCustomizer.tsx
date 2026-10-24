@@ -125,7 +125,7 @@ export function DifficultyCustomizer({
             <button
               type="button"
               onClick={() => onChange(defaultValue)}
-              className="mt-2.5 flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 transition-colors"
+              className="mt-2.5 flex items-center gap-1 text-xs text-white/70 hover:text-white transition-colors"
             >
               <RotateCcw className="h-3 w-3" />
               Reset to AI recommendation

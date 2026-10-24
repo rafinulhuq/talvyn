@@ -178,7 +178,7 @@ testing.
 | Status | Feature | Current Talvyn state | Notes / next action |
 | --- | --- | --- | --- |
 | [x] Done | Email provider integration | Resend API and SMTP paths are present. | Production depends on verified sender configuration. |
-| [x] Done | Vercel candidate/admin frontend option | Magic links can point to `https://acmeTalvyn.vercel.app`. | Frontend proxies public/candidate calls to backend. |
+| [x] Done | Vercel candidate/admin frontend option | Magic links can point to `https://talvyn.vercel.app`. | Frontend proxies public/candidate calls to backend. |
 | [x] Done | GitHub Actions auto-deploy | Production deploy workflow SSHes to the server after CI passes. | Requires `PROD_SSH_KEY` secret and server checkout. |
 | [x] Removed | Ngrok/proxy deployment | ngrok has been retired — `deploy-ngrok.sh` and the ngrok proxy branching are removed from the repo. Deployment now targets a stable domain behind a reverse proxy (`docker-compose.prod.yml` + host Nginx/Certbot). | See `docs/deployment.md`; the old tunnel teardown lives in `docs/talvyn-rebrand-checklist.md`. |
 | [ ] Backlog | ATS integrations | No Greenhouse, Lever, Workday, Ashby, or BambooHR integration. | Build on top of the new webhook events instead of one-off direct integrations. |
@@ -342,7 +342,7 @@ Give Claude one batch at a time and review each batch before moving on:
    the NextAuth session but was never read anywhere.~~ Shipped — new
    Super-Admin-only `/dashboard/users` page (view admin accounts, change
    roles, with a guard against demoting the last remaining Super Admin),
-   `acmeai@Talvyn.com` promoted to `SUPER_ADMIN` (seed + live DB), and
+   `admin@talvyn.com` promoted to `SUPER_ADMIN` (seed + live DB), and
    honest "Coming soon" `Templates`/`Companies` nav items/pages matching a
    user-supplied dashboard mockup that referenced features Talvyn
    doesn't have yet. Live end-to-end smoke-tested against the running dev

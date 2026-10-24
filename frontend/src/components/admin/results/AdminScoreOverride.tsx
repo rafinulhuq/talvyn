@@ -92,7 +92,7 @@ export function AdminScoreOverride({ feedback: fb, attemptId, onUpdate }: AdminS
             type="button"
             onClick={handleClearScore}
             disabled={savingScore}
-            className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-white underline underline-offset-2 transition-colors disabled:opacity-50"
+            className="text-xs font-semibold text-white/70 hover:text-white underline underline-offset-2 transition-colors disabled:opacity-50"
           >
             Clear
           </button>

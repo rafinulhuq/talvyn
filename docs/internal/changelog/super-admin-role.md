@@ -27,7 +27,7 @@ Rather than guess, two things were confirmed before building:
 
 | Area | Change |
 | --- | --- |
-| `frontend/prisma/seed.ts` | `acmeai@Talvyn.com` seeded as `SUPER_ADMIN` instead of `ADMIN`. The seed is now self-healing on existing installs too — if a seeded email's row has drifted from the seed list's role, it's corrected on the next seed run instead of being silently skipped. |
+| `frontend/prisma/seed.ts` | `admin@talvyn.com` seeded as `SUPER_ADMIN` instead of `ADMIN`. The seed is now self-healing on existing installs too — if a seeded email's row has drifted from the seed list's role, it's corrected on the next seed run instead of being silently skipped. |
 | Live database | The already-running dev Postgres had this user seeded as `ADMIN` from before this change — updated directly via SQL so the fix takes effect immediately, not just on the next fresh install. |
 | `app/(admin)/layout.tsx` → `AdminShell.tsx` → `Sidebar.tsx` | `session.user.role` is now passed all the way down to the Sidebar. |
 | `Sidebar.tsx` | New nav items: **Templates** (Workflow group, `soon: true`), **Companies** (System group, `soon: true`) — visible to everyone, with a small "Soon" tag instead of being a working link to nothing. **Users** (System group, `superAdminOnly: true`) — only rendered when `session.user.role === "SUPER_ADMIN"`. Footer profile block and the `AdminShell` header now show "Super Admin" / "Admin" under the user's name, matching the mockup's role-caption style. |
@@ -60,7 +60,7 @@ Rather than guess, two things were confirmed before building:
   `npm run build` all pass.
 - **Live end-to-end smoke test** against the running dev stack (this repo's
   `docker-compose.yml` was already up): logged in as
-  `acmeai@Talvyn.com` via the real NextAuth credentials flow, confirmed
+  `admin@talvyn.com` via the real NextAuth credentials flow, confirmed
   `session.user.role === "SUPER_ADMIN"`, confirmed `/dashboard/users`
   renders the account with a "Super Admin" badge, confirmed the Sidebar
   renders Users/Templates/Companies with the right gating, and confirmed

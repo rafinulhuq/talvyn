@@ -70,15 +70,15 @@ export function SkillsPanel({ data }: SkillsPanelProps) {
 
       {/* Responsibilities — full width */}
       {data.responsibilities.length > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
+        <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs text-white lg:col-span-2">
           <SectionHeader
             title="Key Responsibilities"
             subtitle={`${data.responsibilities.length} items`}
           />
           <ul className="mt-3 flex flex-col gap-2">
             {data.responsibilities.map((r) => (
-              <li key={r} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-600" />
+              <li key={r} className="flex items-start gap-2.5 text-xs text-white/90">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#F2D74E]" />
                 <span>{r}</span>
               </li>
             ))}
@@ -88,7 +88,7 @@ export function SkillsPanel({ data }: SkillsPanelProps) {
 
       {/* Difficulty distribution — full width */}
       {hasDifficulty && (
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
+        <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs text-white lg:col-span-2">
           <SectionHeader
             title="Recommended Test Difficulty"
             subtitle="Used when generating assessment questions"
@@ -116,10 +116,10 @@ function SectionHeader({
   subtitle?: string;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800">
-      <p className="font-display text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</p>
+    <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+      <p className="font-display text-sm font-semibold text-white">{title}</p>
       {subtitle && (
-        <p className="text-xs text-slate-500">{subtitle}</p>
+        <p className="text-xs text-white/70">{subtitle}</p>
       )}
     </div>
   );
@@ -137,7 +137,7 @@ function TagSection({
   badgeVariant: "blue" | "slate" | "purple" | "green" | "indigo";
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <div className="rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs text-white">
       <SectionHeader title={title} subtitle={subtitle} />
       <div className="mt-3.5 flex flex-wrap gap-2">
         {items.map((item) => (

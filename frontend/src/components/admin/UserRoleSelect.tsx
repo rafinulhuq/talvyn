@@ -57,12 +57,12 @@ export function UserRoleSelect({ userId, currentRole, disabled }: UserRoleSelect
           value={role}
           disabled={disabled || saving}
           onChange={(e) => handleChange(e.target.value as "USER" | "ADMIN" | "SUPER_ADMIN" | "DEV")}
-          className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+          className="rounded-lg border border-white/10 bg-[#181A1F] px-2.5 py-1.5 text-xs font-semibold text-white transition-colors hover:border-white/20 focus:border-[#F2D74E] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <option value="USER">User</option>
-          <option value="ADMIN">Admin</option>
-          <option value="SUPER_ADMIN">Super Admin</option>
-          <option value="DEV">Dev</option>
+          <option value="USER" className="bg-[#181A1F] text-white">User</option>
+          <option value="ADMIN" className="bg-[#181A1F] text-white">Admin</option>
+          <option value="SUPER_ADMIN" className="bg-[#181A1F] text-white">Super Admin</option>
+          <option value="DEV" className="bg-[#181A1F] text-white">Dev</option>
         </select>
       </div>
       {error && <p className="text-xs text-danger-dark">{error}</p>}

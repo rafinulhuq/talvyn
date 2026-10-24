@@ -3,9 +3,9 @@
  * privilege level. Currently just the platform's one and only Super Admin
  * (id below) — its role was accidentally reset to USER via the admin UI
  * on 2026-09-07 and had to be restored by hand. Its login email was
- * acmeai@talvyn.com at the time and was renamed to acmeai@talvyn.org
+ * admin@talvyn.com at the time and was renamed to admin@talvyn.org
  * on 2026-09-08 — this guard is keyed by id, so the rename didn't need any
- * change here. A separate dormant duplicate (acmeai@Talvyn.com) was
+ * change here. A separate dormant duplicate (admin@Talvyn.com) was
  * demoted and deactivated the same day so this is the only SUPER_ADMIN.
  *
  * This is a defense-in-depth guard for a friendly error message; the real

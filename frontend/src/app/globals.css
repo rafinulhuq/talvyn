@@ -3,41 +3,41 @@
 
 /* ─── CSS Variables ──────────────────────────────────────────── */
 @layer base {
-  :root {
-    /* Deep Indigo & Cool Slate Theme Tokens */
-    --color-primary: #4f46e5;
-    --color-primary-hover: #4338ca;
-    --color-primary-foreground: #ffffff;
+  :root, :root.dark, .dark {
+    /* Precision Developer Instrument Tokens */
+    --color-primary: #F2D74E;
+    --color-primary-hover: #F7E27A;
+    --color-primary-foreground: #1A1600;
 
-    --color-surface-canvas: #f8fafc;
-    --color-surface: #ffffff;
-    --color-surface-elevated: #ffffff;
-    --color-surface-overlay: #ffffff;
+    --color-surface-canvas: #0B0C0E;
+    --color-surface: #121317;
+    --color-surface-elevated: #181A1F;
+    --color-surface-overlay: #22242B;
 
-    --color-bg: #f8fafc;
-    --color-bg-muted: #f1f5f9;
-    --color-bg-subtle: #e2e8f0;
+    --color-bg: #0B0C0E;
+    --color-bg-muted: #121317;
+    --color-bg-subtle: #181A1F;
 
-    --color-border-subtle: #f1f5f9;
-    --color-border: #e2e8f0;
-    --color-border-strong: #cbd5e1;
+    --color-border-subtle: rgba(255, 255, 255, 0.06);
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-strong: rgba(255, 255, 255, 0.16);
 
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #334155;
-    --color-text-muted: #64748b;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #FFFFFF;
+    --color-text-muted: rgba(255, 255, 255, 0.85);
 
-    --color-text: #0f172a;
-    --color-text-subtle: #64748b;
+    --color-text: #FFFFFF;
+    --color-text-subtle: rgba(255, 255, 255, 0.75);
 
     /* Semantic Status Tokens */
-    --color-status-success-bg: #ecfdf5;
-    --color-status-success-fg: #059669;
-    --color-status-warning-bg: #fffbeb;
-    --color-status-warning-fg: #d97706;
-    --color-status-danger-bg: #fef2f2;
-    --color-status-danger-fg: #e11d48;
-    --color-status-info-bg: #eef2ff;
-    --color-status-info-fg: #4f46e5;
+    --color-status-success-bg: rgba(74, 222, 128, 0.12);
+    --color-status-success-fg: #4ADE80;
+    --color-status-warning-bg: rgba(250, 204, 21, 0.12);
+    --color-status-warning-fg: #FACC15;
+    --color-status-danger-bg: rgba(248, 113, 113, 0.12);
+    --color-status-danger-fg: #F87171;
+    --color-status-info-bg: rgba(56, 189, 248, 0.12);
+    --color-status-info-fg: #38bdf8;
 
     /* Sidebar */
     --sidebar-width: 240px;
@@ -53,71 +53,35 @@
 
   /* ─── Base element resets ─────────────────────────────────── */
   * {
-    @apply border-slate-200;
+    border-color: rgba(255, 255, 255, 0.08);
   }
 
-  /* Mobile hygiene: stop iOS from re-flowing text on rotate, kill the grey
-     tap flash on touch, and let long words break instead of forcing a
-     horizontal scrollbar on a 360px screen. */
+  /* Mobile hygiene */
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    color-scheme: dark;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
-    font-family: var(--font-body);
+    background-color: #0B0C0E;
+    color: #FFFFFF;
+    font-family: var(--font-body), system-ui, -apple-system, sans-serif;
     -webkit-tap-highlight-color: transparent;
     overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Headings default to the display face (Plus Jakarta Sans); any element
-     with an explicit font-sans/font-mono class overrides this, since a
-     class selector outranks this element selector. */
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
+  h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF;
     letter-spacing: -0.02em;
-  }
-
-  /* Dark-mode semantic token overrides */
-  :root.dark, .dark {
-    --color-primary: #6366f1;
-    --color-primary-hover: #818cf8;
-    --color-primary-foreground: #ffffff;
-
-    --color-surface-canvas: #09090b;
-    --color-surface: #121215;
-    --color-surface-elevated: #18181b;
-    --color-surface-overlay: #222226;
-
-    --color-bg: #09090b;
-    --color-bg-muted: #121215;
-    --color-bg-subtle: #18181b;
-
-    --color-border-subtle: #1e1e24;
-    --color-border: #27272a;
-    --color-border-strong: #3f3f46;
-
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #a1a1aa;
-    --color-text-muted: #71717a;
-
-    --color-text: #f8fafc;
-    --color-text-subtle: #71717a;
-
-    --color-status-success-bg: rgba(6, 78, 59, 0.35);
-    --color-status-success-fg: #34d399;
-    --color-status-warning-bg: rgba(120, 53, 15, 0.35);
-    --color-status-warning-fg: #fbbf24;
-    --color-status-danger-bg: rgba(136, 19, 55, 0.35);
-    --color-status-danger-fg: #fb7185;
-    --color-status-info-bg: rgba(12, 74, 110, 0.35);
-    --color-status-info-fg: #38bdf8;
   }
 
   /* ─── Focus styles ────────────────────────────────────────── */
   *:focus-visible {
-    @apply outline-hidden ring-2 ring-indigo-500/40 ring-offset-1;
+    outline: 2px solid #F2D74E !important;
+    outline-offset: 3px !important;
   }
 
   /* ─── Form controls on small screens ──────────────────────────
@@ -184,28 +148,27 @@
      + soft shadow, reversing the lime rebrand's thick-border/no-shadow
      treatment to match the reference dashboards' clean SaaS look. */
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-card dark:border-slate-700 dark:bg-slate-900;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #121317;
+    color: #FFFFFF;
   }
 
-  /* Lift-on-hover is a pointer-device affordance; on touch the transform
-     sticks after a tap (there is no pointer to leave), so the card stays
-     visibly nudged until something else is tapped. Restrict the motion to
-     real hover devices and give touch a press state instead. */
   .card-hover {
-    @apply rounded-xl border border-slate-200 bg-white shadow-card transition-all duration-150 hover:border-brand-300 hover:shadow-card-hover active:border-brand-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-brand-600;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #121317;
+    color: #FFFFFF;
+    transition: border-color 0.15s ease;
   }
 
   @media (hover: hover) and (pointer: fine) {
     .card-hover:hover {
-      @apply -translate-y-0.5;
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
-    /* Same pointer-only lift, for surfaces that aren't `.card-hover` but
-       want the affordance (KPI tiles, result rows). Split out rather than
-       expressed as an inline arbitrary variant so the media query stays
-       written once, in real CSS. */
     .lift-hover:hover {
-      @apply -translate-y-0.5;
+      border-color: rgba(255, 255, 255, 0.2);
     }
   }
 
@@ -482,3 +445,103 @@
   pointer-events: none;
   color: #94a3b8;
 }
+
+@keyframes relayBarSweep {
+  0%, 7% {
+    opacity: 1;
+    box-shadow: 0 0 8px currentColor;
+  }
+  7.01%, 100% {
+    opacity: 0.75;
+    box-shadow: none;
+  }
+}
+
+/* ─── Admin Panel Pure White Text & Hover Visibility Layer ─── */
+.dark, :root.dark {
+  color: #FFFFFF;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #FFFFFF !important;
+}
+
+/* Ensure all primary text on graphite surfaces is pure white */
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-slate-700,
+.dark .text-slate-100,
+.dark .text-slate-50,
+.dark [class*="text-[#EDEEF0]"],
+.dark [class*="text-white"] {
+  color: #FFFFFF !important;
+}
+
+/* Secondary labels are crisp and high-contrast, never dim, faint, or invisible */
+.dark [class*="text-[#8A8F98]"],
+.dark .text-slate-500,
+.dark .text-slate-600 {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark [class*="text-[#5A5F68]"],
+.dark .text-slate-400,
+.dark .text-slate-300 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Prevent text from disappearing on hover */
+.dark [class*="hover:text-"]:hover,
+.dark [class*="group-hover:text-"]:hover {
+  color: #FFFFFF !important;
+}
+
+/* Ensure hover backgrounds never turn bright/white and drown white text */
+.dark [class*="hover:bg-slate-50"]:hover,
+.dark [class*="hover:bg-slate-100"]:hover,
+.dark [class*="hover:bg-slate-200"]:hover,
+.dark [class*="hover:bg-white"]:hover,
+.dark [class*="group-hover:bg-slate-50"]:hover,
+.dark [class*="group-hover:bg-slate-100"]:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Preserve yellow accent hover */
+.dark [class*="hover:text-[#F2D74E]"]:hover,
+.dark [class*="hover:text-brand-"]:hover,
+.dark [class*="hover:text-indigo-"]:hover,
+.dark [class*="group-hover:text-[#F2D74E]"]:hover,
+.dark [class*="group-hover:text-indigo-"]:hover {
+  color: #F2D74E !important;
+}
+
+/* Preserve danger and success hover */
+.dark [class*="hover:text-rose-"]:hover,
+.dark [class*="hover:text-danger"]:hover,
+.dark [class*="hover:text-[#F87171]"]:hover,
+.dark [class*="group-hover:text-[#F87171]"]:hover {
+  color: #F87171 !important;
+}
+
+.dark [class*="hover:text-emerald-"]:hover,
+.dark [class*="hover:text-success"]:hover,
+.dark [class*="hover:text-[#4ADE80]"]:hover,
+.dark [class*="group-hover:text-[#4ADE80]"]:hover {
+  color: #4ADE80 !important;
+}
+
+/* Preserve dark ink on yellow buttons & badges */
+.dark [class*="bg-[#F2D74E]"],
+.dark .btn-primary {
+  color: #1A1600 !important;
+}
+.dark [class*="bg-[#F2D74E]"] * {
+  color: #1A1600 !important;
+}
+.dark [class*="bg-[#F2D74E]"]:hover,
+.dark [class*="hover:bg-[#F7E27A]"]:hover {
+  background-color: #F7E27A !important;
+  color: #1A1600 !important;
+}
+
+

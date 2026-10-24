@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Terminal } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { DevSignature } from "@/components/landing/DevSignature";
 import type { SiteContent } from "@/lib/cms/content";
@@ -33,14 +33,16 @@ export function LandingNav({ content }: { content: SiteContent }) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-md shadow-xs dark:border-slate-800 dark:bg-slate-900/85">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 h-16 border-b border-white/[0.06] bg-[#0B0C0E]/75 backdrop-blur-[12px] backdrop-saturate-[140%]">
+      <div className="mx-auto flex h-full max-w-[1160px] items-center justify-between px-5 sm:px-8">
+        {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5" onClick={handleLogoClick}>
-          <BrandWordmark variant="default" className="h-8 w-auto" ariaLabel={content.brand.name} />
+          <BrandWordmark variant="on-dark" className="h-7 w-auto" ariaLabel={content.brand.name} />
         </Link>
         {showSignature && <DevSignature onClose={() => setShowSignature(false)} />}
 
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* Desktop Links */}
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
           {content.navLinks.map((link) => {
             const isHash = link.href.startsWith("#");
             const href = isHash ? `/${link.href}` : link.href;
@@ -48,32 +50,33 @@ export function LandingNav({ content }: { content: SiteContent }) {
               <Link
                 key={`${link.href}-${link.label}`}
                 href={href}
-                className="group relative text-xs uppercase tracking-wider text-slate-600 font-semibold transition-colors hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
+                className="text-[14px] text-[#8A8F98] transition-colors hover:text-white"
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-indigo-600 transition-[width] duration-200 group-hover:w-full dark:bg-indigo-400" />
               </Link>
             );
           })}
         </nav>
 
+        {/* Desktop Actions */}
         <div className="hidden items-center gap-5 md:flex">
           <Link
             href={content.navActions.login.href}
-            className="text-xs uppercase tracking-wider text-slate-700 font-semibold transition-colors hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
+            className="text-[14px] text-[#8A8F98] transition-colors hover:text-white"
           >
             {content.navActions.login.label}
           </Link>
           <Link
             href={content.navActions.primary.href}
-            className="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-xs hover:bg-indigo-700 active:scale-[0.98] transition-all"
+            className="rounded-[8px] bg-[#F2D74E] px-[14px] py-[8px] text-[14px] font-semibold text-[#1A1600] transition-colors hover:bg-[#F7E27A] focus-visible:outline-2 focus-visible:outline-[#F2D74E] focus-visible:outline-offset-3"
           >
             {content.navActions.primary.label}
           </Link>
         </div>
 
+        {/* Mobile Toggle */}
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/80 bg-white text-slate-700 shadow-xs hover:bg-slate-50 active:scale-95 transition-all md:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-white/[0.08] bg-[#181A1F] text-white transition-colors md:hidden"
           onClick={() => setOpen((o) => !o)}
           aria-label="Toggle menu"
         >
@@ -81,9 +84,10 @@ export function LandingNav({ content }: { content: SiteContent }) {
         </button>
       </div>
 
+      {/* Mobile Drawer */}
       {open && (
-        <div className="border-t border-slate-200/80 bg-white px-4 pb-4 md:hidden shadow-lg dark:border-slate-800 dark:bg-slate-900">
-          <nav className="flex flex-col gap-2 pt-3">
+        <div className="border-t border-white/[0.08] bg-[#121317] px-5 pb-5 pt-3 md:hidden">
+          <nav className="flex flex-col gap-2">
             {content.navLinks.map((link) => {
               const isHash = link.href.startsWith("#");
               const href = isHash ? `/${link.href}` : link.href;
@@ -92,22 +96,22 @@ export function LandingNav({ content }: { content: SiteContent }) {
                   key={`${link.href}-${link.label}`}
                   href={href}
                   onClick={() => setOpen(false)}
-                  className="border-b border-slate-100 py-2.5 text-xs font-medium uppercase tracking-wider text-slate-700 hover:text-indigo-600 dark:border-slate-800 dark:text-slate-300 dark:hover:text-indigo-400"
+                  className="border-b border-white/[0.06] py-2.5 text-[14px] text-[#8A8F98] hover:text-white"
                 >
                   {link.label}
                 </Link>
               );
             })}
-            <div className="pt-2 flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5 pt-3">
               <Link
                 href={content.navActions.login.href}
-                className="py-2 text-xs font-medium uppercase tracking-wider text-slate-700 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
+                className="py-2 text-[14px] text-[#8A8F98] hover:text-white"
               >
                 {content.navActions.login.label}
               </Link>
               <Link
                 href={content.navActions.primary.href}
-                className="rounded-xl bg-indigo-600 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white shadow-xs hover:bg-indigo-700"
+                className="rounded-[8px] bg-[#F2D74E] py-2.5 text-center text-[14px] font-semibold text-[#1A1600] hover:bg-[#F7E27A]"
               >
                 {content.navActions.primary.label}
               </Link>

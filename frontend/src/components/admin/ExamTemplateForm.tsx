@@ -126,7 +126,7 @@ export function ExamTemplateForm({ template, onSaved, onCancel }: ExamTemplateFo
         <button
           type="button"
           onClick={onCancel}
-          className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          className="rounded p-1 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           aria-label="Cancel"
         >
           <X className="h-4 w-4" />

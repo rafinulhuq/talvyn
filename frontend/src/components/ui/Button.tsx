@@ -15,15 +15,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "rounded-lg bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-1 disabled:opacity-50 disabled:pointer-events-none",
+    "rounded-[10px] bg-[#F2D74E] hover:bg-[#F7E27A] text-[#1A1600] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-[#F2D74E] focus-visible:outline-offset-3 disabled:opacity-50 disabled:pointer-events-none transform-none",
   secondary:
-    "rounded-lg border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 font-medium shadow-xs focus-visible:ring-2 focus-visible:ring-slate-300 disabled:opacity-50 disabled:pointer-events-none",
+    "rounded-[10px] border border-white/[0.08] bg-[#181A1F] hover:border-white/[0.2] text-white font-medium transition-colors focus-visible:outline-2 focus-visible:outline-[#F2D74E] focus-visible:outline-offset-3 disabled:opacity-50 disabled:pointer-events-none transform-none",
   ghost:
-    "rounded-lg bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium transition-colors disabled:opacity-50",
+    "rounded-[10px] bg-transparent border border-white/12 hover:border-white/24 text-white font-medium transition-colors focus-visible:outline-2 focus-visible:outline-[#F2D74E] focus-visible:outline-offset-3 disabled:opacity-50 transform-none",
   danger:
-    "rounded-lg bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-medium shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-rose-500/40 disabled:opacity-50",
+    "rounded-[10px] bg-[#F87171] hover:bg-rose-500 text-[#1A1600] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-[#F87171] focus-visible:outline-offset-3 disabled:opacity-50 transform-none",
   outline:
-    "rounded-lg border border-slate-300 bg-transparent text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-400 transition-colors disabled:opacity-50",
+    "rounded-[10px] border border-white/12 bg-transparent text-white font-medium hover:border-white/24 transition-colors focus-visible:outline-2 focus-visible:outline-[#F2D74E] focus-visible:outline-offset-3 disabled:opacity-50 transform-none",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -56,9 +56,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         className={clsx(
           "inline-flex items-center justify-center select-none font-sans font-medium",
-          "transition-all duration-150 ease-out",
-          "active:scale-[0.985]",
-          "disabled:active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed",
+          "transition-colors duration-150 ease-out",
+          "disabled:opacity-60 disabled:cursor-not-allowed",
           "focus-visible:outline-none",
           variantClasses[variant],
           sizeClasses[size],

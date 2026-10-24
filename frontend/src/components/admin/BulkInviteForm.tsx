@@ -281,7 +281,7 @@ export function BulkInviteForm({ jdId, approvedTests }: BulkInviteFormProps) {
               <button
                 type="button"
                 onClick={reset}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                className="text-white/70 hover:text-white transition-colors"
                 aria-label="Clear CSV preview"
               >
                 <X className="h-4 w-4" />

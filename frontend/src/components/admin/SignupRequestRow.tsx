@@ -58,22 +58,22 @@ export function SignupRequestRow({
   }
 
   return (
-    <div className="flex items-center gap-4 rounded-xl bg-white px-4 py-3 dark:bg-slate-900">
+    <div className="flex items-center gap-4 rounded-xl border border-white/8 bg-[#181A1F] px-4 py-3 text-white">
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">
+          <p className="truncate text-sm font-medium text-white">
             {companyName ?? "(no company name)"}
           </p>
           <Badge variant={signupStatus === "REJECTED" ? "red" : "yellow"}>
             {signupStatus === "REJECTED" ? "Rejected" : "Pending"}
           </Badge>
         </div>
-        <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+        <p className="mt-0.5 truncate text-xs text-white/80">
           {name} — {email}
           {username && ` · @${username}`}
         </p>
         {[roleInCompany, phoneNumber].filter(Boolean).length > 0 && (
-          <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 truncate text-xs text-white/80">
             {[roleInCompany, phoneNumber].filter(Boolean).join(" · ")}
           </p>
         )}
@@ -83,16 +83,16 @@ export function SignupRequestRow({
               href={companyWebsite}
               target="_blank"
               rel="noreferrer noopener"
-              className="mt-0.5 block truncate text-xs text-brand-700 hover:underline"
+              className="mt-0.5 block truncate text-xs text-[#F2D74E] hover:underline"
             >
               {companyWebsite}
             </a>
           ) : (
-            <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">{companyWebsite}</p>
+            <p className="mt-0.5 truncate text-xs text-white/80">{companyWebsite}</p>
           )
         )}
-        <p className="mt-0.5 text-xs text-slate-400">Requested {requestedAt}</p>
-        {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+        <p className="mt-0.5 text-xs text-white/70">Requested {requestedAt}</p>
+        {error && <p className="mt-1 text-xs text-[#F87171]">{error}</p>}
       </div>
       <div className="flex shrink-0 gap-2">
         <Button

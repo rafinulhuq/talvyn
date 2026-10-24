@@ -13,8 +13,8 @@ const seedPassword = process.env.SEED_ADMIN_PASSWORD || crypto.randomBytes(18).t
 
 const SEED_ADMINS = [
   {
-    email: process.env.SEED_ADMIN_EMAIL || 'acmeai@talvyn.com',
-    name: 'ACME AI Admin',
+    email: process.env.SEED_ADMIN_EMAIL || 'admin@talvyn.com',
+    name: 'Talvyn Admin',
     password: seedPassword,
     role: Role.SUPER_ADMIN,
   },

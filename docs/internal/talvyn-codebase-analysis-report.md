@@ -4,7 +4,7 @@
 
 Prepared for codebase understanding, developer handover, business review, and maintenance planning.
 
-Prepared by: Acme AI Ltd.
+Prepared by: Talvyn Ltd.
 
 Date: 8 June 2026
 
@@ -16,9 +16,9 @@ Date: 8 June 2026
 | --- | --- |
 | Document title | Talvyn Codebase Analysis Report |
 | Project reviewed | Talvyn |
-| Review location | `/home/a-m-rafinul-huq/Desktop/Office/ACME AI/Talvyn-main/Talvyn` |
+| Review location | `/home/a-m-rafinul-huq/Desktop/Office/Talvyn/Talvyn-main/Talvyn` |
 | Version | 1.0 |
-| Prepared by | Acme AI Ltd. |
+| Prepared by | Talvyn Ltd. |
 | Reference style followed | Deployment handover guide style: cover details, numbered sections, tables, validation notes, handover checklist, and recommended sequence |
 | Review scope | Backend, frontend, database models, migrations, tests, Docker files, startup scripts, and documentation |
 | Excluded from review | Generated dependency/build folders such as `node_modules`, `.next`, `.venv`, uploaded files, and runtime database data |

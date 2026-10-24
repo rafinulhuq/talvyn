@@ -100,7 +100,7 @@ export function QuestionEditorHeader({
             e.stopPropagation();
             onEdit();
           }}
-          className="rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          className="rounded-lg border border-white/10 p-1.5 text-white/80 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
           aria-label={`Edit question ${index + 1}`}
         >
           <Pencil className="h-3.5 w-3.5" />
@@ -110,7 +110,7 @@ export function QuestionEditorHeader({
             e.stopPropagation();
             onRequestDelete();
           }}
-          className="rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-colors hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 dark:border-slate-700 dark:text-slate-400 dark:hover:border-rose-800 dark:hover:bg-rose-950/50 dark:hover:text-rose-400"
+          className="rounded-lg border border-white/10 p-1.5 text-white/80 transition-colors hover:border-[#F87171]/40 hover:bg-[#F87171]/10 hover:text-[#F87171]"
           aria-label={`Delete question ${index + 1}`}
         >
           <Trash2 className="h-3.5 w-3.5" />
@@ -122,7 +122,7 @@ export function QuestionEditorHeader({
               e.stopPropagation();
               onToggleExpand();
             }}
-            className="rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            className="rounded-lg border border-white/10 p-1.5 text-white/80 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
             aria-label={`${expanded ? "Collapse" : "Expand"} question ${index + 1}`}
             aria-expanded={expanded}
             aria-controls={contentId}

@@ -52,7 +52,7 @@ export function UserAvatar({
       <div
         style={{ width: size, height: size }}
         className={clsx(
-          "flex shrink-0 items-center justify-center rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 font-semibold text-xs uppercase shadow-xs",
+          "flex shrink-0 items-center justify-center rounded-full border border-[#F2D74E]/30 bg-[#181A1F] text-[#F2D74E] font-semibold text-xs uppercase shadow-xs",
           className,
           fallbackClassName
         )}

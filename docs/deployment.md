@@ -181,11 +181,11 @@ EMAIL_FROM=no-reply@your-domain.com
 
 `MAGIC_LINK_BASE_URL` controls the public URL candidates receive. For example,
 to make new invitations look like
-`https://acmeTalvyn.vercel.app/tests/<token>` and public assessment links
-look like `https://acmeTalvyn.vercel.app/apply/<slug>`, set:
+`https://talvyn.vercel.app/tests/<token>` and public assessment links
+look like `https://talvyn.vercel.app/apply/<slug>`, set:
 
 ```bash
-MAGIC_LINK_BASE_URL=https://acmeTalvyn.vercel.app
+MAGIC_LINK_BASE_URL=https://talvyn.vercel.app
 ```
 
 The backend appends `/tests/<token>` for private candidate invitations and

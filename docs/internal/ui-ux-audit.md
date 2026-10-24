@@ -680,7 +680,7 @@ distinction. The `Role` enum (`ADMIN`/`SUPER_ADMIN`) and NextAuth session
 plumbing already existed but were never consumed anywhere — this wired them
 up: a new Super-Admin-only `/dashboard/users` page (view/manage admin
 accounts and roles, with a guard against demoting the last remaining Super
-Admin), `acmeai@Talvyn.com` promoted to `SUPER_ADMIN`, and honest
+Admin), `admin@talvyn.com` promoted to `SUPER_ADMIN`, and honest
 "Coming soon" `Templates`/`Companies` nav items for two mockup features
 Talvyn doesn't actually have yet (no test-template library, no
 multi-tenant concept) rather than faking them with placeholder data. Two

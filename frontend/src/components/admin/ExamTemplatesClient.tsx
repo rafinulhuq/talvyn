@@ -126,27 +126,27 @@ export function ExamTemplatesClient() {
           {templates.map((template) => (
             <div
               key={template.id}
-              className="flex items-start justify-between gap-4 rounded-xl border border-slate-200/80 bg-white p-5 shadow-xs transition-colors hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+              className="flex items-start justify-between gap-4 rounded-xl border border-white/8 bg-[#121317] p-5 shadow-xs transition-colors hover:border-white/20 text-white"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{template.name}</p>
+                  <p className="truncate text-sm font-semibold text-white">{template.name}</p>
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${
                       template.status === "ACTIVE"
-                        ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-400"
+                        ? "bg-[#4ADE80]/10 text-[#4ADE80] ring-1 ring-inset ring-[#4ADE80]/20"
                         : template.status === "DRAFT"
-                        ? "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-950/40 dark:text-amber-400"
-                        : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                        ? "bg-[#FACC15]/10 text-[#FACC15] ring-1 ring-inset ring-[#FACC15]/20"
+                        : "bg-[#181A1F] text-white/80 border border-white/10"
                     }`}
                   >
                     {STATUS_BADGE[template.status].label}
                   </span>
                 </div>
                 {template.description && (
-                  <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{template.description}</p>
+                  <p className="mt-1 truncate text-xs text-white/80">{template.description}</p>
                 )}
-                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{configSummary(template)}</p>
+                <p className="mt-1 text-xs text-white/70">{configSummary(template)}</p>
               </div>
               <div className="flex shrink-0 items-center gap-1.5">
                 <button
@@ -154,7 +154,7 @@ export function ExamTemplatesClient() {
                   onClick={() => setEditing(template)}
                   disabled={busyId === template.id}
                   aria-label="Edit template"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-xs hover:border-slate-300 hover:text-indigo-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-indigo-400 transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] text-white/80 hover:border-white/20 hover:text-white disabled:opacity-50 transition-colors"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                 </button>
@@ -164,7 +164,7 @@ export function ExamTemplatesClient() {
                     onClick={() => handleArchive(template)}
                     disabled={busyId === template.id}
                     aria-label="Archive template"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-xs hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-slate-100 transition-colors"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] text-white/80 hover:border-white/20 hover:text-white disabled:opacity-50 transition-colors"
                   >
                     <Archive className="h-3.5 w-3.5" />
                   </button>
@@ -174,7 +174,7 @@ export function ExamTemplatesClient() {
                   onClick={() => setPendingDelete(template)}
                   disabled={busyId === template.id}
                   aria-label="Delete template"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-xs hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-rose-900/50 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] text-white/80 hover:border-[#F87171]/40 hover:text-[#F87171] disabled:opacity-50 transition-colors"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

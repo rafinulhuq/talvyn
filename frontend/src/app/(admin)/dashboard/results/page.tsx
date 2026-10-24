@@ -125,31 +125,31 @@ function ResultsFilterToolbar({
   return (
     <form
       action="/dashboard/results"
-      className="mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-2 lg:grid-cols-4"
+      className="mb-4 grid gap-3 rounded-xl border border-white/8 bg-[#121317] p-4 shadow-xs sm:grid-cols-2 lg:grid-cols-4 text-white"
     >
       <div className="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
-        <label htmlFor="results-search" className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+        <label htmlFor="results-search" className="text-[10px] font-semibold uppercase tracking-wider text-white/80">
           Search
         </label>
         <div className="relative">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/60" />
           <input
             id="results-search"
             name="search"
             defaultValue={filters.search}
             placeholder="Candidate, email, number"
-            className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-8 pr-2 text-xs text-slate-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] pl-8 pr-2 text-xs text-white placeholder:text-white/40 outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
           />
         </div>
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Job</label>
+        <label className="text-[10px] font-semibold uppercase tracking-wider text-white/80">Job</label>
         <select
           name="jd_id"
           aria-label="Filter by job description"
           defaultValue={filters.jd_id}
-          className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] px-2.5 text-xs text-white outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
         >
           <option value="">All job descriptions</option>
           {jds?.items.map((jd) => (
@@ -161,12 +161,12 @@ function ResultsFilterToolbar({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Status</label>
+        <label className="text-[10px] font-semibold uppercase tracking-wider text-white/80">Status</label>
         <select
           name="status"
           aria-label="Filter by status"
           defaultValue={filters.status}
-          className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] px-2.5 text-xs text-white outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
         >
           <option value="">All statuses</option>
           <option value="SUBMITTED">Needs evaluation</option>
@@ -176,12 +176,12 @@ function ResultsFilterToolbar({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Verdict</label>
+        <label className="text-[10px] font-semibold uppercase tracking-wider text-white/80">Verdict</label>
         <select
           name="recommendation"
           aria-label="Filter by recommendation"
           defaultValue={filters.recommendation}
-          className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] px-2.5 text-xs text-white outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
         >
           <option value="">All recommendations</option>
           <option value="STRONG_HIRE">Strong Hire</option>
@@ -192,12 +192,12 @@ function ResultsFilterToolbar({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Integrity</label>
+        <label className="text-[10px] font-semibold uppercase tracking-wider text-white/80">Integrity</label>
         <select
           name="integrity"
           aria-label="Filter by integrity status"
           defaultValue={filters.integrity}
-          className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] px-2.5 text-xs text-white outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
         >
           <option value="">Any integrity status</option>
           <option value="clean">Clean</option>
@@ -206,24 +206,24 @@ function ResultsFilterToolbar({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="results-date-from" className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">From</label>
+        <label htmlFor="results-date-from" className="text-[10px] font-semibold uppercase tracking-wider text-white/80">From</label>
         <input
           id="results-date-from"
           type="date"
           name="date_from"
           defaultValue={filters.date_from}
-          className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] px-2.5 text-xs text-white outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="results-date-to" className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">To</label>
+        <label htmlFor="results-date-to" className="text-[10px] font-semibold uppercase tracking-wider text-white/80">To</label>
         <input
           id="results-date-to"
           type="date"
           name="date_to"
           defaultValue={filters.date_to}
-          className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="h-9 w-full rounded-lg border border-white/8 bg-[#181A1F] px-2.5 text-xs text-white outline-none focus:border-[#F2D74E] focus:ring-1 focus:ring-[#F2D74E] shadow-xs"
         />
       </div>
 
@@ -234,7 +234,7 @@ function ResultsFilterToolbar({
         {hasFilters && (
           <Link
             href="/dashboard/results"
-            className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 transition-colors"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-white/10 bg-[#181A1F] px-3 text-xs font-semibold text-white shadow-xs hover:bg-white/10 transition-colors"
           >
             Clear
           </Link>
@@ -250,55 +250,55 @@ function ResultsTableRow({ item }: { item: ResultsInboxItem }) {
   const isViolation = item.attempt_status === "TERMINATED";
 
   return (
-    <tr className="transition-colors hover:bg-slate-50/60 dark:hover:bg-slate-800/40 text-xs border-b border-slate-100 dark:border-slate-800 last:border-0">
+    <tr className="transition-colors hover:bg-white/5 text-xs border-b border-white/5 last:border-0 text-white">
       <td className="px-4 py-3.5">
-        <p className="font-semibold text-slate-900 dark:text-white">{item.candidate_name}</p>
-        <p className="mt-0.5 text-[11px] text-slate-400">
+        <p className="font-semibold text-white">{item.candidate_name}</p>
+        <p className="mt-0.5 text-[11px] text-white/70">
           #{item.candidate_number} · {item.candidate_email}
         </p>
       </td>
-      <td className="max-w-[160px] truncate px-4 py-3.5 text-slate-800 dark:text-slate-200 font-medium">
+      <td className="max-w-[160px] truncate px-4 py-3.5 text-white font-medium">
         {item.jd_title}
       </td>
-      <td className="max-w-[140px] truncate px-4 py-3.5 text-slate-500 font-medium">
+      <td className="max-w-[140px] truncate px-4 py-3.5 text-white/80 font-medium">
         {item.test_title}
       </td>
       <td className="px-4 py-3.5">
         <Badge variant={statusCfg.variant}>{statusCfg.label}</Badge>
       </td>
-      <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white tabular-nums">
+      <td className="px-4 py-3.5 font-bold text-white tabular-nums font-mono">
         {item.percentage !== null ? `${Math.round(item.percentage)}%` : "—"}
       </td>
       <td className="px-4 py-3.5">
         {recCfg && item.recommendation ? (
           <Badge variant={RECOMMENDATION_VARIANT[item.recommendation]}>{recCfg.label}</Badge>
         ) : (
-          <span className="text-xs text-slate-400">—</span>
+          <span className="text-xs text-white/70">—</span>
         )}
       </td>
       <td className="px-4 py-3.5">
         {isViolation ? (
           <span
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 uppercase"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#F87171] uppercase"
             title={item.integrity_violation_reason ?? undefined}
           >
             <ShieldAlert className="h-3.5 w-3.5" />
             Violation
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#4ADE80]">
             <ShieldCheck className="h-3.5 w-3.5" />
             Clean
           </span>
         )}
       </td>
-      <td className="px-4 py-3.5 text-xs text-slate-400 font-medium">
+      <td className="px-4 py-3.5 text-xs text-white/80 font-medium">
         {formatDate(item.submitted_at ?? item.terminated_at)}
       </td>
       <td className="px-4 py-3.5 text-right">
         <Link
           href={`/dashboard/results/${item.attempt_id}`}
-          className="inline-block rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-xs font-semibold shadow-xs hover:bg-indigo-700 transition-colors"
+          className="inline-block rounded-lg bg-[#F2D74E] text-[#1A1600] px-3 py-1.5 text-xs font-semibold shadow-xs hover:bg-[#F7E27A] transition-colors"
         >
           View
         </Link>
@@ -309,9 +309,9 @@ function ResultsTableRow({ item }: { item: ResultsInboxItem }) {
 
 function ResultsTable({ items }: { items: ResultsInboxItem[] }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <div className="overflow-x-auto rounded-xl border border-white/8 bg-[#121317] shadow-xs text-white">
       <table className="w-full text-left text-xs">
-        <thead className="border-b border-slate-200 bg-slate-50/80 text-slate-500 text-[11px] uppercase tracking-wider font-semibold dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
+        <thead className="border-b border-white/8 bg-[#181A1F] text-white/80 text-[11px] uppercase tracking-wider font-semibold">
           <tr>
             <th className="px-4 py-3">Candidate</th>
             <th className="px-4 py-3">Job</th>
@@ -324,7 +324,7 @@ function ResultsTable({ items }: { items: ResultsInboxItem[] }) {
             <th className="px-4 py-3" />
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+        <tbody className="divide-y divide-white/5">
           {items.map((item) => (
             <ResultsTableRow key={item.attempt_id} item={item} />
           ))}

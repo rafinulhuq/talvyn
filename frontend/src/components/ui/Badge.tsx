@@ -24,41 +24,41 @@ interface BadgeProps {
 
 const variantClasses: Record<BadgeVariant, string> = {
   default:
-    "border border-slate-200 bg-slate-100 text-slate-700",
+    "border border-white/10 bg-[#181A1F] text-white",
   slate:
-    "border border-slate-200 bg-slate-100 text-slate-600",
+    "border border-white/10 bg-white/5 text-white/80",
   blue:
-    "border border-indigo-200 bg-indigo-50 text-indigo-700",
+    "border border-[#F2D74E]/30 bg-[#F2D74E]/10 text-[#F2D74E]",
   indigo:
-    "border border-indigo-200 bg-indigo-50 text-indigo-700",
+    "border border-[#F2D74E]/30 bg-[#F2D74E]/10 text-[#F2D74E]",
   green:
-    "border border-emerald-200 bg-emerald-50 text-emerald-700",
+    "border border-[#4ADE80]/30 bg-[#4ADE80]/10 text-[#4ADE80]",
   emerald:
-    "border border-emerald-200 bg-emerald-50 text-emerald-700",
+    "border border-[#4ADE80]/30 bg-[#4ADE80]/10 text-[#4ADE80]",
   yellow:
-    "border border-amber-200 bg-amber-50 text-amber-700",
+    "border border-[#FACC15]/30 bg-[#FACC15]/10 text-[#FACC15]",
   amber:
-    "border border-amber-200 bg-amber-50 text-amber-700",
+    "border border-[#FACC15]/30 bg-[#FACC15]/10 text-[#FACC15]",
   red:
-    "border border-rose-200 bg-rose-50 text-rose-700",
+    "border border-[#F87171]/30 bg-[#F87171]/10 text-[#F87171]",
   rose:
-    "border border-rose-200 bg-rose-50 text-rose-700",
+    "border border-[#F87171]/30 bg-[#F87171]/10 text-[#F87171]",
   purple:
-    "border border-purple-200 bg-purple-50 text-purple-700",
+    "border border-white/15 bg-white/10 text-white",
 };
 
 const dotClasses: Record<BadgeVariant, string> = {
-  default: "bg-slate-500",
-  slate: "bg-slate-400",
-  blue: "bg-indigo-600",
-  indigo: "bg-indigo-600",
-  green: "bg-emerald-600",
-  emerald: "bg-emerald-600",
-  yellow: "bg-amber-600",
-  amber: "bg-amber-600",
-  red: "bg-rose-600",
-  rose: "bg-rose-600",
-  purple: "bg-purple-600",
+  default: "bg-white",
+  slate: "bg-white/70",
+  blue: "bg-[#F2D74E]",
+  indigo: "bg-[#F2D74E]",
+  green: "bg-[#4ADE80]",
+  emerald: "bg-[#4ADE80]",
+  yellow: "bg-[#FACC15]",
+  amber: "bg-[#FACC15]",
+  red: "bg-[#F87171]",
+  rose: "bg-[#F87171]",
+  purple: "bg-white",
 };
 
 export function Badge({

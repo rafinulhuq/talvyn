@@ -172,21 +172,21 @@ function PublicLinkDetails({
 }) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 dark:bg-slate-900">
-        <span className="flex-1 truncate font-mono text-[11px] text-slate-600 select-all">
+      <div className="flex items-center gap-2 rounded-lg bg-[#181A1F] border border-white/10 px-3 py-2">
+        <span className="flex-1 truncate font-mono text-[11px] text-white select-all">
           {link.public_url}
         </span>
         <button
           type="button"
           onClick={onCopy}
-          className="shrink-0 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors dark:hover:bg-slate-800"
+          className="shrink-0 rounded p-1 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           aria-label={copied ? "Public assessment link copied" : "Copy public assessment link"}
         >
-          {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+          {copied ? <Check className="h-3.5 w-3.5 text-[#4ADE80]" /> : <Copy className="h-3.5 w-3.5 text-white" />}
         </button>
       </div>
 
-      <div className="flex items-center gap-4 text-xs text-slate-500">
+      <div className="flex items-center gap-4 text-xs text-white/70">
         <span className="flex items-center gap-1">
           <Users className="h-3.5 w-3.5" />
           {link.registration_count}

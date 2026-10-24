@@ -24,7 +24,7 @@ pointing your newly bought domain directly at the server.
 ## 2. Recreate the Docker stack under the new names — done, with two gotchas
 
 This step is complete on this box (`talvyn_postgres/redis/worker/backend/frontend`
-all up and healthy, admin login confirmed at `acmeai@talvyn.com`). Two
+all up and healthy, admin login confirmed at `admin@talvyn.com`). Two
 real issues came up doing it — worth knowing if you ever repeat this on
 another server:
 
@@ -77,7 +77,7 @@ that's what caused the stale health-check response above.
 Checklist:
 
 - [x] `docker ps` shows `talvyn_postgres`, `talvyn_backend`, `talvyn_frontend`, etc. (not `rolepilot_*`)
-- [x] Admin login works with the reseeded account: `acmeai@talvyn.com` / `acmeai@r2026p#` (from `frontend/prisma/seed.ts`)
+- [x] Admin login works with the reseeded account: `admin@talvyn.com` / `talvyn@r2026p#` (from `frontend/prisma/seed.ts`)
 - [x] Backup taken before cutover: `pg_dump` of the old `rolepilot`/`jd_assessment` database and a tarball of its uploads volume, saved at `/home/acme-server/backups/`. Restore with `docker exec -i talvyn_postgres pg_restore -U talvyn_user -d talvyn_db < rolepilot_db_backup_*.dump` if ever needed.
 - [x] Old `rolepilot_backend/frontend/worker/postgres/redis` stopped (not removed) — freed the ports so `talvyn_*` could start; their volumes are untouched as an extra safety net on top of the backup above.
 - [ ] If you rely on `create-admin.sh` instead of the seed, re-run it: `./create-admin.sh --docker --email you@example.com` — not needed right now, the seed already created the admin

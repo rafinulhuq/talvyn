@@ -81,22 +81,22 @@ function CandidateRow({ inv }: { inv: Invitation }) {
   const initial = (inv.candidate_name ?? "?").charAt(0).toUpperCase();
 
   return (
-    <div className="flex items-center gap-4 rounded-xl bg-white px-5 py-4 dark:bg-slate-900">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+    <div className="flex items-center gap-4 rounded-xl border border-white/8 bg-[#121317] px-5 py-4 text-white">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#181A1F] border border-white/5 text-sm font-semibold text-[#F2D74E]">
         {initial}
       </div>
 
       <div className="flex-1 min-w-0">
         <Link
           href={`/dashboard/candidates/${inv.candidate_id}`}
-          className="block truncate text-sm font-medium text-slate-900 transition-colors hover:text-brand-800 dark:text-slate-50"
+          className="block truncate text-sm font-semibold text-white transition-colors hover:text-[#F2D74E]"
           aria-label={`Open profile for ${inv.candidate_name ?? inv.candidate_email ?? "candidate"}`}
         >
           {inv.candidate_name ?? "Unknown"}
         </Link>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-white/70">
           {inv.candidate_number && (
-            <span className="font-medium text-slate-600 dark:text-slate-300">
+            <span className="font-medium text-white/90">
               Candidate #{inv.candidate_number}
             </span>
           )}
@@ -112,7 +112,7 @@ function CandidateRow({ inv }: { inv: Invitation }) {
         />
       </div>
 
-      <div className="hidden md:block shrink-0 text-xs text-slate-400">
+      <div className="hidden md:block shrink-0 text-xs text-white/60">
         {formatDate(inv.created_at)}
       </div>
 

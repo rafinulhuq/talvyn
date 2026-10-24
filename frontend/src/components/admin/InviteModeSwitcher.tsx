@@ -20,7 +20,7 @@ export function InviteModeSwitcher({ jdId, approvedTests, jdTitle }: InviteModeS
   return (
     <div className="flex flex-col gap-5">
       {/* Tab toggle */}
-      <div className="flex rounded-xl border border-slate-200 bg-slate-50 p-1 gap-1">
+      <div className="flex rounded-xl border border-white/10 bg-[#181A1F] p-1 gap-1 shadow-2xs">
         <TabButton
           active={mode === "single"}
           onClick={() => setMode("single")}
@@ -60,10 +60,10 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+      className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
         active
-          ? "bg-white text-slate-900 shadow-sm"
-          : "text-slate-500 hover:text-slate-700"
+          ? "bg-[#F2D74E] text-[#1A1600] shadow-sm"
+          : "text-white/80 hover:text-white hover:bg-white/10"
       }`}
     >
       {icon}

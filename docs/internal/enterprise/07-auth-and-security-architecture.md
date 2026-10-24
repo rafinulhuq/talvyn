@@ -72,8 +72,8 @@ into existence are:
   start (per `_facts.md` §11) and idempotently creates a default admin:
   ```ts
   const SEED_ADMINS = [
-    { email: 'acmeai@Talvyn.com', name: 'ACME AI Admin',
-      password: 'acmeai@r2026p#', role: Role.ADMIN },
+    { email: 'admin@talvyn.com', name: 'Talvyn Admin',
+      password: 'talvyn@r2026p#', role: Role.ADMIN },
   ];
   ```
   It checks `prisma.user.findUnique({ where: { email } })` first and skips

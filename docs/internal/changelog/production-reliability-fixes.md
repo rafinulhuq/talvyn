@@ -29,7 +29,7 @@ guidance.
 These need real values only the operator has — no code change can supply them:
 
 - **CORS**: Set `ALLOWED_ORIGINS` in the production `backend/.env` to the real
-  frontend/candidate domain(s), e.g. `ALLOWED_ORIGINS=https://acmeTalvyn.vercel.app`
+  frontend/candidate domain(s), e.g. `ALLOWED_ORIGINS=https://talvyn.vercel.app`
   (comma-separate multiple domains, no trailing slash). Recreate the
   `backend` and `worker` containers after editing.
 - **Email**: Set either `SMTP_HOST`/`SMTP_PORT`/`SMTP_USERNAME`/`SMTP_PASSWORD`

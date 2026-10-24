@@ -10,11 +10,10 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={clsx(
-        "rounded-xl border border-slate-300/90",
-        "bg-white text-slate-900",
-        "shadow-[0_1px_3px_0_rgba(15,23,42,0.06),0_1px_2px_-1px_rgba(15,23,42,0.06)] ring-1 ring-slate-900/5",
-        "transition-all duration-150 ease-out",
-        hover && "hover:border-slate-400 hover:shadow-md hover:-translate-y-0.5",
+        "rounded-[14px] border border-white/[0.08]",
+        "bg-[#121317] text-white",
+        "transition-colors duration-150 ease-out",
+        hover && "hover:border-white/[0.18]",
         className
       )}
       {...props}
@@ -27,7 +26,7 @@ export const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={clsx("flex flex-col space-y-1.5 p-6 pb-4 border-b border-slate-200", className)}
+      className={clsx("flex flex-col space-y-1.5 p-6 pb-4 border-b border-white/[0.08]", className)}
       {...props}
     />
   )
@@ -38,7 +37,7 @@ export const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttribut
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={clsx("font-display text-base font-semibold leading-none text-slate-900 tracking-tight", className)}
+      className={clsx("text-base font-semibold leading-none text-white tracking-tight", className)}
       {...props}
     />
   )
@@ -49,7 +48,7 @@ export const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTML
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={clsx("text-sm text-slate-500 leading-relaxed font-sans", className)}
+      className={clsx("text-sm text-white/80 leading-relaxed", className)}
       {...props}
     />
   )
@@ -67,7 +66,7 @@ export const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={clsx("flex items-center p-6 pt-4 border-t border-slate-200", className)}
+      className={clsx("flex items-center p-6 pt-4 border-t border-white/[0.08]", className)}
       {...props}
     />
   )

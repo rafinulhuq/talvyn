@@ -17,17 +17,17 @@ export function ScheduleField({
   return (
     <div className="rounded-xl border border-slate-200 p-4">
       <h3 className="mb-3 text-sm font-semibold text-slate-900">When to publish</h3>
-      <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
+      <div className="flex gap-1 rounded-lg bg-[#181A1F] border border-white/10 p-1">
         {(["now", "later"] as const).map((mode) => (
           <button
             key={mode}
             type="button"
             onClick={() => onScheduleModeChange(mode)}
             className={clsx(
-              "flex-1 rounded-md px-3 py-1 text-xs font-medium transition-colors",
+              "flex-1 rounded-md px-3 py-1 text-xs font-semibold transition-colors",
               scheduleMode === mode
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-[#F2D74E] text-[#1A1600] shadow-sm"
+                : "text-white/80 hover:text-white hover:bg-white/10"
             )}
           >
             {mode === "now" ? "Publish now" : "Schedule for later"}

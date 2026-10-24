@@ -218,7 +218,7 @@ INTERNAL_API_SECRET=<same-value-as-above>
 On first startup the frontend seeds the default admin account automatically
 (`frontend/prisma/seed.ts`):
 
-- Email: `acmeai@talvyn.com`, or `SEED_ADMIN_EMAIL` if set
+- Email: `admin@talvyn.com`, or `SEED_ADMIN_EMAIL` if set
 - Password: `SEED_ADMIN_PASSWORD` if set in `frontend/.env.local`; otherwise a
   random password is generated and printed once to the frontend container
   logs (`docker compose logs frontend | grep seed`)
@@ -449,7 +449,7 @@ docker exec -it talvyn_postgres psql -U talvyn_user talvyn_db
 \dt
 
 # Verify admin seeded
-SELECT id, email, name, role, created_at FROM users WHERE email = 'acmeai@Talvyn.com';
+SELECT id, email, name, role, created_at FROM users WHERE email = 'admin@talvyn.com';
 
 # Test PL/pgSQL score function
 SELECT * FROM calculate_evaluation_scores('<attempt-uuid>');
@@ -531,7 +531,7 @@ CSV parsing is client-side in `BulkInviteForm.tsx`. The parsed list is sent as a
 `frontend/scripts/start-dev.sh` runs inside the container before Next.js starts:
 
 ```bash
-npx prisma db seed   # creates acmeai@Talvyn.com if not exists
+npx prisma db seed   # creates admin@talvyn.com if not exists
 npm run dev
 ```
 

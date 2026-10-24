@@ -44,24 +44,24 @@ export function GenerationBanner() {
     : null;
 
   const actionCls =
-    "inline-flex items-center justify-center gap-1.5 rounded-lg border border-brand-200 bg-white px-3 py-2 text-xs font-medium text-brand-800 transition-colors hover:bg-brand-50 disabled:opacity-50 sm:py-1";
+    "inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-[#121317] px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-50 sm:py-1";
 
   return (
-    <div className="border-b border-brand-100 bg-brand-50/80">
+    <div className="border-b border-white/8 bg-[#181A1F]">
       {/* Summary line — always visible, one row even on a 360px screen */}
       <div className="flex items-center gap-2 px-4 py-2 sm:px-6">
-        <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-brand-700" />
-        <p className="min-w-0 flex-1 truncate text-xs text-brand-800">
+        <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-[#F2D74E]" />
+        <p className="min-w-0 flex-1 truncate text-xs text-white">
           <span className="font-semibold">Generating tests</span>
           <span className="hidden sm:inline">{" for "}</span>
           <span className="sm:hidden">{" · "}</span>
           <Link
             href={`/dashboard/jds/${activeJob.jdId}/tests`}
-            className="font-medium underline-offset-2 hover:underline"
+            className="font-medium text-[#F2D74E] underline-offset-2 hover:underline"
           >
             {activeJob.jdTitle}
           </Link>
-          <span className="hidden text-brand-700 sm:inline">
+          <span className="hidden text-white/80 sm:inline">
             {" · "}
             {activeJob.phase}
             {elapsedMinutes ? ` · ${elapsedMinutes} min elapsed` : ""}
@@ -73,7 +73,7 @@ export function GenerationBanner() {
           aria-expanded={expanded}
           aria-controls="generation-banner-detail"
           aria-label={expanded ? "Hide generation details" : "Show generation details"}
-          className="touch-target -mr-2 shrink-0 rounded-lg text-brand-700 transition-colors hover:bg-brand-100"
+          className="touch-target -mr-2 shrink-0 rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white"
         >
           <ChevronDown
             className={clsx("h-4 w-4 transition-transform", expanded && "rotate-180")}
@@ -87,7 +87,7 @@ export function GenerationBanner() {
           id="generation-banner-detail"
           className="flex flex-col gap-2.5 px-4 pb-3 sm:flex-row sm:items-center sm:justify-between sm:px-6"
         >
-          <p className="text-[11px] leading-relaxed text-brand-700">
+          <p className="text-[11px] leading-relaxed text-white/80">
             <span className="sm:hidden">
               {activeJob.phase}
               {elapsedMinutes ? ` · ${elapsedMinutes} min elapsed` : ""}
@@ -111,7 +111,7 @@ export function GenerationBanner() {
               type="button"
               onClick={handleStop}
               disabled={cancelling}
-              className={clsx(actionCls, "hover:text-danger")}
+              className={clsx(actionCls, "hover:text-[#F87171] hover:border-[#F87171]/30")}
               aria-label="Stop generation"
             >
               {cancelling ? (
