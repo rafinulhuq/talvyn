@@ -6,7 +6,7 @@ export const controlBase = cn(
   "transition-colors duration-150 hover:border-ink-faint",
   "focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/25",
   "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-faint",
-  "aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:ring-danger/25",
+  "aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:border-danger aria-[invalid=true]:focus-visible:ring-danger/25",
 );
 
 export function Input({ className, ...props }: ComponentProps<"input">) {

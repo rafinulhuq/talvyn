@@ -468,3 +468,15 @@ intentional behavior changes. Each one tightens security or fixes a bug.
 Not ported: the `*.selfcheck.ts` scripts. They're replaced by `tests/unit/*.test.ts`
 (`npm run test:unit`) and the API e2e suite (`tests/e2e/api`, which needs
 `E2E_DATABASE_URL` pointing at a throwaway DB).
+
+### Phase 3 additions (2026-11-23)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| `/dashboard/docs/[[...path]]` | Decoded path segments were written into an injected `<base href="…">` | Segments restricted to `[A-Za-z0-9._-]`; `..` rejected | Reflected XSS: a crafted docs link could run script on the app origin |
+| Brand in app chrome | Full lockup (with tagline and a baked-in "v2.0" badge) at about 20px tall | T mark plus live "TALVYN" wordmark; the full lockup is kept for large placements (`LogoLockup`) | The lockup is unreadable below about 48px. The logo itself is unchanged |
+| Sidebar labels | "AI Checker", "ATS Checker", "CMP" | "AI writing check", "Résumé ATS check", "Website content" | Named by what users do. The routes are unchanged |
+| "Companies" nav item | Shown with a "soon" badge | Hidden until it does something | No placeholder features in the nav |
+
+Routes missed by the section 1 inventory (they aren't `page.tsx`/`api`), to be rebuilt in Phase 7:
+`/blog/feed.xml` (RSS), `/robots.txt` (`robots.ts`), `/sitemap.xml` (`sitemap.ts`).

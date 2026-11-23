@@ -24,11 +24,13 @@ export function DropdownMenuItem({
   className,
   shortcut,
   destructive,
+  asChild,
   children,
   ...props
 }: ComponentProps<typeof Menu.Item> & { shortcut?: ReactNode; destructive?: boolean }) {
   return (
     <Menu.Item
+      asChild={asChild}
       className={cn(
         "flex h-8 cursor-default select-none items-center gap-2 rounded-control px-2 text-base outline-none",
         "data-[highlighted]:bg-sunken data-[disabled]:opacity-50 [&_svg]:size-4 [&_svg]:text-ink-muted",
@@ -37,8 +39,15 @@ export function DropdownMenuItem({
       )}
       {...props}
     >
-      {children}
-      {shortcut && <span className="ml-auto pl-4 text-sm text-ink-muted">{shortcut}</span>}
+      {/* With asChild, Radix's Slot requires exactly one child element. */}
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {children}
+          {shortcut && <span className="ml-auto pl-4 text-sm text-ink-muted">{shortcut}</span>}
+        </>
+      )}
     </Menu.Item>
   );
 }

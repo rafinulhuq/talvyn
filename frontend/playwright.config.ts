@@ -41,5 +41,8 @@ export default defineConfig({
           FASTAPI_INTERNAL_URL: "http://127.0.0.1:59999",
         },
       },
-  projects: [{ name: "api", testMatch: /api\/.*\.spec\.ts/ }],
+  projects: [
+    { name: "api", testMatch: /api\/.*\.spec\.ts/ },
+    { name: "ui", testMatch: /ui\/.*\.spec\.ts/, use: { browserName: "chromium", viewport: { width: 1280, height: 800 } } },
+  ],
 });
