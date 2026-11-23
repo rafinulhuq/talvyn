@@ -41,6 +41,15 @@ const securityHeaders = [
 // /api/proxy layer, and no app code used it. See docs/internal/frontend-contract.md.
 const nextConfig: NextConfig = {
   images: { remotePatterns },
+  // The old per-role results pages are now one "Results" tab per job description.
+  async redirects() {
+    return [
+      { source: "/dashboard/results/by-jd", destination: "/dashboard/jds", permanent: true },
+      { source: "/dashboard/results/jd/:jdId", destination: "/dashboard/jds/:jdId/results", permanent: true },
+      { source: "/dashboard/results/leaderboard/:jdId", destination: "/dashboard/jds/:jdId/results", permanent: true },
+      { source: "/dashboard/results/report/:jdId", destination: "/dashboard/jds/:jdId/results", permanent: true },
+    ];
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

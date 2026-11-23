@@ -90,7 +90,7 @@ export function SystemStatusLine({ collapsed = false }: { collapsed?: boolean })
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   return (
-    <aside
+    <aside data-print="hide"
       className={cn(
         "sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-line bg-canvas transition-[width] duration-200 lg:flex",
         collapsed ? "w-14 px-2" : "w-60 px-3",

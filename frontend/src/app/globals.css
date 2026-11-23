@@ -172,4 +172,10 @@
       transition-duration: 1ms !important;
     }
   }
+  /* Print-grade reports: app chrome and actions drop out; the page prints light. */
+  @media print {
+    [data-print="hide"] { display: none !important; }
+    html, body { background: #fff !important; }
+    section, article { break-inside: avoid; }
+  }
 }

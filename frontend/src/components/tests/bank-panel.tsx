@@ -111,9 +111,9 @@ export function BankPanel({ jdId, initial, templates }: { jdId: string; initial:
 
   const presetHint = presets.find((p) => p.id === presetId)?.hint;
   const presetField = (
-    <Field label="Bank size">
+    <Field label="Bank size" className="w-full sm:w-80">
       <Select value={presetId} onValueChange={setPresetId}>
-        <SelectTrigger className="sm:w-80">
+        <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

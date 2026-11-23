@@ -12,6 +12,7 @@ export function JdSubnav({ jdId }: { jdId: string }) {
     { label: "Overview", href: base, active: path === base },
     { label: "Tests", href: `${base}/tests`, active: path.startsWith(`${base}/tests`) },
     { label: "Candidates", href: `${base}/candidates`, active: path.startsWith(`${base}/candidates`) || path.startsWith(`${base}/invite`) },
+    { label: "Results", href: `${base}/results`, active: path.startsWith(`${base}/results`) },
     { label: "Question bank", href: `${base}/question-bank`, active: path.startsWith(`${base}/question-bank`) },
   ];
   return (

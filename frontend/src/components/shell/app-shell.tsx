@@ -91,7 +91,7 @@ function ShellInner({
       <Sidebar collapsed={collapsed} onToggle={onToggleCollapsed} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-line bg-canvas/90 px-4 backdrop-blur-sm supports-[backdrop-filter]:bg-canvas/75 lg:px-8">
+        <header data-print="hide" className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-line bg-canvas/90 px-4 backdrop-blur-sm supports-[backdrop-filter]:bg-canvas/75 lg:px-8">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}

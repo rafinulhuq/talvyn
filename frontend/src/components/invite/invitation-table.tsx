@@ -1,6 +1,6 @@
 "use client";
 
-import { Ban, MoreHorizontal, Send, TriangleAlert, UserRound } from "lucide-react";
+import { Ban, ClipboardCheck, MoreHorizontal, Send, TriangleAlert, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -44,6 +44,13 @@ function RowMenu({ inv, onAct }: { inv: Invitation; onAct: (a: Act) => void }) {
             <UserRound aria-hidden /> View candidate
           </Link>
         </DropdownMenuItem>
+        {inv.attempt_id && (
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/results/${inv.attempt_id}?c=${inv.candidate_id}`}>
+              <ClipboardCheck aria-hidden /> View result
+            </Link>
+          </DropdownMenuItem>
+        )}
         {open && (
           <DropdownMenuItem onSelect={() => void resend()}>
             <Send aria-hidden /> Resend with a new link

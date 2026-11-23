@@ -33,3 +33,15 @@ describe("tidyStep", () => {
     assert.equal(tidyStep("Done"), "Done");
   });
 });
+
+import { skillScores } from "../../src/lib/domain/evaluation";
+
+describe("skillScores", () => {
+  it("keeps numeric 0–100 entries, clamps and sorts best first (ties keep their order)", () => {
+    assert.deepEqual(skillScores({ Laravel: 66.7, PHP: 100, Odd: "x", Over: 140 }), [
+      { skill: "PHP", score: 100 },
+      { skill: "Over", score: 100 },
+      { skill: "Laravel", score: 66.7 },
+    ]);
+  });
+});

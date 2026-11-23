@@ -532,3 +532,18 @@ Verified end to end on the local stack: magic link → cookie → landing → st
 Not tested: the sectioned (question bank) exam flow, because `QUESTION_BANK_MODE=false` in the local backend `.env`.
 
 Backend fixes this phase (Alembic, committed separately): `f5b2c8d1e4a9` adds `evaluations.mcq_max/open_ended_max`; `a7c3e9f1b2d4` renames `suspicious_events.metadata` → `event_metadata`. Without the second, on older databases every integrity event and every termination returned 500, so violations were never recorded server-side. A full ORM-vs-database column diff on the dev DB showed no other drift.
+
+### Phase 4d additions: results (2026-11-23)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Per-role results | Four routes: `/results/by-jd`, `/results/jd/[id]` (invitation list), `/results/leaderboard/[id]`, `/results/report/[id]` | One "Results" tab per job description (`/dashboard/jds/[id]/results`): summary stats, ranking with pass mark on the score scale, AI recommendation spread, common strengths and gaps, Word export. The old URLs 308-redirect there (or to the JD list / candidates tab) | One place per role; no dead bookmarks |
+| Results inbox filters | Query string, server-rendered | Same, with role, status, recommendation, integrity and date filters in the URL | |
+| Attempt report header | "Evaluation Report" with no candidate context | Candidate name, test, role and email when the link carries `?c=<candidate id>` (all in-app links do); the evaluation endpoint has no candidate fields | Context without a new endpoint |
+| Re-score warning | "Re-evaluate" with no warning | Says the reviewer's decision, notes and per-question changes are replaced (`evaluate_attempt` deletes the old evaluation) | It's destructive |
+| Recommendation copy | Thresholds in a frontend constant | Same 80/65/45 bands, verified against `_score_to_recommendation`; states the AI can only be more cautious (`_enforce_recommendation`) and that a person decides (`is_preliminary` is always true) | |
+| Per-question override | Score input | Inline edit capped at the question's max, "Restore the AI's score" sends `admin_score: null` | |
+| Print | `window.print()` printed the app chrome | `@media print` hides the sidebar, header and actions (`data-print="hide"`) | Print-grade reports |
+| Exam report | Separate component | `/dashboard/exam-results/[id]`: weighted overall, per-section scale with weights, AI-writing risk with the backend's disclaimer, "Try scoring again" when FAILED | |
+
+Verified on the local stack: the inbox lists submitted, scored and ended attempts; the ended attempt shows the integrity view; "Score this test" scored Ada's real submission with qwen2.5-coder:7b (MCQs 0/9, written 7/10, AI estimate 80% AI-written, flagged); the reviewer decision and notes were saved; the written score was overridden to 8 (totals recalculated to 42%); the Word report downloaded; the role tab, leaderboard and old-URL redirect work; the print view hides the chrome. Not tested: the exam report (needs `QUESTION_BANK_MODE`).

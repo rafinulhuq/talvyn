@@ -110,7 +110,7 @@ export default async function CandidatePage({ params }: Props) {
                 return (
                   <TR key={a.attempt_id}>
                     <TD>
-                      <Link href={`/dashboard/results/${a.attempt_id}`} className="font-medium text-ink hover:text-accent">
+                      <Link href={`/dashboard/results/${a.attempt_id}?c=${c.id}`} className="font-medium text-ink hover:text-accent">
                         {a.test_title}
                       </Link>
                       <span className="block text-sm text-ink-muted">
