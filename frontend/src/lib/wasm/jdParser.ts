@@ -8,7 +8,9 @@
  * can't be parsed, callers fall back to the existing server-side parser.
  */
 
-type ParserModule = typeof import("./talvyn_parser");
+import type * as TalvynParser from "./talvyn_parser";
+
+type ParserModule = typeof TalvynParser;
 
 let modulePromise: Promise<ParserModule> | null = null;
 
