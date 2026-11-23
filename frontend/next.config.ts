@@ -48,6 +48,8 @@ const nextConfig: NextConfig = {
       { source: "/dashboard/results/jd/:jdId", destination: "/dashboard/jds/:jdId/results", permanent: true },
       { source: "/dashboard/results/leaderboard/:jdId", destination: "/dashboard/jds/:jdId/results", permanent: true },
       { source: "/dashboard/results/report/:jdId", destination: "/dashboard/jds/:jdId/results", permanent: true },
+      // Companies was a "coming soon" placeholder; hidden until it does something.
+      { source: "/dashboard/companies", destination: "/dashboard", permanent: false },
     ];
   },
   async headers() {

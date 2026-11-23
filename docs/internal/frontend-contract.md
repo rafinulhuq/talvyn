@@ -547,3 +547,19 @@ Backend fixes this phase (Alembic, committed separately): `f5b2c8d1e4a9` adds `e
 | Exam report | Separate component | `/dashboard/exam-results/[id]`: weighted overall, per-section scale with weights, AI-writing risk with the backend's disclaimer, "Try scoring again" when FAILED | |
 
 Verified on the local stack: the inbox lists submitted, scored and ended attempts; the ended attempt shows the integrity view; "Score this test" scored Ada's real submission with qwen2.5-coder:7b (MCQs 0/9, written 7/10, AI estimate 80% AI-written, flagged); the reviewer decision and notes were saved; the written score was overridden to 8 (totals recalculated to 42%); the Word report downloaded; the role tab, leaderboard and old-URL redirect work; the print view hides the chrome. Not tested: the exam report (needs `QUESTION_BANK_MODE`).
+
+### Phase 6a additions: users, profile, settings (2026-11-23)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Users page guards | UI counted "last Super Admin" for role changes (all SAs) and "last active" for status | One rule, matching the server (`src/server/admin-users.ts`): the last active Super Admin can't be demoted, deactivated or removed. The protected account can be deactivated, as the server allows | UI and server agree |
+| Role-change copy | n/a | "Their access changes straight away", because `currentSessionUser` reads the role from the DB on every request | Accurate |
+| Add user | Old form | Dialog with role hints that match real scoping (`owner_scope_for`: USER sees only their own data) | |
+| Profile | Picture only, inside Settings | Its own page: picture (5 MB, JPEG/PNG/WebP, the backend's limits), account details, "Email me a password reset link" (the existing forgot-password flow) | |
+| Settings overview | Hard-coded facts, some false ("API Proxy /backend", "Invitation Expiry 72 hours") | Removed. The "System health" tab shows live `/health/ready` checks, including the 503 body | No invented facts |
+| Webhooks | Same features | Same: create (secret shown once), pause, test event, recent deliveries, delete. Event list = the five events the backend emits | |
+| Backup / reset copy | "Hiring data" | States exactly what's included: backup covers website content and exam templates; reset deletes exam templates but keeps website content and accounts (`admin_service._BACKUP_MODELS`/`_RESET_MODELS`) | Destructive actions say what they do |
+| Companies | "Coming soon" placeholder page | Redirects to the dashboard (hidden from the nav since Phase 3) | No placeholder features |
+| Avatars | `<img>` with onError | Probed after mount; an image that fails before hydration otherwise shows a broken icon | Bug found in testing |
+
+Verified on the local stack: add user, change role, deactivate and reactivate, set password, remove and restore; avatar upload; health tab; webhook create, test event (delivery to example.com recorded as 405, failed), deliveries sheet; backup download; audit log lists the actions; /dashboard/companies redirects. Not run: restore and reset, which are destructive on the dev DB.
