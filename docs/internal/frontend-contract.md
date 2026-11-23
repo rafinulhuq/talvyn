@@ -596,3 +596,20 @@ Two gotchas found here:
 - `mergeCopy` rejected arrays of objects, so CMS lists (steps, features) silently fell back to the defaults. Fixed and unit-tested.
 
 Note for production: `cms_content_documents.draft_json` still holds the old copy (drafts were seeded from the old defaults). Public pages are unaffected (they serve defaults merged with `published_json`), but publishing an old draft from the editor would bring the old claims back. The 7b editor makes the draft visible before publishing.
+
+### Phase 7b: Website content and blog editors (2026-11-24)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| CMP editor | Hand-written forms per document (site, home, candidate, email) | One schema-agnostic form that follows the document's own shape, in reading order (the DB returns keys sorted by length), with honest-content notes on the logo, stats and testimonial lists. Icon fields are a picker limited to the backend's allowed icons; media fields can upload | Covers all four documents and any keys added later |
+| Stale drafts | Draft shown as-is | If a document was never published and its stored draft differs from what visitors see, the editor says so and offers "Use the live version as the draft" | The drafts still hold the old, unverifiable copy; publishing them would bring it back |
+| Publish / history | Same endpoints | Publish confirms; History lists versions and copies one to the draft ("Copy to draft", then publish to roll back) | Matches `restore_version`, which writes to the draft |
+| Blog editor | TipTap + tiptap-markdown | Same stack, toolbar (headings, lists, quote, code, divider, link dialog, image upload), word count; cover, author, tags, address, search title and description; Publish now, Schedule (a future `publish_at`), Unpublish, Move to trash | |
+| Post address | Fixed at creation ("untitled-post-3") | Follows the title until edited by hand or published | Found in testing |
+| `/dashboard/cms` | Redirect | Same redirect | |
+
+New dependencies (named in the approved plan, kept from the old frontend): `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/extension-image`, `@tiptap/extensions`, `tiptap-markdown`, `react-markdown`, `remark-gfm`.
+
+Gotchas found: `useEditorState` with a not-yet-created editor left the editor blank, so the toolbar now reads state directly with `shouldRerenderOnTransaction`. Plain values exported from `"use client"` modules arrive in server components as client references, so shared constants live in `src/lib/` (DOCS, ROLE_LABEL).
+
+Verified: the homepage document's stale-draft guard, "use live", publish (version 1), and history; the public homepage still serves the honest copy. A post created, written in the editor (paragraph, heading), saved, published, shown on /blog and its page, clapped (count 1), and in the RSS feed. Not run: scheduling, unpublishing, author profiles, cover upload, the link dialog, version restore.

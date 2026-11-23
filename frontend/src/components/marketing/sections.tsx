@@ -1,4 +1,4 @@
-import { BarChart3, Brain, Clock, Code2, FileText, Shield, Sparkles, Target, Trophy, Users, Zap, type LucideIcon } from "lucide-react";
+import { ArrowRight, BarChart3, Brain, CircleCheck, Clock, Code2, FileText, Layers, Shield, Sparkles, Target, TrendingUp, Trophy, Users, Zap, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { fullTitle, type HomeContent } from "@/lib/cms/site-content";
@@ -19,6 +19,10 @@ const ICONS: Record<string, LucideIcon> = {
   target: Target,
   sparkles: Sparkles,
   clock: Clock,
+  layers: Layers,
+  "trending-up": TrendingUp,
+  "check-circle": CircleCheck,
+  "arrow-right": ArrowRight,
 };
 const Icon = ({ name, className }: { name: string; className?: string }) => {
   const I = ICONS[name] ?? Sparkles;
