@@ -506,3 +506,29 @@ Backend observation (not changed): `_delete_existing_tests` hard-deletes every D
 | Candidate directory search | Client filter | `?q=` sent to `/candidates/?search=`, server-paginated | Works past page 1 |
 
 Local dev DB finding (not changed): `evaluations.mcq_max` and `evaluations.open_ended_max` exist on the ORM model but no Alembic migration adds them; the initial migration builds tables from current metadata, so only databases created before those columns lack them. On such a DB every query loading `Evaluation` 500s (seen on `GET /candidates/{id}/attempts`).
+
+### Phase 5 additions: candidate experience (2026-11-23)
+
+What actually ran in the old frontend, checked against the code (not the comments):
+
+| Mechanism | Old frontend | Rebuild | Why |
+|---|---|---|---|
+| Timer | `useTestTimer`: `setInterval` decrementing 1/s, heartbeat every 30s, server wins on >30s drift, `force_submit` expires | Same heartbeat and drift rules; counts against a fixed deadline (`useExamTimer`) | A decrementing interval drifts when the tab is throttled; a deadline can't |
+| Web-worker timer | `useWebWorkerTimer` + `public/workers/examTimerWorker.js` existed but **were never imported** | Not ported | Dead code |
+| Three-strike integrity | `useProgressiveIntegrity` existed but **was never imported** | Not ported | Dead code; the live rule was first-violation termination |
+| Integrity rules | `useSuspiciousEvents`: hidden page or window blur ends the attempt; copy/cut/paste, right-click, Ctrl/Cmd+S/P, Ctrl/Cmd+A outside fields blocked and logged (5s per-type rate limit); drag/drop blocked | Identical (`useIntegrity`) | Behavior kept exactly |
+| IndexedDB | Every change written (`talvyn_candidate_exam_v1`), **never read back** (`getAllLocalAnswersForAttempt` unused) | Same DB and store names; on resume, records still "dirty" (never confirmed by the server) override the server copy and are re-sent; cleared after a successful submit | Makes the "survives a reload" promise true. Verified: text typed and reloaded within the 2s debounce came back |
+| Autosave | Bulk save 2s after typing, every 10s, on reconnect | Same; an answer is only marked clean if it still equals what was sent | |
+| MCQ keyboard shortcuts | 1–4 / A–D picked an option even with Ctrl held, so Ctrl+C quietly selected option C | Ignored with Ctrl/Cmd/Alt held | Bug |
+| Code answer length | Client allowed 20,000 chars; backend trims every answer to 10,000 | Both inputs stop at 10,000 | No silent truncation |
+| Code editor Tab | Tab always inserted spaces (keyboard trap) | Tab indents; Esc then Tab leaves the editor | WCAG 2.1.2 |
+| "Answered" count | Any key in the answer map, including untouched starter code | Non-blank, and not identical to the starter code | Accurate unanswered warning |
+| Candidate copy | CMP document `candidate_experience`, deep-merged over defaults | Same keys and merge (`mergeCopy`); wrong-typed overrides fall back to defaults; defaults rewritten (no hard-coded "72 hours", since expiry is configurable via `MAGIC_LINK_EXPIRY_HOURS`) | Existing overrides keep working (verified: the stored revoked-link copy rendered) |
+| Expiry time | Formatted on the server (server time zone) | Formatted in the candidate's browser time zone | |
+| Public link redirect | `router.push('/tests/<token>')` | Full navigation | The proxy must swap the token for the httpOnly cookie |
+
+Verified end to end on the local stack: magic link → cookie → landing → start → MCQ via keyboard → blocked copy logged → instant-reload restore → autosave → submit → "already used" on reopen; a revoked link; window blur → terminate (200) → reload shows the ended screen → link reports ended; public-link registration with validation; timer ticks (1:00:00 → 59:56 in 4s).
+
+Not tested: the sectioned (question bank) exam flow, because `QUESTION_BANK_MODE=false` in the local backend `.env`.
+
+Backend fixes this phase (Alembic, committed separately): `f5b2c8d1e4a9` adds `evaluations.mcq_max/open_ended_max`; `a7c3e9f1b2d4` renames `suspicious_events.metadata` → `event_metadata`. Without the second, on older databases every integrity event and every termination returned 500, so violations were never recorded server-side. A full ORM-vs-database column diff on the dev DB showed no other drift.
