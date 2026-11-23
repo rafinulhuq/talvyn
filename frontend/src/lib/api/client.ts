@@ -5,7 +5,7 @@
  *
  * Never throws: returns a discriminated result so callers must handle errors.
  */
-export type ApiError = { code: string; message: string };
+export type ApiError = { code: string; message: string; details?: Record<string, unknown> };
 export type ApiResult<T> = { ok: true; status: number; data: T } | { ok: false; status: number; error: ApiError };
 
 const FALLBACK: Record<number, string> = {
@@ -20,7 +20,7 @@ function toError(status: number, body: unknown): ApiError {
   const b = (body ?? {}) as { error?: unknown; detail?: unknown };
   if (b.error && typeof b.error === "object") {
     const e = b.error as Partial<ApiError>;
-    if (typeof e.message === "string") return { code: e.code ?? "ERROR", message: e.message };
+    if (typeof e.message === "string") return { code: e.code ?? "ERROR", message: e.message, details: e.details };
   }
   if (typeof b.detail === "string") return { code: "ERROR", message: b.detail };
   // FastAPI validation errors: detail is an array of { msg }.
