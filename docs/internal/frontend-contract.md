@@ -480,3 +480,16 @@ Not ported: the `*.selfcheck.ts` scripts. They're replaced by `tests/unit/*.test
 
 Routes missed by the section 1 inventory (they aren't `page.tsx`/`api`), to be rebuilt in Phase 7:
 `/blog/feed.xml` (RSS), `/robots.txt` (`robots.ts`), `/sitemap.xml` (`sitemap.ts`).
+
+### Phase 4b additions (2026-11-23)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Test generation progress | SSE plus a 120-step poll loop with timed fake phase messages ("Generating Practical Reasoning Test…" every 20s) | The SSE stream drives the bar; `/jd/{id}/status` is polled every 5s as the source of truth | No invented progress copy; the backend's own step text is shown |
+| Tests list | Archived tests mixed in with live ones | Archived tests hidden, with a count line ("kept for past candidates' results") | Regeneration archives approved tests; they aren't actionable |
+| Regenerate warning | Generic confirm | States exactly what happens: drafts replaced, approved tests archived (from `_delete_existing_tests`) | Users should know candidate results are safe |
+| Pass mark | Could be cleared in the form, silently ignored by the backend (`None` means "unchanged") | Can be changed but not removed, and the form says so | The backend has no way to unset it |
+| Bank-size presets | Labelled "Commercial default" / "Fast / minimum" | "Standard" / "Quick", with counts in the hint | Plain language |
+| Question-bank candidates page (`/question-bank/candidates`) | Built in 4b's area | Moved to Phase 4c with the other candidate lists | Same data shape as the candidates screens |
+
+Backend observation (not changed): `_delete_existing_tests` hard-deletes every DRAFT test for the JD, including question-bank section tests (they share `jd_id`). Regenerating the fixed tests while a bank is still a draft would delete the bank's questions. Untested; worth confirming.

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { AnalyzeButton, JdMenu } from "@/components/jd/jd-actions";
 import { JdLiveStatus } from "@/components/jd/jd-live-status";
+import { JdSubnav } from "@/components/jd/jd-subnav";
 import { JdTextPanel } from "@/components/jd/jd-text-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -121,6 +122,7 @@ export default async function JdDetailPage({ params }: Props) {
         }
         className="pb-0"
       />
+      <JdSubnav jdId={id} />
 
       <JdLiveStatus jdId={id} initial={status} errorMessage={status.error_message} />
 

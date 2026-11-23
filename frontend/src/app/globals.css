@@ -129,6 +129,7 @@
   --animate-fade-in: fade-in 160ms var(--ease-out-quiet);
   --animate-sheet-in: sheet-in 220ms var(--ease-out-quiet);
   --animate-pop-in: pop-in 160ms var(--ease-out-quiet);
+  --animate-indeterminate: indeterminate 1.4s ease-in-out infinite; /* progress with no percentage yet */
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -137,6 +138,10 @@
   @keyframes sheet-in {
     from { transform: translateX(16px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes indeterminate {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(400%); }
   }
   @keyframes pop-in {
     from { transform: translateY(4px) scale(0.98); opacity: 0; }
