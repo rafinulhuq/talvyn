@@ -493,3 +493,16 @@ Routes missed by the section 1 inventory (they aren't `page.tsx`/`api`), to be r
 | Question-bank candidates page (`/question-bank/candidates`) | Built in 4b's area | Moved to Phase 4c with the other candidate lists | Same data shape as the candidates screens |
 
 Backend observation (not changed): `_delete_existing_tests` hard-deletes every DRAFT test for the JD, including question-bank section tests (they share `jd_id`). Regenerating the fixed tests while a bank is still a draft would delete the bank's questions. Untested; worth confirming.
+
+### Phase 4c additions (2026-11-23)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Proxy redirects | axios followed any upstream redirect (default `maxRedirects: 5`), including FastAPI's 307 for `/invitations` → `/invitations/` | Redirects are never followed, except exactly "same path plus trailing slash" (`slashRedirectTarget`); any other 3xx becomes `502 UPSTREAM_REDIRECT` | Following arbitrary redirects with the internal token attached is unsafe; Next strips trailing slashes, so FastAPI collection routes (`POST /invitations/`, `/candidates/`, `/templates/`) still need that one hop |
+| Invite page | Three separate components behind a mode switcher | Tabs with the mode in `?mode=` (one person, a list, public link) | Shareable, survives reload |
+| Bulk CSV | Parsed client-side, comma or semicolon, header optional | Same rules, plus quoted delimiters, BOM stripping, line numbers in errors, paste as an alternative to a file; unit-tested | |
+| Public link limits | Editable; clearing a value was silently ignored by the backend | Can be changed but not removed, and the form says so | Backend treats `null` as "unchanged" |
+| Email not sent | Banner with the magic link | Same, shown only when `email_sent` is false and the backend returned the link | |
+| Candidate directory search | Client filter | `?q=` sent to `/candidates/?search=`, server-paginated | Works past page 1 |
+
+Local dev DB finding (not changed): `evaluations.mcq_max` and `evaluations.open_ended_max` exist on the ORM model but no Alembic migration adds them; the initial migration builds tables from current metadata, so only databases created before those columns lack them. On such a DB every query loading `Evaluation` 500s (seen on `GET /candidates/{id}/attempts`).

@@ -39,28 +39,56 @@ export async function readBody(req: NextRequest, maxBytes: number): Promise<{ bo
   return { body };
 }
 
-export function forward(
+/**
+ * FastAPI answers a collection route without its trailing slash ("/invitations")
+ * with a 307 to "/invitations/". Next strips trailing slashes before this layer,
+ * so follow exactly that one redirect: same path plus "/", nothing else.
+ * Any other redirect is never followed (it could point anywhere).
+ */
+export function slashRedirectTarget(location: unknown, apiPath: string): string | null {
+  if (typeof location !== "string" || !location) return null;
+  try {
+    const target = new URL(location, "http://upstream.invalid");
+    return target.pathname === `${apiPath}/` ? target.pathname : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function forward(
   req: NextRequest,
   apiPath: string,
   opts: { headers: Record<string, string>; body?: string; timeoutMs: number; binary?: boolean },
 ): Promise<AxiosResponse<string | ArrayBuffer>> {
-  return axios.request({
-    url: `${backendBaseUrl()}${apiPath}${req.nextUrl.search}`,
-    method: req.method,
-    headers: opts.headers,
-    data: opts.body,
-    timeout: opts.timeoutMs,
-    responseType: opts.binary ? "arraybuffer" : "text",
-    validateStatus: () => true,
-    decompress: false,
-    maxRedirects: 0,
-  });
+  const send = (path: string) =>
+    axios.request<string | ArrayBuffer>({
+      url: `${backendBaseUrl()}${path}${req.nextUrl.search}`,
+      method: req.method,
+      headers: opts.headers,
+      data: opts.body,
+      timeout: opts.timeoutMs,
+      responseType: opts.binary ? "arraybuffer" : "text",
+      validateStatus: () => true,
+      decompress: false,
+      maxRedirects: 0,
+    });
+  const res = await send(apiPath);
+  if (res.status === 307 || res.status === 308) {
+    const retry = slashRedirectTarget(res.headers["location"], apiPath);
+    if (retry) return send(retry);
+  }
+  return res;
 }
 
 /** Re-emit an upstream text response as JSON with the same status. */
 export function jsonFromUpstream(res: AxiosResponse<string | ArrayBuffer>): NextResponse {
   // Next's Response constructor throws on a 204/205 with a body; callers expect {} anyway.
   if (res.status === 204 || res.status === 205) return NextResponse.json({}, { status: 200 });
+  // A redirect we didn't follow must not reach the browser (it would chase an internal URL).
+  if (res.status >= 300 && res.status < 400) {
+    console.error(`[upstream] unexpected ${res.status} redirect to ${String(res.headers["location"] ?? "")}`);
+    return errorJson(502, "UPSTREAM_REDIRECT", "The Talvyn service returned an unexpected response. Try again.");
+  }
   const text = typeof res.data === "string" ? res.data : Buffer.from(res.data).toString("utf-8");
   let parsed: unknown = {};
   if (text) {

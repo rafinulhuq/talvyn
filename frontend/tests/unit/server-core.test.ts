@@ -4,7 +4,7 @@ import { newPasswordSchema, passwordConfirmationSchema, normalizeEmail } from ".
 import { redeemTokenPath } from "../../src/lib/candidate-session";
 import { canViewDocs, roleAtLeast } from "../../src/lib/roles";
 import { createRateLimiter } from "../../src/server/rate-limit";
-import { safeApiPath } from "../../src/server/upstream";
+import { safeApiPath, slashRedirectTarget } from "../../src/server/upstream";
 
 describe("safeApiPath", () => {
   it("joins normal segments", () => {
@@ -106,5 +106,17 @@ describe("display helpers", () => {
     assert.equal(tidyExtractedText("Experience\r\n●\r\n2 to 5 years"), "Experience\n● 2 to 5 years");
     // Real PDF output: bullet + zero-width space before the newline.
     assert.equal(tidyExtractedText("Education\n●\u200b\nBachelor of Science"), "Education\n● Bachelor of Science");
+  });
+});
+
+describe("slashRedirectTarget", () => {
+  it("follows only the same path with a trailing slash", () => {
+    assert.equal(slashRedirectTarget("http://backend:8000/api/v1/invitations/", "/api/v1/invitations"), "/api/v1/invitations/");
+    assert.equal(slashRedirectTarget("/api/v1/invitations/", "/api/v1/invitations"), "/api/v1/invitations/");
+  });
+  it("refuses any other redirect", () => {
+    assert.equal(slashRedirectTarget("http://evil.example/api/v1/internal/emails/", "/api/v1/invitations"), null);
+    assert.equal(slashRedirectTarget("/api/v1/invitations/x", "/api/v1/invitations"), null);
+    assert.equal(slashRedirectTarget(undefined, "/api/v1/invitations"), null);
   });
 });
