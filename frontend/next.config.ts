@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 // next/image may optimise remote images only from our own origins:
@@ -45,4 +46,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// GlitchTip wrapper only when a DSN is configured; a plain pass-through otherwise.
+// Source maps stay local (self-hosted GlitchTip, nothing uploaded).
+export default process.env.NEXT_PUBLIC_GLITCHTIP_DSN
+  ? withSentryConfig(nextConfig, { silent: true, sourcemaps: { disable: true } })
+  : nextConfig;

@@ -442,3 +442,29 @@ OBSERVABILITY_DEBUG
 PUBLIC_APP_URL
 VERCEL_URL
 ```
+
+## 6. Deliberate deviations in the rebuild (Phase 2, 2026-11-23)
+
+The server layer was rewritten with the same contracts. These are the only
+intentional behavior changes. Each one tightens security or fixes a bug.
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| `/api/proxy`, `/api/candidate`, `/api/public` | Joined raw catch-all segments; the `/api/v1/internal/*` denylist ran on the un-normalized path | `safeApiPath()` rejects `.`, `..`, empty segments and segments containing `/`, `\` or `%`, then requires the normalized path to equal the joined one | Review issue #1: a dot-segment could bypass the denylist after URL normalization. Covered by e2e tests |
+| `/api/public` | Forwarded **all** browser cookies to FastAPI | Forwards only `rp_device_id` | The session and candidate-token cookies were leaking upstream for no reason |
+| Login lockout | Keyed on the raw email; DB lookup lowercased | Email normalized before the lockout check | Changing letter case reset the 5-attempt counter |
+| Session re-validation | `currentSessionUser` didn't check `deletedAt` | Also rejects soft-deleted users | A removed user's existing session kept working until expiry |
+| Last-Super-Admin guards | Role route counted inactive/removed SAs; other routes disagreed | One definition everywhere: role SA, active, not deleted, approved | Could demote the last *active* SA and lock everyone out |
+| Admin user mutations | Only the password route had a CSRF check | All admin mutations reject `Sec-Fetch-Site: cross-site` and require JSON | Defense in depth on top of SameSite=Lax |
+| Highgarden OTP | Attempt counter lived only in the signed cookie | Also counted server-side per code hash (5 guesses) | Replaying the original cookie gave unlimited guesses |
+| Highgarden passphrase | Unlimited attempts | 10 per Super Admin per 15 min | Brute-force bound |
+| Signup / admin-created passwords | `min(8)` only | `newPasswordSchema` (8 chars to 72 bytes) | bcrypt silently truncates past 72 bytes |
+| `jd/[id]/analyze`, avatar and media `[id]` routes | Raw `id` interpolated into backend URLs | `isSafeId()` allowlist | Path manipulation |
+| `/backend/*` rewrite in `next.config` | Exposed FastAPI to the browser without the auth proxy | Removed | Unused, and it bypassed the authenticated layer |
+| Server-side GlitchTip | Not wired (Edge middleware bundle size) | `src/instrumentation.ts` (`register` + `onRequestError`), still a no-op without a DSN | `proxy.ts` runs on Node in Next 16, so the constraint is gone |
+| Error responses | `500 PROXY_ERROR` when the backend is down | `502 UPSTREAM_UNAVAILABLE` / `504 TIMEOUT` with plain-language messages | Correct status codes; the new UI reads `error.code` |
+| Middleware | `src/middleware.ts` with `runtime: "nodejs"` | `src/proxy.ts`, exporting `proxy` | Next 16 rename; `runtime` in proxy throws |
+
+Not ported: the `*.selfcheck.ts` scripts. They're replaced by `tests/unit/*.test.ts`
+(`npm run test:unit`) and the API e2e suite (`tests/e2e/api`, which needs
+`E2E_DATABASE_URL` pointing at a throwaway DB).
