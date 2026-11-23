@@ -45,6 +45,16 @@ export function ActivityChart({ points }: { points: TimelinePoint[] }) {
   );
 
   const hp = hover !== null ? points[hover] : null;
+  const empty = points.every((p) => p.submitted === 0 && p.invitations === 0);
+
+  // End labels: keep at least 14px apart so equal values don't overprint.
+  const labelY = (() => {
+    const ys = paths.map((s) => y(s.last));
+    const [a = 0, b = 0] = ys;
+    if (Math.abs(a - b) >= 14) return ys;
+    // Stack upward only: pushing down would collide with the x-axis dates.
+    return a <= b ? [b - 14, b] : [a, a - 14];
+  })();
 
   return (
     <figure aria-labelledby={titleId} className="flex flex-col gap-3">
@@ -69,20 +79,24 @@ export function ActivityChart({ points }: { points: TimelinePoint[] }) {
               </text>
             </g>
           ))}
-          {points.map((p, i) =>
-            i % Math.ceil(points.length / 7) === 0 || i === points.length - 1 ? (
+          {points.map((p, i) => {
+            const step = Math.ceil(points.length / 7);
+            const last = points.length - 1;
+            // Every `step`th day, plus the last day only if it isn't crowding the previous tick.
+            const show = i % step === 0 || (i === last && last - Math.floor(last / step) * step >= Math.max(2, step * 0.75));
+            return show ? (
               <text key={p.date} x={x(i)} y={H - 6} textAnchor="middle" className="fill-ink-muted text-[11px]">
                 {dayLabel(p.date)}
               </text>
-            ) : null,
-          )}
+            ) : null;
+          })}
           {hover !== null && <line x1={x(hover)} x2={x(hover)} y1={PAD.top} y2={PAD.top + ih} stroke="var(--line-strong)" strokeWidth={1} />}
           {paths.map((s) => (
             <g key={s.key}>
               <path d={s.d} fill="none" stroke={s.color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-              <text x={x(points.length - 1) + 8} y={y(s.last)} dy="0.32em" className="fill-ink text-[11px]">
+              {!empty && <text x={x(points.length - 1) + 8} y={labelY[paths.indexOf(s)] ?? y(s.last)} dy="0.32em" className="fill-ink text-[11px]">
                 {s.last} {s.key === "submitted" ? "submitted" : "invited"}
-              </text>
+              </text>}
               {hover !== null && hp && (
                 <circle cx={x(hover)} cy={y(hp[s.key])} r={4} fill={s.color} stroke="var(--surface)" strokeWidth={2} />
               )}
@@ -101,6 +115,11 @@ export function ActivityChart({ points }: { points: TimelinePoint[] }) {
             />
           ))}
         </svg>
+        {empty && (
+          <p className="pointer-events-none absolute inset-x-0 top-1/3 text-center text-base text-ink-muted">
+            No invitations or submissions in the last {points.length} days.
+          </p>
+        )}
         {hp && hover !== null && (
           <div
             className="pointer-events-none absolute top-0 z-10 min-w-36 -translate-x-1/2 rounded-menu border border-line bg-surface px-3 py-2 text-sm shadow-float"

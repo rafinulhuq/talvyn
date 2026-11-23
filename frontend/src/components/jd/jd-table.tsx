@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable, dataTableColumns } from "@/components/ui/data-table";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
-import { jdStatus, jdTitle } from "@/lib/domain/jd";
+import { displaySeniority, jdStatus, jdTitle } from "@/lib/domain/jd";
 import { formatRelative } from "@/lib/format";
 import type { JobDescriptionListItem } from "@/types/jd";
 
@@ -21,7 +21,7 @@ const columns = col.columns([
     cell: (info) => (
       <div className="flex flex-col">
         <span className="font-medium text-ink">{info.getValue()}</span>
-        <span className="text-sm text-ink-muted">{info.row.original.seniority_level ?? "Seniority not set"}</span>
+        <span className="text-sm text-ink-muted">{displaySeniority(info.row.original.seniority_level) ?? "Seniority not set"}</span>
       </div>
     ),
   }),

@@ -44,7 +44,7 @@ export function DialogContent({
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         </div>
-        <div className="px-5 py-4">{children}</div>
+        {children ? <div className="px-5 py-4">{children}</div> : <div className="h-4" />}
         {footer && <div className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</div>}
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>

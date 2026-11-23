@@ -70,7 +70,7 @@ export function SystemStatusLine({ collapsed = false }: { collapsed?: boolean })
     status.state === "ok"
       ? "All systems operational"
       : status.state === "degraded"
-        ? `${status.degraded} ${status.degraded === 1 ? "service needs" : "services need"} attention`
+        ? `${status.degraded} ${status.degraded === 1 ? "service" : "services"} degraded`
         : "Status unavailable";
   const dot = <span aria-hidden className={cn("size-2 shrink-0 rounded-full", tone)} />;
   return collapsed ? (
@@ -83,7 +83,7 @@ export function SystemStatusLine({ collapsed = false }: { collapsed?: boolean })
     <p role="status" className="flex items-center gap-2 px-2.5 text-sm text-ink-muted">
       {dot}
       <span className="truncate">{text}</span>
-      {status.version && <span className="ml-auto text-xs text-ink-muted">v{status.version}</span>}
+      {status.version && status.state === "ok" && <span className="ml-auto text-xs text-ink-muted">v{status.version}</span>}
     </p>
   );
 }

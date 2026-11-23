@@ -21,3 +21,17 @@ export const jdTitle = (jd: Pick<JobDescriptionListItem, "job_title" | "original
 export const SENIORITY = ["Intern", "Junior", "Mid-level", "Senior", "Lead", "Principal", "Manager", "Director"] as const;
 export const TONES = ["Professional", "Friendly", "Concise", "Enthusiastic"] as const;
 export const LENGTHS = ["Short", "Standard", "Detailed"] as const;
+
+/** "mid" → "Mid", "senior" → "Senior"; leaves already-cased values alone. */
+export const displaySeniority = (v: string | null | undefined) => (v ? v.charAt(0).toUpperCase() + v.slice(1) : null);
+
+/**
+ * Display-only cleanup of PDF-extracted text: PDF extraction often puts a
+ * bullet glyph alone on its own line. Join it to the line that follows.
+ * The stored text is never modified.
+ */
+export const tidyExtractedText = (text: string) =>
+  text
+    .replace(/\r\n?/g, "\n")
+    .replace(/^[ \t\u00a0\u200b\u200c\u200d\ufeff]*([•●○◦▪■□◆◇‣·∙\-–])[ \t\u00a0\u200b\u200c\u200d\ufeff]*\n+[ \t\u00a0\u200b\u200c\u200d\ufeff]*/gm, "$1 ")
+    .replace(/\n{3,}/g, "\n\n");

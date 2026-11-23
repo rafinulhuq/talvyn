@@ -73,7 +73,7 @@ export function BriefForm() {
       {failure && <Alert tone="danger" title="Couldn't start writing">{failure}</Alert>}
       <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
         <Field label="Role title" error={errors.title}>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Senior Backend Engineer" maxLength={200} />
+          <Input value={title} onChange={(e) => { setTitle(e.target.value); if (errors.title) setErrors((x) => ({ ...x, title: undefined })); }} placeholder="Senior Backend Engineer" maxLength={200} />
         </Field>
         <Choice label="Seniority" value={seniority} onChange={setSeniority} options={SENIORITY} />
       </div>
@@ -86,7 +86,7 @@ export function BriefForm() {
         </Field>
       </div>
       <Field label="Must-have skills" hint="Press Enter or comma after each skill." error={errors.must}>
-        <TagInput value={must} onChange={setMust} placeholder="Go, PostgreSQL, distributed systems" invalid={!!errors.must} />
+        <TagInput value={must} onChange={(v) => { setMust(v); if (errors.must && v.length) setErrors((x) => ({ ...x, must: undefined })); }} placeholder="Go, PostgreSQL, distributed systems" invalid={!!errors.must} />
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Nice-to-have skills" optional>

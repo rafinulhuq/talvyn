@@ -28,7 +28,7 @@ export function Panel({
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className={cn("p-5", bodyClassName)}>{children}</div>
+      <div className={bodyClassName ?? "p-5"}>{children}</div>
     </section>
   );
 }

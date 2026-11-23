@@ -91,3 +91,20 @@ describe("password policy", () => {
     assert.equal(normalizeEmail("  Admin@Talvyn.COM "), "admin@talvyn.com");
   });
 });
+
+import { parseApiDate } from "../../src/lib/format";
+import { tidyExtractedText } from "../../src/lib/domain/jd";
+
+describe("display helpers", () => {
+  it("treats zone-less API timestamps as UTC", () => {
+    assert.equal(parseApiDate("2026-11-23T10:43:58").toISOString(), "2026-11-23T10:43:58.000Z");
+    assert.equal(parseApiDate("2026-11-23T10:43:58+06:00").toISOString(), "2026-11-23T04:43:58.000Z");
+    assert.equal(parseApiDate("2026-11-23T10:43:58Z").toISOString(), "2026-11-23T10:43:58.000Z");
+  });
+  it("joins lone PDF bullets to their line", () => {
+    assert.equal(tidyExtractedText("Education\n•\nBSc in CSE\n•\n  2 to 5 years"), "Education\n• BSc in CSE\n• 2 to 5 years");
+    assert.equal(tidyExtractedText("Experience\r\n●\r\n2 to 5 years"), "Experience\n● 2 to 5 years");
+    // Real PDF output: bullet + zero-width space before the newline.
+    assert.equal(tidyExtractedText("Education\n●\u200b\nBachelor of Science"), "Education\n● Bachelor of Science");
+  });
+});
