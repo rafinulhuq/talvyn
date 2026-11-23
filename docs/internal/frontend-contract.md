@@ -563,3 +563,18 @@ Verified on the local stack: the inbox lists submitted, scored and ended attempt
 | Avatars | `<img>` with onError | Probed after mount; an image that fails before hydration otherwise shows a broken icon | Bug found in testing |
 
 Verified on the local stack: add user, change role, deactivate and reactivate, set password, remove and restore; avatar upload; health tab; webhook create, test event (delivery to example.com recorded as 405, failed), deliveries sheet; backup download; audit log lists the actions; /dashboard/companies redirects. Not run: restore and reset, which are destructive on the dev DB.
+
+### Phase 6b additions: templates, trash, AI writing check, ATS check (2026-11-23)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Template weights | Sent as typed | Typed as any non-negative numbers, shown as live shares, normalised to sum to 1.0 before sending | The backend rejects weights that don't sum to 1.0 (±0.01): `INVALID_SECTION_WEIGHTS`, found in testing |
+| Template lifecycle | Same | Create (ACTIVE), edit, archive, delete; list includes archived | |
+| Trash | Same endpoints | Restore and "Delete for good", each stating what's deleted with it (JD → tests, invitations, results; candidate → invitations, answers, results) | Destructive actions say what they do |
+| AI writing check | Async job + poll | Same (`/ai-checker/jobs`, 2s poll, up to 6 min); flagged phrases highlighted in the text; the backend's disclaimer is shown verbatim | |
+| ATS check | Client WASM extraction, server fallback with OCR | Same; the OCR notice explains why it matters; keyword lists de-duplicated (the backend can repeat keywords) | |
+| Shared input | Two copies | One `DocumentInput` (paste or upload; PDF/DOCX via WASM, then the server) | |
+
+Verified on the local stack: template create, edit, archive; candidate to trash and back; ATS check against the analysed Laravel JD (76/100); AI writing check with the real model (about 40s). Not run: "Delete for good" (destructive).
+
+Backend observation (not changed): the ATS check reported "No phone number was found" for a résumé whose first line contains `+44 20 7946 0000`.
