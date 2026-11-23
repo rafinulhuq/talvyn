@@ -578,3 +578,21 @@ Verified on the local stack: add user, change role, deactivate and reactivate, s
 Verified on the local stack: template create, edit, archive; candidate to trash and back; ATS check against the analysed Laravel JD (76/100); AI writing check with the real model (about 40s). Not run: "Delete for good" (destructive).
 
 Backend observation (not changed): the ATS check reported "No phone number was found" for a résumé whose first line contains `+44 20 7946 0000`.
+
+### Phase 7a: public site (2026-11-24)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Homepage copy | Backend defaults (and the old frontend's copy) claimed customer logos (Linear, Vercel…), invented stats ("94.8% offer acceptance"), stock-photo testimonials, "SOC-2 compliant", "keystroke dynamics" | `backend/app/cms/defaults.py` rewritten (`69c6f47`) to describe only what the product does. Logos, stats and testimonials default to empty, and the site hides empty sections. Rafinul chose this on 2026-11-24 | Client-facing claims must be true |
+| Headline "highlight" | A second phrase coloured differently | Kept in the content model for compatibility, rendered as part of the same headline | Design rule: no single coloured phrase |
+| Hero visual | 3D canvas, dashboard mockup, animated geometry | A sample report built from the product's own components, labelled "Example report. Names and scores are illustrative." | Shows the real product; no fake metrics |
+| Section order | CMS `sectionOrder` | Same; unknown and duplicate keys ignored | |
+| Blog | Index, post, claps, share, RSS | Same features; markdown rendered without raw HTML (no rehype-raw); external links `noopener`; repeated H1 title stripped | XSS-safe |
+| robots / sitemap / feed | CMS "allow indexing" switch | Same behaviour | |
+| Candidate copy defaults | Backend defaults said "valid for 72 hours" | Backend defaults now match the frontend copy from Phase 5 | Expiry is configurable |
+
+Two gotchas found here:
+- The repo root `.gitignore` has `site/` (MkDocs output), which also matched `frontend/src/components/site/`. Git and Tailwind's source scan both skipped it, so the folder is now `components/marketing/`.
+- `mergeCopy` rejected arrays of objects, so CMS lists (steps, features) silently fell back to the defaults. Fixed and unit-tested.
+
+Note for production: `cms_content_documents.draft_json` still holds the old copy (drafts were seeded from the old defaults). Public pages are unaffected (they serve defaults merged with `published_json`), but publishing an old draft from the editor would bring the old claims back. The 7b editor makes the draft visible before publishing.

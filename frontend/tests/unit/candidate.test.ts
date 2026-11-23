@@ -74,3 +74,11 @@ describe("candidate copy", () => {
     assert.equal(fill("Test {current} of {total}", { current: 2, total: 3 }), "Test 2 of 3");
   });
 });
+
+describe("mergeCopy arrays", () => {
+  it("accepts object lists for object defaults and empty defaults, rejects mismatched items", () => {
+    assert.deepEqual(mergeCopy({ steps: [] as { t: string }[] }, { steps: [{ t: "a" }] }).steps, [{ t: "a" }]);
+    assert.deepEqual(mergeCopy({ steps: [{ t: "x" }] }, { steps: ["nope"] }).steps, [{ t: "x" }]);
+    assert.deepEqual(mergeCopy({ tags: ["a"] }, { tags: ["b", 3] }).tags, ["a"]);
+  });
+});

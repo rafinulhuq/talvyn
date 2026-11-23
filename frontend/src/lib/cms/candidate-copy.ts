@@ -101,7 +101,15 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "obj
 
 /** Override wins per key; arrays are replaced whole; wrong types fall back to the default. */
 export function mergeCopy<T>(base: T, override: unknown): T {
-  if (Array.isArray(base)) return (Array.isArray(override) && override.every((x) => typeof x === "string") ? override : base) as T;
+  if (Array.isArray(base)) {
+    if (!Array.isArray(override)) return base;
+    // Accept the override when its items have the same shape as the default's
+    // (strings, or objects); an empty default accepts strings or objects.
+    const kind = (x: unknown) => (typeof x === "string" ? "string" : isRecord(x) ? "object" : "other");
+    const want = base.length ? kind(base[0]) : null;
+    const ok = override.every((x) => (want ? kind(x) === want : kind(x) !== "other"));
+    return (ok ? override : base) as T;
+  }
   if (!isRecord(base)) return (typeof override === typeof base && override !== "" ? override : base) as T;
   if (!isRecord(override)) return base;
   const out: Record<string, unknown> = { ...base };
