@@ -22,8 +22,10 @@ export function SidebarNav({ collapsed = false, onNavigate }: { collapsed?: bool
           {group.items.map((item) => {
             const active = isActive(item, pathname);
             const count = item.href === "/dashboard/users" ? pendingSignups : 0;
+            // Plain <a> for document routes: a Next <Link> would prefetch them as RSC and fail.
+            const LinkEl = item.document ? "a" : Link;
             const link = (
-              <Link
+              <LinkEl
                 key={item.href}
                 href={item.href}
                 onClick={onNavigate}
@@ -47,7 +49,7 @@ export function SidebarNav({ collapsed = false, onNavigate }: { collapsed?: bool
                       <span className="sr-only"> pending access requests</span>
                     </span>
                   ))}
-              </Link>
+              </LinkEl>
             );
             return collapsed ? (
               <Tooltip key={item.href} content={item.label} side="right">

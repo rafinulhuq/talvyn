@@ -118,7 +118,7 @@ export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChang
               {nav.length > 0 && (
                 <CommandGroup heading="Go to">
                   {nav.map((i) => (
-                    <CommandItem key={i.href} value={`nav:${i.href}`} onSelect={() => run(() => router.push(i.href))}>
+                    <CommandItem key={i.href} value={`nav:${i.href}`} onSelect={() => run(() => (i.document ? window.location.assign(i.href) : router.push(i.href)))}>
                       <i.icon aria-hidden />
                       <span className="flex-1">{i.label}</span>
                       {i.key && (

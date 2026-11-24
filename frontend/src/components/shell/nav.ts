@@ -20,6 +20,8 @@ import { canViewDocs, roleAtLeast, type RankedRole } from "@/lib/roles";
 export type NavItem = {
   label: string;
   href: string;
+  /** Served outside React (a route handler returning HTML): needs a full page load, not client navigation. */
+  document?: boolean;
   icon: LucideIcon;
   /** Minimum ranked role. Mirrors the gates in src/proxy.ts (UX only; the backend is the authority). */
   minRole?: RankedRole;
@@ -59,7 +61,7 @@ export const NAV: NavGroup[] = [
       { label: "Highgarden", href: "/dashboard/highgarden", icon: Sprout, minRole: "SUPER_ADMIN" },
       { label: "Trash", href: "/dashboard/trash", icon: Trash2, minRole: "SUPER_ADMIN" },
       { label: "Settings", href: "/dashboard/settings", icon: Settings, minRole: "ADMIN", key: "s" },
-      { label: "Docs", href: "/dashboard/docs", icon: BookOpen, visible: canViewDocs },
+      { label: "Docs", href: "/dashboard/docs", icon: BookOpen, visible: canViewDocs, document: true },
     ],
   },
 ];
