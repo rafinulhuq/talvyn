@@ -1,5 +1,18 @@
 # Talvyn frontend: ground-up rebuild
 
+## Status (2026-11-24)
+
+| Phase | State | Commit |
+|---|---|---|
+| 0–7 | Done | up to `0ac60f9` |
+| 8 Highgarden | Done | `29aeedb` |
+| 9 Hardening | Mostly done: e2e suite + axe sweep (9a), first-load JS and Docs link (9b), CSP (9c) | `e7e7826`, `26d6037`, `dcb66bf` |
+| Gate 2 | Skipped: merged to `main` at the owner's request before review | `main` = `dcb66bf` |
+
+**Not deployed yet.** The repo has no self-hosted runner registered, so CI and `deploy.yml` are queued. Production serves the old UI until the runner on the production box is back.
+
+Phase 9 still open (details at the end of `frontend-contract.md`): the 2GB prod image (standalone output), the candidate flow in the automated suite, a local `docker-compose.prod.yml` run (its project name clashes with the dev stack).
+
 ## Context
 The current `frontend/` (Next 16.3.4, ~50k LOC: 53 pages, 32 API routes) has to be deleted and rebuilt from scratch. That covers every surface: admin app, candidate exam, auth, marketing, blog/CMS and Highgarden analytics. The goal is a premium SaaS for international clients that can be shown to prospects, with no AI-slop look. Decisions already made with the user:
 - Rebuild **everything**.
