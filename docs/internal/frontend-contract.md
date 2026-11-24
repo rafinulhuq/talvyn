@@ -633,3 +633,29 @@ Verified: the homepage document's stale-draft guard, "use live", publish (versio
 Gotcha found (local only): Next's env loader runs dotenv-expand over every key listed in a `.env*` file, even when the value comes from the shell. An unescaped bcrypt hash (`$2b$12$…`) is cut from 60 to 36 characters and never matches. Escape each `$` as `\$`. Production is not affected: `.dockerignore` keeps `.env*` files out of the image. Documented in `frontend/.env.local.example`.
 
 Verified end to end (`next build && next start`, Playwright, Mailpit): tracker beacons, feedback widget, wrong passphrase, correct passphrase → emailed code → wrong code → right code → unlocked, all six sections plus filters and session detail, mark-read, alert recipients save (invalid address dropped), digest email sent, purge validation (400), the CSRF guard (415), no session (401), lock. Both themes, and 375px. Not run: purge actually deleting rows, the CSV downloads, archive/delete feedback, the 4-hour cookie expiry.
+
+### Phase 9: hardening (2026-11-24, in progress)
+
+Merged to `main` at the user's request before Gate 2 (`29aeedb`, fast-forward). It has **not deployed**: the repo has no self-hosted runner registered, so CI and the deploy job sit queued.
+
+| Area | Finding | Change |
+|---|---|---|
+| e2e suite | 36 tests (auth, accounts, proxy) | 54: Highgarden (tracking, unlock with emailed code, analytics, CSV), public site (landing, robots, sitemap, RSS, 404, 375px overflow), and an axe sweep of every public, app and Highgarden page in both themes. Gate: nothing above "minor". Stable over repeated runs |
+| Labelled Selects | `Field` passed `id`/`aria-*` to Radix's Root, which renders nothing, so every labelled Select had an unnamed trigger (axe: critical) | `Select` forwards them to its trigger through context |
+| `EmptyState` | `h3` directly under a page `h1` (skipped level) | `h2` |
+| Auth pages | Logo link outside any landmark | Wrapped in `<header>` |
+| Highgarden | Placeholder colour (`ink-faint`) on readable text; `aria-label` on a plain span | `ink-muted`; screen-reader text |
+| Highgarden config | A malformed hash (e.g. `$` expanded by a .env file) rejected every passphrase silently | Not a valid bcrypt hash → "not set up", with a hint about escaping `$` |
+| First-load JS | `@sentry/nextjs` statically imported: ~70KB gzip on every page with no DSN (prod sets none) | Imported on demand only when a DSN is set. Landing first load 285KB → 215KB gzip |
+| Docs nav link | A Next `<Link>` to a route handler that returns MkDocs HTML: prefetched as RSC on every page and failed (502) | Nav items can be marked `document` and render as `<a>` |
+
+Measured (local `next start`, Playwright; not a Lighthouse score): LCP 50–110ms desktop, 210–830ms with mobile throttling (4× CPU, 1.6 Mbps, 150ms); CLS 0 on every page measured. The `zod` and `libphonenumber` chunks seen on the landing page are background prefetches of /login and /signup, not part of the first load.
+
+Prod image: `Dockerfile.prod` builds (about 2.5 min) and boots against the local backend; every signed-in page rendered with no page errors and no 5xx. Security headers present: HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy.
+
+Still open:
+- No Content-Security-Policy header (the old frontend had none either). Needs nonces for Next's inline scripts.
+- The prod image is 2GB: the runtime stage copies all of `node_modules`, dev dependencies included. Next's `output: "standalone"` would cut it sharply, but it changes the deploy image.
+- The candidate test flow isn't in the automated suite (it needs the backend and a generated test). It was verified live in Phase 5.
+- `docker-compose.prod.yml` wasn't run locally: it shares the Compose project name `talvyn` with the dev stack, so `up` would replace the dev containers.
+- Ollama health test (`test_health.py::test_returns_200_when_all_dependencies_ok`) fails on machines without Ollama running.
