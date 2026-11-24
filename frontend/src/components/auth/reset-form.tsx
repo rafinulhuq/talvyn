@@ -6,7 +6,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { passwordConfirmationSchema } from "@/lib/auth/password-policy";
 import { api } from "@/lib/api/client";
 

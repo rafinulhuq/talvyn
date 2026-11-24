@@ -5,6 +5,7 @@
  *   3. Redeem candidate magic-link tokens into an httpOnly cookie.
  *   4. Gate /dashboard behind a live session + per-area minimum role.
  *   5. Bounce signed-in users away from the auth pages.
+ *   6. Attach a per-request nonce + Content-Security-Policy to pages (src/lib/csp.ts).
  *
  * /api/* is NOT gated here — every route handler does its own auth. The
  * /api/proxy hot path (autosave, heartbeat, polling) would otherwise verify
@@ -25,6 +26,7 @@ import {
   isHostNeutralPath,
   isSiteOnlyPath,
 } from "@/lib/hosts";
+import { buildCsp, dsnOrigin, newNonce } from "@/lib/csp";
 import { roleAtLeast, type RankedRole } from "@/lib/roles";
 import { currentSessionUser } from "@/server/auth/session";
 
@@ -59,6 +61,28 @@ function hostRedirect(req: NextRequest): NextResponse | null {
   return null;
 }
 
+/**
+ * Continue to the route. Pages get a fresh nonce and CSP: the request header
+ * is how Next.js learns the nonce to put on its scripts. Skipped for API
+ * routes (JSON) and the MkDocs proxy, which serves its own HTML and scripts.
+ */
+function pass(req: NextRequest): NextResponse {
+  const { pathname } = req.nextUrl;
+  if (pathname.startsWith("/api/") || pathname === "/dashboard/docs" || pathname.startsWith("/dashboard/docs/")) return NextResponse.next();
+  const nonce = newNonce();
+  const csp = buildCsp(nonce, {
+    dev: process.env.NODE_ENV === "development",
+    https: req.nextUrl.protocol === "https:" || req.headers.get("x-forwarded-proto") === "https",
+    sentryOrigin: dsnOrigin(process.env.NEXT_PUBLIC_GLITCHTIP_DSN),
+  });
+  const headers = new Headers(req.headers);
+  headers.set("x-nonce", nonce);
+  headers.set("content-security-policy", csp);
+  const res = NextResponse.next({ request: { headers } });
+  res.headers.set("Content-Security-Policy", csp);
+  return res;
+}
+
 export async function proxy(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
 
@@ -85,7 +109,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   }
 
   const isDashboard = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
-  if (!isDashboard && !AUTH_PAGES.has(pathname)) return NextResponse.next();
+  if (!isDashboard && !AUTH_PAGES.has(pathname)) return pass(req);
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const user = token ? await currentSessionUser(token) : null;
@@ -98,11 +122,11 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
     }
     const rule = AREA_MIN_ROLE.find((r) => pathname === r.prefix || pathname.startsWith(`${r.prefix}/`));
     if (rule && !roleAtLeast(user.role, rule.minRole)) return NextResponse.redirect(new URL("/dashboard", req.url));
-    return NextResponse.next();
+    return pass(req);
   }
 
   // Auth pages
-  return user ? NextResponse.redirect(new URL("/dashboard", req.url)) : NextResponse.next();
+  return user ? NextResponse.redirect(new URL("/dashboard", req.url)) : pass(req);
 }
 
 export const config = {

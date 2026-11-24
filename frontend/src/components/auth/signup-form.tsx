@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore, type FormEvent } from "react";
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import type { CountryCode } from "libphonenumber-js/core";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";

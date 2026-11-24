@@ -653,8 +653,16 @@ Measured (local `next start`, Playwright; not a Lighthouse score): LCP 50–110m
 
 Prod image: `Dockerfile.prod` builds (about 2.5 min) and boots against the local backend; every signed-in page rendered with no page errors and no 5xx. Security headers present: HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy.
 
+**CSP (9c).** Every page now gets a per-request nonce and `Content-Security-Policy` from `src/proxy.ts` (built in `src/lib/csp.ts`):
+- `script-src 'self' 'nonce-…' 'strict-dynamic' 'wasm-unsafe-eval'` (+ `'unsafe-eval'` in dev only). No `'unsafe-inline'` for scripts: injected markup with inline handlers is blocked (tested).
+- `style-src 'self' 'unsafe-inline'`: the UI uses inline style attributes, and browsers ignore `'unsafe-inline'` when a nonce is present. Style injection is far weaker than script injection.
+- `img-src 'self' data: blob: https:` (blog posts may show outside images); `connect-src 'self'` plus the GlitchTip origin if a DSN is set; `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`; `upgrade-insecure-requests` only over HTTPS.
+- Not applied to `/api/*` (JSON) or `/dashboard/docs` (MkDocs serves its own scripts).
+- The root layout reads the nonce (for `next-themes`' inline script), which makes every page dynamic. Four pages were static before (`/signup`, `/forgot-password`, `/_not-found`, `/dev/design`); a static page can't carry a per-request nonce anyway.
+- zod v4 probes `new Function` for its JIT and reported a violation on every form page. Browser code now imports zod from `src/lib/zod.ts`, which sets `jitless`.
+- Verified: e2e (nonce on every Next script, fresh per request, no violations across public, candidate-error, app and Highgarden pages, the theme script runs, WebAssembly compiles, an injected `onerror` is blocked); live against the local backend: a full candidate session (start, answer, bulk-save, heartbeat, reload restore), JD detail, an attempt report, the TipTap editor and a public post, all with zero violations.
+
 Still open:
-- No Content-Security-Policy header (the old frontend had none either). Needs nonces for Next's inline scripts.
 - The prod image is 2GB: the runtime stage copies all of `node_modules`, dev dependencies included. Next's `output: "standalone"` would cut it sharply, but it changes the deploy image.
 - The candidate test flow isn't in the automated suite (it needs the backend and a generated test). It was verified live in Phase 5.
 - `docker-compose.prod.yml` wasn't run locally: it shares the Compose project name `talvyn` with the dev stack, so `up` would replace the dev containers.

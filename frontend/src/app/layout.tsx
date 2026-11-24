@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif } from "next/font/google";
 import type { ReactNode } from "react";
 import { FeedbackWidget } from "@/components/highgarden/feedback-widget";
@@ -35,7 +36,9 @@ export const metadata: Metadata = {
   description: "Role-specific hiring assessments, generated from your job description and graded consistently.",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Set by src/proxy.ts. Reading it makes every page dynamic, which a per-request nonce requires anyway.
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html
       lang="en"
@@ -43,7 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${plexSans.variable} ${plexMono.variable} ${instrumentSerif.variable}`}
     >
       <body>
-        <ThemeProvider>
+        <ThemeProvider nonce={nonce}>
           <TooltipProvider>
             {children}
             <Toaster />

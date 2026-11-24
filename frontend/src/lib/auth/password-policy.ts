@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 // 72 bytes is bcrypt's input limit; longer passwords would be silently truncated.
 export const newPasswordSchema = z
