@@ -613,3 +613,23 @@ New dependencies (named in the approved plan, kept from the old frontend): `@tip
 Gotchas found: `useEditorState` with a not-yet-created editor left the editor blank, so the toolbar now reads state directly with `shouldRerenderOnTransaction`. Plain values exported from `"use client"` modules arrive in server components as client references, so shared constants live in `src/lib/` (DOCS, ROLE_LABEL).
 
 Verified: the homepage document's stale-draft guard, "use live", publish (version 1), and history; the public homepage still serves the honest copy. A post created, written in the editor (paragraph, heading), saved, published, shown on /blog and its page, clapped (count 1), and in the RSS feed. Not run: scheduling, unpublishing, author profiles, cover upload, the link dialog, version restore.
+
+### Phase 8: Highgarden analytics (2026-11-24)
+
+| Area | Old behavior | New behavior | Why |
+|---|---|---|---|
+| Tracker + feedback widget | Mounted in the root layout | Same, rebuilt (`components/highgarden/tracker.tsx`, `feedback-widget.tsx`). Same events, privacy blocklist and `hg_sid` cookie | |
+| Feedback widget clicks | The popover was portaled outside the `data-hg-ignore` root, so its own clicks were recorded as analytics | The popover content carries `data-hg-ignore` too | Found in testing: "Confusing", "2", "Send feedback" showed up as top clicks |
+| Feedback widget | Rating preset to 4, select for category | No preset rating (send stays disabled until one is picked); topic chips; trigger labelled "Feedback" to match its visible text | A preset quietly skewed ratings up |
+| Mutations | Server actions (`actions.ts`) | JSON route handlers, each with `requireHighgardenApi` + `rejectUnsafeMutation`: `PATCH/DELETE /api/highgarden/feedback/[id]`, `POST /api/highgarden/purge`, `PUT /api/highgarden/alerts`, `POST /api/highgarden/alerts/send` | Same pattern as the rest of the rebuild (no server actions) |
+| Daily trend | Loaded up to 5,000 events and counted in JS | Grouped by UTC day in SQL | Busy ranges were undercounted |
+| Heatmap | 10×10 buckets, 5,000 points | 24×15 buckets, latest 20,000 points, cells with mostly dead clicks outlined | Finer detail; caps are stated on the page |
+| Area filter | `startsWith("/test")` also matched `/tests…`, `/testimonials` | Segment-aware (`/test` or `/test/…`) | Precision |
+| Funnels | Showed "% kept" above 100% when a later step had more records | Shows `+N`, and the page says steps are not a strict cohort | Honest numbers |
+| Alerts | Thresholds and the weekly toggle looked active | The page says plainly that nothing evaluates thresholds or schedules the digest yet; "Send digest now" works | Nothing in the codebase reads them (checked) |
+| Purge | Two server actions | One route: `{mode: "retention"}` (older than 90 days) or `{mode: "filter", type?, from?, to?}` (UTC days, inclusive), each behind a confirm dialog | |
+| Unlock page | Always started at the passphrase step | Resumes at the code step if a pending-code cookie exists (e.g. after a reload); an expired code sends you back to the passphrase | |
+
+Gotcha found (local only): Next's env loader runs dotenv-expand over every key listed in a `.env*` file, even when the value comes from the shell. An unescaped bcrypt hash (`$2b$12$…`) is cut from 60 to 36 characters and never matches. Escape each `$` as `\$`. Production is not affected: `.dockerignore` keeps `.env*` files out of the image. Documented in `frontend/.env.local.example`.
+
+Verified end to end (`next build && next start`, Playwright, Mailpit): tracker beacons, feedback widget, wrong passphrase, correct passphrase → emailed code → wrong code → right code → unlocked, all six sections plus filters and session detail, mark-read, alert recipients save (invalid address dropped), digest email sent, purge validation (400), the CSRF guard (415), no session (401), lock. Both themes, and 375px. Not run: purge actually deleting rows, the CSV downloads, archive/delete feedback, the 4-hour cookie expiry.

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif } from "next/font/google";
 import type { ReactNode } from "react";
+import { FeedbackWidget } from "@/components/highgarden/feedback-widget";
+import { Tracker } from "@/components/highgarden/tracker";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -45,6 +47,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <TooltipProvider>
             {children}
             <Toaster />
+            <Tracker />
+            <FeedbackWidget />
           </TooltipProvider>
         </ThemeProvider>
       </body>
