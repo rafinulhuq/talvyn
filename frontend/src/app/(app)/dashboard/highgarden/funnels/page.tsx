@@ -33,10 +33,10 @@ function FunnelView({ funnel }: { funnel: Funnel }) {
             <li key={s.label} className="grid grid-cols-[minmax(9rem,14rem)_1fr_auto] items-center gap-4">
               <div className="min-w-0">
                 <p className="truncate text-base text-ink">
-                  <span className="mr-2 font-mono text-xs text-ink-faint">{i + 1}</span>
+                  <span className="mr-2 font-mono text-xs text-ink-muted">{i + 1}</span>
                   {s.label}
                 </p>
-                <p className="truncate text-sm text-ink-faint">{s.detail}</p>
+                <p className="truncate text-sm text-ink-muted">{s.detail}</p>
               </div>
               <div className="h-6 overflow-hidden rounded-control bg-sunken" aria-hidden>
                 <div className="h-full rounded-control bg-chart-1" style={{ width: `${s.count > 0 ? Math.max(1.5, (s.count / max) * 100) : 0}%` }} />

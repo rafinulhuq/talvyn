@@ -132,7 +132,7 @@ export default async function HighgardenSessionsPage({ searchParams }: { searchP
                     <TD className="whitespace-nowrap text-ink-muted">{areaLabel(entry)}</TD>
                     <TD className="whitespace-nowrap text-ink-muted">
                       <span>{deviceLabel(meta?.deviceType ?? "unknown")}</span>
-                      {meta?.browserName && <span className="block text-sm text-ink-faint">{[meta.browserName, meta.osName, meta.country].filter(Boolean).join(" · ")}</span>}
+                      {meta?.browserName && <span className="block text-sm text-ink-muted">{[meta.browserName, meta.osName, meta.country].filter(Boolean).join(" · ")}</span>}
                     </TD>
                     <TD className="text-right tabular-nums">{s._count.events.toLocaleString("en")}</TD>
                     <TD className="whitespace-nowrap text-right tabular-nums">{formatDuration(last.getTime() - first.getTime())}</TD>
@@ -140,7 +140,7 @@ export default async function HighgardenSessionsPage({ searchParams }: { searchP
                       <span className="flex flex-wrap gap-1">
                         {errors > 0 && <Badge tone="danger">{errors} error{errors === 1 ? "" : "s"}</Badge>}
                         {dead > 0 && <Badge tone="warning">{dead} dead click{dead === 1 ? "" : "s"}</Badge>}
-                        {errors + dead === 0 && <span className="text-sm text-ink-faint">None</span>}
+                        {errors + dead === 0 && <span className="text-sm text-ink-muted">None</span>}
                       </span>
                     </TD>
                     <TD className="whitespace-nowrap text-right text-ink-muted">{formatRelative(s.lastSeenAt.toISOString())}</TD>

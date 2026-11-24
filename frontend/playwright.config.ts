@@ -1,4 +1,7 @@
 import { defineConfig } from "@playwright/test";
+import bcrypt from "bcryptjs";
+import { existsSync, readFileSync } from "node:fs";
+import { E2E_HIGHGARDEN_COOKIE_SECRET, E2E_HIGHGARDEN_PASSPHRASE } from "./tests/e2e/constants";
 
 /**
  * E2E suites hit a real database. They run ONLY against an explicitly named
@@ -10,6 +13,13 @@ if (!dbUrl && !process.env.PLAYWRIGHT_BASE_URL) {
   throw new Error("Set E2E_DATABASE_URL to a throwaway Postgres (schema via `prisma db push`) before running e2e tests.");
 }
 if (dbUrl) process.env.DATABASE_URL = dbUrl; // for the test process's own Prisma client
+
+// Highgarden: a known passphrase for the unlock tests. Next expands "$" in any
+// key that a local .env* file lists, so escape the hash only in that case.
+const hgHash = bcrypt.hashSync(E2E_HIGHGARDEN_PASSPHRASE, 4);
+const listedInEnvFile = [".env", ".env.local", ".env.production", ".env.production.local"].some(
+  (f) => existsSync(f) && /^\s*HIGHGARDEN_PASSPHRASE_HASH\s*=/m.test(readFileSync(f, "utf8")),
+);
 
 const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 3200);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${PORT}`;
@@ -39,6 +49,8 @@ export default defineConfig({
           INTERNAL_API_SECRET: "e2e-internal-secret-32-characters!!",
           // Nothing listens here: backend-dependent paths must degrade cleanly.
           FASTAPI_INTERNAL_URL: "http://127.0.0.1:59999",
+          HIGHGARDEN_PASSPHRASE_HASH: listedInEnvFile ? hgHash.replaceAll("$", "\\$") : hgHash,
+          HIGHGARDEN_COOKIE_SECRET: E2E_HIGHGARDEN_COOKIE_SECRET,
         },
       },
   projects: [

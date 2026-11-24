@@ -144,9 +144,9 @@ export default async function HighgardenSessionPage({ params }: { params: Promis
             return (
               <li key={`${v.at.getTime()}-${i}`} className="px-5 py-3.5">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="w-20 shrink-0 font-mono text-xs tabular-nums text-ink-faint">{time(v.at)}</span>
+                  <span className="w-20 shrink-0 font-mono text-xs tabular-nums text-ink-muted">{time(v.at)}</span>
                   <span className="min-w-0 break-all font-mono text-sm text-ink">{v.path}</span>
-                  <span className="ml-auto text-sm tabular-nums text-ink-faint">{formatDuration(next.getTime() - v.at.getTime())}</span>
+                  <span className="ml-auto text-sm tabular-nums text-ink-muted">{formatDuration(next.getTime() - v.at.getTime())}</span>
                 </div>
                 {v.events.length > 0 && (
                   <ul className="mt-2 flex flex-col gap-1 border-l border-line pl-4 sm:ml-[5.75rem]">
@@ -158,9 +158,9 @@ export default async function HighgardenSessionPage({ params }: { params: Promis
                           <span className="sr-only">{EVENT_LABEL[e.type]}:</span>
                           <span className="min-w-0 flex-1">
                             <span className={cn(e.type === TrackedEventType.CLIENT_ERROR ? "text-danger" : "text-ink")}>{e.targetLabel || e.targetSelector || EVENT_LABEL[e.type]}</span>
-                            {e.targetSelector && e.targetLabel && <span className="ml-2 font-mono text-xs text-ink-faint">{e.targetSelector}</span>}
+                            {e.targetSelector && e.targetLabel && <span className="ml-2 font-mono text-xs text-ink-muted">{e.targetSelector}</span>}
                           </span>
-                          <span className="shrink-0 font-mono text-xs tabular-nums text-ink-faint">{time(e.createdAt)}</span>
+                          <span className="shrink-0 font-mono text-xs tabular-nums text-ink-muted">{time(e.createdAt)}</span>
                         </li>
                       );
                     })}

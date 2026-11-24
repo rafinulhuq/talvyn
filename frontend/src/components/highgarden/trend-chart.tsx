@@ -18,7 +18,7 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden className="size-2.5 rounded-[2px] bg-chart-2" /> Clicks
         </span>
-        <span className="ml-auto tabular-nums text-ink-faint">Peak {max.toLocaleString("en")} / day</span>
+        <span className="ml-auto tabular-nums text-ink-muted">Peak {max.toLocaleString("en")} / day</span>
       </div>
       <div aria-hidden className="flex h-40 items-end gap-[3px] border-b border-line">
         {points.map((p) => (
@@ -28,7 +28,7 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
           </div>
         ))}
       </div>
-      <div aria-hidden className="flex gap-[3px] text-xs tabular-nums text-ink-faint">
+      <div aria-hidden className="flex gap-[3px] text-xs tabular-nums text-ink-muted">
         {points.map((p, i) => (
           // On phones, show every other label so dates don't collide.
           <span key={p.day} className={`min-w-0 flex-1 overflow-visible whitespace-nowrap text-center ${i % (step * 2) !== 0 ? "max-sm:invisible" : ""}`}>

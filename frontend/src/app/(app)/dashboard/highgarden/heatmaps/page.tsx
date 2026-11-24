@@ -126,7 +126,7 @@ export default async function HighgardenHeatmapsPage({ searchParams }: { searchP
               <span className="inline-flex items-center gap-1.5">
                 <span aria-hidden className="size-3 rounded-[2px] outline outline-1 -outline-offset-1 outline-danger" /> Mostly dead clicks
               </span>
-              <span className="text-ink-faint">Positions are relative to the window, not the full page, so long pages blur below the fold.</span>
+              <span className="text-ink-muted">Positions are relative to the window, not the full page, so long pages blur below the fold.</span>
             </figcaption>
           </figure>
         </Panel>

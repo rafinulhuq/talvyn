@@ -24,7 +24,7 @@ export function EmptyState({
         </span>
       )}
       <div className="max-w-md">
-        <h3 className="text-md font-medium text-ink">{title}</h3>
+        <h2 className="text-md font-medium text-ink">{title}</h2>
         {description && <p className="mt-1 text-base text-ink-muted">{description}</p>}
       </div>
       {action}

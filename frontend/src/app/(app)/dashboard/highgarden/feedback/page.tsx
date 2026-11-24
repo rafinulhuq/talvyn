@@ -71,13 +71,18 @@ export default async function HighgardenFeedbackPage({ searchParams }: { searchP
               <li key={f.id} className={cn("flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-start", f.status === "UNREAD" && "bg-accent-soft/30")}>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    {f.status === "UNREAD" && <span aria-label="Unread" className="size-2 rounded-full bg-accent" />}
+                    {f.status === "UNREAD" && (
+                      <>
+                        <span aria-hidden className="size-2 rounded-full bg-accent" />
+                        <span className="sr-only">Unread.</span>
+                      </>
+                    )}
                     <Badge tone={f.rating <= 2 ? "danger" : f.rating === 3 ? "warning" : "success"}>{f.rating}/5</Badge>
                     <span className="text-base font-medium text-ink">{f.category}</span>
                     <span className="font-mono text-xs text-ink-muted">{f.path}</span>
                     {f.status === "ARCHIVED" && <Badge>{STATUS_LABEL.ARCHIVED}</Badge>}
                   </div>
-                  {f.comment ? <p className="mt-1.5 whitespace-pre-wrap text-base text-ink">{f.comment}</p> : <p className="mt-1.5 text-base italic text-ink-faint">No comment</p>}
+                  {f.comment ? <p className="mt-1.5 whitespace-pre-wrap text-base text-ink">{f.comment}</p> : <p className="mt-1.5 text-base italic text-ink-muted">No comment</p>}
                   <p className="mt-1.5 text-sm text-ink-muted">
                     <time dateTime={f.createdAt.toISOString()} title={formatDateTime(f.createdAt.toISOString())}>
                       {formatRelative(f.createdAt.toISOString())}

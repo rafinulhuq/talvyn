@@ -35,7 +35,8 @@ export default async function HighgardenUnlockPage() {
           <UnlockForm initialStep={jar.has(OTP_COOKIE) ? "code" : "passphrase"} />
         ) : (
           <Alert tone="danger" title="Highgarden isn't set up on this server">
-            Set <code className="font-mono text-sm">HIGHGARDEN_PASSPHRASE_HASH</code> (a bcrypt hash) and <code className="font-mono text-sm">HIGHGARDEN_COOKIE_SECRET</code>, then restart the app.
+            Set <code className="font-mono text-sm">HIGHGARDEN_PASSPHRASE_HASH</code> to a full bcrypt hash (60 characters, starting <code className="font-mono text-sm">$2b$</code>) and <code className="font-mono text-sm">HIGHGARDEN_COOKIE_SECRET</code>, then restart the app.
+            {process.env.HIGHGARDEN_PASSPHRASE_HASH && " A hash is set but isn't valid. If it's in a .env file, write each $ as \\$ so it isn't expanded."}
           </Alert>
         )}
       </div>

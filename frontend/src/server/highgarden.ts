@@ -43,7 +43,11 @@ function safeEqual(a: string, b: string): boolean {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 
-export const highgardenConfigured = () => Boolean(process.env.HIGHGARDEN_PASSPHRASE_HASH && secret());
+// A full bcrypt hash is 60 chars. Anything else (often a hash whose "$" signs
+// were expanded away by a .env file) can never match, so treat it as unset.
+const BCRYPT_HASH = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/;
+export const passphraseHashValid = () => BCRYPT_HASH.test(process.env.HIGHGARDEN_PASSPHRASE_HASH ?? "");
+export const highgardenConfigured = () => passphraseHashValid() && Boolean(secret());
 
 export const cookieOptions = (maxAge: number) => ({
   httpOnly: true,

@@ -125,7 +125,7 @@ export function Stat({ label, value, hint, tone }: { label: string; value: numbe
       <span className={cn("text-xl font-medium tabular-nums tracking-[-0.01em]", tone === "danger" ? "text-danger" : tone === "warning" ? "text-warning" : "text-ink")}>
         {typeof value === "number" ? value.toLocaleString("en") : value}
       </span>
-      {hint && <span className="text-sm text-ink-faint">{hint}</span>}
+      {hint && <span className="text-sm text-ink-muted">{hint}</span>}
     </div>
   );
 }
